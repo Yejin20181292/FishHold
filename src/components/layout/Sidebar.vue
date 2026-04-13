@@ -1,8 +1,5 @@
 <script setup lang="ts">
 // Using lucide-vue-next for icons (as an example, though not fully installed yet we just text mock)
-import { ref } from 'vue'
-
-const activeMenu = ref('장비 모니터링')
 </script>
 
 <template>
