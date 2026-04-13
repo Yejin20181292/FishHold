@@ -18,7 +18,7 @@ interface FishHold {
 // The user will need to fine-tune these percentages based on their exact image aspect ratio.
 const fishHolds = ref<FishHold[]>([
   // Port (P) Side - Top Row (from stern to bow)
-  { id: '10p', name: 'No.10 (P)', temp: -14.5, top: '39%', left: '8%', width: '6%', height: '5%' },
+  { id: '10p', name: 'No.10                 (P)', temp: -14.5, top: '39%', left: '8%', width: '6%', height: '5%' },
   { id: '9p', name: 'No.9 (P)', temp: -1.6, top: '39%', left: '17%', width: '6%', height: '5%' },
   { id: '8p', name: 'No.8 (P)', temp: 3.5, top: '39%', left: '26%', width: '6%', height: '5%' },
   { id: '7p', name: 'No.7 (P)', temp: -8.9, top: '39%', left: '35%', width: '6%', height: '5%' },
@@ -29,7 +29,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '2p', name: 'No.2 (P)', temp: -10.2, top: '39%', left: '80%', width: '6%', height: '5%' },
 
   // Bow
-  { id: '1', name: 'No.1', temp: 20.5, top: '54%', left: '90%', width: '5%', height: '5%' },
+  { id: '1', name: 'No.1', temp: 20.5, top: '54%', left: '85%', width: '5%', height: '5%' },
 
   // Starboard (S) Side - Bottom Row (from stern to bow)
   { id: '10s', name: 'No.10 (S)', temp: -11.1, top: '69%', left: '8%', width: '6%', height: '5%' },
