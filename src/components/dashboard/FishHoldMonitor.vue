@@ -26,7 +26,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '5p', name: 'No.5 (P)', temp: -3.6, top: '39%', left: '53%', width: '6%', height: '5%' },
   { id: '4p', name: 'No.4 (P)', temp: -1.5, top: '39%', left: '62%', width: '6%', height: '5%' },
   { id: '3p', name: 'No.3 (P)', temp: -0.1, top: '43%', left: '71%', width: '6%', height: '5%' },
-  { id: '2p', name: 'No.2 (P)', temp: -10.2, top: '43%', left: '78%', width: '6%', height: '5%' },
+  { id: '2p', name: 'No.2 (P)', temp: -10.2, top: '43%', left: '79%', width: '6%', height: '5%' },
 
   // Bow
   { id: '1', name: 'No.1', temp: 20.5, top: '54.5%', left: '88.5%', width: '5%', height: '5%' },
