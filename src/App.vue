@@ -2,10 +2,22 @@
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
+import AuthModal from '@/components/auth/AuthModal.vue'
+import { useAuth } from '@/composables/useAuth'
+
+const { isLoggedIn } = useAuth()
 </script>
 
 <template>
-  <div class="app-container">
+  <!-- 비로그인 시 강제 로그인 모달 (닫기 불가) -->
+  <AuthModal
+    v-if="!isLoggedIn"
+    mode="login"
+    :closable="false"
+    @close="() => {}"
+  />
+
+  <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
     <Sidebar class="app-sidebar" />
     <div class="app-main-wrapper">
       <Header class="app-header" />
@@ -63,5 +75,12 @@ body {
   background-color: #fdfce3; /* The light yellow background of the blueprint area */
   position: relative;
   overflow: auto; /* Allow scrolling */
+}
+
+/* 비로그인 시 화면 잠금 */
+.app-locked {
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
 }
 </style>

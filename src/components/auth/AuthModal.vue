@@ -2,9 +2,12 @@
 import { ref, watch } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   mode: 'login' | 'register'
-}>()
+  closable?: boolean
+}>(), {
+  closable: true
+})
 
 const emit = defineEmits<{
   close: []
@@ -72,7 +75,7 @@ function handleRegister() {
 }
 
 function handleOverlayClick(e: MouseEvent) {
-  if ((e.target as HTMLElement).classList.contains('modal-overlay')) {
+  if (props.closable && (e.target as HTMLElement).classList.contains('modal-overlay')) {
     emit('close')
   }
 }
@@ -85,7 +88,7 @@ function handleOverlayClick(e: MouseEvent) {
         <Transition name="modal-scale" appear>
           <div class="modal-container">
             <!-- Close button -->
-            <button class="modal-close" @click="emit('close')" aria-label="닫기">
+            <button v-if="closable" class="modal-close" @click="emit('close')" aria-label="닫기">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
