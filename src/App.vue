@@ -50,7 +50,7 @@ body {
 }
 
 .app-header {
-  height: 60px;
+  height: 80px;
   background-color: #fff;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
