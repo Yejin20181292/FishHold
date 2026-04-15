@@ -18,10 +18,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <div class="nav-link">
               <span class="icon">🖥️</span>
               장비 모니터링
-            </a>
+            </div>
+            <ul class="sub-nav-list">
+              <li class="sub-nav-item">새 서브페이지</li>
+            </ul>
           </li>
           <li class="nav-item">
             <div class="nav-link active">
