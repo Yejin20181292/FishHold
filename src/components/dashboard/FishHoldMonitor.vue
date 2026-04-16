@@ -42,6 +42,8 @@ const fishHolds = ref<FishHold[]>([
   { id: '3s', name: 'No.3 (S)', temp: -0.6, top: '65.5%', left: '71%', width: '6%', height: '5%' },
   { id: '2s', name: 'No.2 (S)', temp: -0.8, top: '65.5%', left: '79.3%', width: '6%', height: '5%' },
 ]);
+
+const emit = defineEmits(['select-tank']);
 </script>
 
 <template>
@@ -59,6 +61,7 @@ const fishHolds = ref<FishHold[]>([
         v-for="tank in fishHolds" 
         :key="tank.id"
         class="tank-overlay"
+        @click="emit('select-tank', tank)"
         :style="{
           top: tank.top,
           left: tank.left,
@@ -103,8 +106,15 @@ const fishHolds = ref<FishHold[]>([
 
 .tank-overlay {
   position: absolute;
-  /* Border for debugging. Remove this later once positions are calibrated. */
-  /* border: 1px dashed red; */
-  /* pointer-events: none; allow clicks to pass through if it overlaps other stuff */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Make sure background is interactable if it is fully transparent */
+  background: rgba(0,0,0,0.01);
+}
+
+.tank-overlay:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  z-index: 10;
 }
 </style>

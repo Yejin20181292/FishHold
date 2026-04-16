@@ -23,7 +23,7 @@
               장비 모니터링
             </div>
             <ul class="sub-nav-list">
-              <li class="sub-nav-item">새 서브페이지</li>
+              <li class="sub-nav-item">신라 나오에로썬 MKR-3</li>
             </ul>
           </li>
           <li class="nav-item">

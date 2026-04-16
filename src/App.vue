@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
+import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
+const currentTank = ref<any>(null)
+
+const handleTankSelect = (tank: any) => {
+  currentTank.value = tank
+}
+
+const handleBack = () => {
+  currentTank.value = null
+}
 </script>
 
 <template>
@@ -22,7 +33,8 @@ const { isLoggedIn } = useAuth()
     <div class="app-main-wrapper">
       <Header class="app-header" />
       <main class="app-content">
-        <FishHoldMonitor />
+        <FishHoldMonitor v-if="!currentTank" @select-tank="handleTankSelect" />
+        <FishHoldDetail v-else :tank="currentTank" @back="handleBack" />
       </main>
     </div>
   </div>
