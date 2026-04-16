@@ -50,26 +50,28 @@ const emit = defineEmits(['select-tank']);
   <div class="monitor-container">
 
     <div class="blueprint-wrapper">
-      <!-- 
-        User should place their actual blueprint image at src/assets/blueprint.png
-        If missing, this will show a missing image icon, so we put a fallback alt text.
-      -->
-      <img src="@/assets/blueprint.png" alt="Ship Blueprint" class="ship-bg" />
-      
-      <!-- Temperature overlays -->
-      <div 
-        v-for="tank in fishHolds" 
-        :key="tank.id"
-        class="tank-overlay"
-        @click="emit('select-tank', tank)"
-        :style="{
-          top: tank.top,
-          left: tank.left,
-          width: tank.width,
-          height: tank.height
-        }"
-      >
-        <FishHoldIndicator :temp="tank.temp" />
+      <div class="image-container">
+        <!-- 
+          User should place their actual blueprint image at src/assets/blueprint.png
+          If missing, this will show a missing image icon, so we put a fallback alt text.
+        -->
+        <img src="@/assets/blueprint.png" alt="Ship Blueprint" class="ship-bg" />
+        
+        <!-- Temperature overlays -->
+        <div 
+          v-for="tank in fishHolds" 
+          :key="tank.id"
+          class="tank-overlay"
+          @click="emit('select-tank', tank)"
+          :style="{
+            top: tank.top,
+            left: tank.left,
+            width: tank.width,
+            height: tank.height
+          }"
+        >
+          <FishHoldIndicator :temp="tank.temp" />
+        </div>
       </div>
     </div>
   </div>
@@ -96,10 +98,17 @@ const emit = defineEmits(['select-tank']);
   margin: 0 auto;
 }
 
+.image-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
 .ship-bg {
   width: 100%;
   height: auto;
-  object-fit: contain;
+  display: block;
   /* Adding a slight shadow for aesthetics */
   filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.1));
 }
@@ -107,9 +116,11 @@ const emit = defineEmits(['select-tank']);
 .tank-overlay {
   position: absolute;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  z-index: 5;
   /* Make sure background is interactable if it is fully transparent */
   background: rgba(0,0,0,0.01);
+  border-radius: 4px;
 }
 
 .tank-overlay:hover {
