@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { decodeCredential, GoogleLogin } from 'vue3-google-login'
 import { useAuth } from '@/composables/useAuth'
 
 const props = withDefaults(defineProps<{
@@ -13,7 +14,8 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const { login, register } = useAuth()
+
+const { login, register, loginWithGoogle } = useAuth()
 
 // Form state
 const activeTab = ref<'login' | 'register'>(props.mode)
@@ -72,6 +74,22 @@ function handleRegister() {
       errorMessage.value = result.error || '회원가입에 실패했습니다.'
     }
   }, 400)
+}
+
+function handleGoogleLogin(response: any) {
+  try {
+    const userData = decodeCredential(response.credential) as any
+    const result = loginWithGoogle(userData.email, userData.name, userData.picture)
+    
+    if (result.success) {
+      successMessage.value = '구글 로그인 성공!'
+      setTimeout(() => emit('close'), 600)
+    } else {
+      errorMessage.value = result.error || '구글 로그인 처리에 실패했습니다.'
+    }
+  } catch (error) {
+    errorMessage.value = '구글 인증 정보를 처리에 실패했습니다.'
+  }
 }
 
 function handleOverlayClick(e: MouseEvent) {
@@ -137,6 +155,14 @@ function handleOverlayClick(e: MouseEvent) {
 
             <!-- Login Form -->
             <form v-if="activeTab === 'login'" class="auth-form" @submit.prevent="handleLogin">
+              <div class="google-login-wrapper">
+                <GoogleLogin :callback="handleGoogleLogin" prompt />
+              </div>
+              
+              <div class="divider">
+                <span>또는 이메일로 로그인</span>
+              </div>
+
               <div class="input-group">
                 <label for="login-email">이메일</label>
                 <div class="input-wrapper">
@@ -188,6 +214,14 @@ function handleOverlayClick(e: MouseEvent) {
 
             <!-- Register Form -->
             <form v-else class="auth-form" @submit.prevent="handleRegister">
+              <div class="google-login-wrapper">
+                <GoogleLogin :callback="handleGoogleLogin" />
+              </div>
+              
+              <div class="divider">
+                <span>또는 이메일로 가입</span>
+              </div>
+
               <div class="input-group">
                 <label for="register-name">이름</label>
                 <div class="input-wrapper">
@@ -446,6 +480,27 @@ function handleOverlayClick(e: MouseEvent) {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 4px 0;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+.divider span {
+  padding: 0 10px;
+  color: #94a3b8;
+  font-size: 0.8rem;
 }
 .input-group {
   display: flex;

@@ -4,12 +4,15 @@ import { ref, computed } from 'vue'
 interface User {
   email: string
   name: string
+  picture?: string
 }
 
 interface StoredUser {
   email: string
   name: string
-  password: string
+  password?: string
+  picture?: string
+  provider?: string
 }
 
 // --- Reactive State (Singleton) ---
@@ -82,6 +85,7 @@ export function useAuth() {
   const isLoggedIn = computed(() => currentUser.value !== null)
   const userName = computed(() => currentUser.value?.name ?? '')
   const userEmail = computed(() => currentUser.value?.email ?? '')
+  const userPicture = computed(() => currentUser.value?.picture ?? '')
   const userInitial = computed(() => {
     const name = currentUser.value?.name
     return name ? name.charAt(0).toUpperCase() : ''
@@ -101,7 +105,25 @@ export function useAuth() {
     if (found.password !== password) return { success: false, error: '비밀번호가 일치하지 않습니다.' }
 
     // Success
-    const user: User = { email: found.email, name: found.name }
+    const user: User = { email: found.email, name: found.name, picture: found.picture }
+    currentUser.value = user
+    saveSession(user)
+    return { success: true }
+  }
+
+  function loginWithGoogle(email: string, name: string, picture: string): { success: boolean; error?: string } {
+    const users = getStoredUsers()
+    let found = users.find(u => u.email.toLowerCase() === email.toLowerCase())
+    
+    // If user is not found, we automatically register them via Google
+    if (!found) {
+      found = { email, name, picture, provider: 'google' }
+      users.push(found)
+      saveStoredUsers(users)
+    }
+
+    // Success
+    const user: User = { email: found.email, name: found.name, picture: found.picture || picture }
     currentUser.value = user
     saveSession(user)
     return { success: true }
@@ -148,8 +170,10 @@ export function useAuth() {
     isLoggedIn,
     userName,
     userEmail,
+    userPicture,
     userInitial,
     login,
+    loginWithGoogle,
     register,
     logout
   }
