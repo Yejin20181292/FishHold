@@ -50,7 +50,7 @@ const historyData = ref([
       </div>
 
       <div class="card premium-card chart-card">
-        <h3>온도 변화 추이 (최근 5시간)</h3>
+        <h3>기간별 모니터링</h3>
         <div class="dummy-chart">
           <div class="bar-container" v-for="(point, index) in historyData" :key="index">
             <div class="bar-value">{{ point.temp.toFixed(1) }}</div>
