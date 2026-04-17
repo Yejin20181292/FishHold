@@ -167,4 +167,13 @@ h2 {
   border-radius: 50%;
 }
 
+.status-dot.active { 
+  background-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.status-dot.inactive { 
+  background-color: #cbd5e1; 
+}
+
 </style>
