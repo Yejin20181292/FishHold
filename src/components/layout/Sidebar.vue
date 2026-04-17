@@ -1,5 +1,9 @@
 <script setup lang="ts">
-// Using lucide-vue-next for icons (as an example, though not fully installed yet we just text mock)
+defineProps<{
+  currentView?: string;
+}>();
+
+const emit = defineEmits(['navigate']);
 </script>
 
 <template>
@@ -18,21 +22,21 @@
             </a>
           </li>
           <li class="nav-item">
-            <div class="nav-link">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">
               <span class="icon">🖥️</span>
               장비 모니터링
             </div>
             <ul class="sub-nav-list">
-              <li class="sub-nav-item">신라 나오에로썬 MKR-3</li>
+              <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
             </ul>
           </li>
           <li class="nav-item">
-            <div class="nav-link active">
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">
               <span class="icon">🚢</span>
               장비 현황판
             </div>
             <ul class="sub-nav-list">
-              <li class="sub-nav-item active">신라 나오에로썬 FISH...</li>
+              <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
             </ul>
           </li>
         </ul>

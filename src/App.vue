@@ -4,18 +4,29 @@ import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
+import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
 const currentTank = ref<any>(null)
+const currentView = ref<string>('dashboard')
 
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
+  currentView.value = 'tankDetail'
 }
 
 const handleBack = () => {
   currentTank.value = null
+  currentView.value = 'dashboard'
+}
+
+const handleNavigate = (viewType: string) => {
+  currentView.value = viewType
+  if (viewType === 'dashboard') {
+    currentTank.value = null
+  }
 }
 </script>
 
@@ -29,12 +40,13 @@ const handleBack = () => {
   />
 
   <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
-    <Sidebar class="app-sidebar" />
+    <Sidebar class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
     <div class="app-main-wrapper">
       <Header class="app-header" />
       <main class="app-content">
-        <FishHoldMonitor v-if="!currentTank" @select-tank="handleTankSelect" />
-        <FishHoldDetail v-else :tank="currentTank" @back="handleBack" />
+        <FishHoldMonitor v-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
+        <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" />
+        <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
       </main>
     </div>
   </div>

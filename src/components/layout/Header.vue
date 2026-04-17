@@ -6,7 +6,7 @@ import AuthModal from '@/components/auth/AuthModal.vue'
 const { isLoggedIn, userName, userInitial, logout } = useAuth()
 
 // --- Real-time clock ---
-const currentDateTime = ref('')
+const currentDateTime = ref('')     
 
 function updateDateTime() {
   const now = new Date()
