@@ -45,7 +45,7 @@ const handleNavigate = (viewType: string) => {
       <Header class="app-header" />
       <main class="app-content">
         <FishHoldMonitor v-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
-        <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" />
+        <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
       </main>
     </div>

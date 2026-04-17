@@ -4,7 +4,10 @@ import { ref, computed } from 'vue'
 const props = defineProps<{
   baseTemp?: number | null;
   titleName?: string;
+  showExpand?: boolean;
 }>();
+
+const emit = defineEmits(['navigate']);
 
 const todayStr = new Date().toISOString().split('T')[0];
 const today = ref(todayStr);
@@ -116,10 +119,18 @@ const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== unde
         <h3>기간별 모니터링</h3>
         <span class="tank-name" v-if="titleName">{{ titleName }}</span>
       </div>
-      <div class="custom-date-picker">
-        <input type="date" v-model="startDate" :max="today" @change="validateRange" />
-        <span class="separator">~</span>
-        <input type="date" v-model="endDate" :max="today" @change="validateRange" />
+      <div class="header-controls">
+        <div class="custom-date-picker">
+          <input type="date" v-model="startDate" :max="today" @change="validateRange" />
+          <span class="separator">~</span>
+          <input type="date" v-model="endDate" :max="today" @change="validateRange" />
+        </div>
+        <button v-if="showExpand" class="expand-btn" @click="emit('navigate', 'mkr3')" title="장비 모니터링 페이지로 이동">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
       </div>
     </div>
     <div class="dummy-chart">
@@ -218,6 +229,12 @@ h3 {
   font-weight: 600;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .custom-date-picker {
   display: flex;
   align-items: center;
@@ -226,6 +243,26 @@ h3 {
   padding: 4px 12px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expand-btn:hover {
+  background: #f1f5f9;
+  color: #3b82f6;
+  border-color: #cbd5e1;
 }
 
 .custom-date-picker input[type="date"] {

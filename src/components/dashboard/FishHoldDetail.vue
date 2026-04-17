@@ -10,7 +10,7 @@ defineProps<{
   }
 }>();
 
-const emit = defineEmits(['back']);
+const emit = defineEmits(['back', 'navigate']);
 </script>
 
 <template>
@@ -42,7 +42,7 @@ const emit = defineEmits(['back']);
       </div>
 
       <div class="card premium-card chart-card">
-        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" />
+        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" :showExpand="true" @navigate="(v) => emit('navigate', v)" />
       </div>
     </div>
   </div>
