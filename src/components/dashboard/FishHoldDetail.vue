@@ -120,7 +120,6 @@ const svgFill = computed(() => {
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
-        뒤로 가기
       </button>
     </div>
 
@@ -230,17 +229,18 @@ const svgFill = computed(() => {
 
 .back-btn {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  width: 42px;
+  height: 42px;
   background: white;
   border: 1px solid #e2e8f0;
-  padding: 10px 16px;
   border-radius: 8px;
-  font-weight: 600;
   color: #475569;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 0;
 }
 
 .back-btn:hover {
