@@ -58,7 +58,7 @@ const checkLimit = (event: Event, tank: TankData) => {
 <template>
   <div class="mkr3-container">
     <div class="header">
-      <h2 class="title">MKR-3 데이터 모니터링</h2>
+      <h2 class="title">신라 나오에로썬 MKR-3</h2>
     </div>
 
     <div class="content">
