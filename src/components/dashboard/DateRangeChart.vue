@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+interface TankData {
+  id: string;
+  name: string;
+  temp: number;
+}
+
 const props = defineProps<{
+  tanks?: TankData[];
   baseTemp?: number | null;
   titleName?: string;
   showExpand?: boolean;
@@ -47,77 +54,121 @@ const diffDays = computed(() => {
   return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
 });
 
-// Generate dynamic data based on selected date range (24 points per day)
-const historyData = computed(() => {
-  const data = [];
-  const baseT = props.baseTemp ?? 0;
-  
-  if (!startDate.value) return [];
-  const start = new Date(startDate.value);
-  const days = diffDays.value;
-  
-  for (let d = 0; d < days; d++) {
-    const curDate = new Date(start);
-    curDate.setDate(curDate.getDate() + d);
-    
-    for (let i = 0; i < 24; i++) {
-      const time = `${i.toString().padStart(2, '0')}:00`;
-      const variation = Math.sin((i - 6) / 24 * Math.PI * 2) * (baseT < 0 ? 1.5 : 2.5);
-      const dayVariation = Math.sin(d) * 0.5; // Slight drift per day
-      const noise = (Math.random() - 0.5) * 0.8;
-      data.push({
-        time,
-        temp: parseFloat((baseT + variation + dayVariation + noise).toFixed(1)),
-        hour: i,
-        day: curDate.getDate(),
-        month: curDate.getMonth() + 1,
-        isNewDay: i === 0
-      });
-    }
+const computedTanks = computed(() => {
+  if (props.tanks && props.tanks.length > 0) {
+    return props.tanks;
   }
-  return data;
+  if (props.titleName || props.baseTemp !== undefined) {
+    return [{
+      id: 'default',
+      name: props.titleName || '',
+      temp: props.baseTemp ?? 0
+    }];
+  }
+  return [];
 });
 
-// Calculate metrics for Y-axis scaling
-const maxTemp = computed(() => Math.ceil(Math.max(...historyData.value.map(d => d.temp)) + 1));
-const minTemp = computed(() => Math.floor(Math.min(...historyData.value.map(d => d.temp)) - 1));
+const palette = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'];
+const getTankColor = (tank: TankData, index: number) => {
+  if (computedTanks.value.length === 1) {
+    return tank.temp >= 0 ? '#ef4444' : '#3b82f6';
+  }
+  return palette[index % palette.length];
+};
+
+const historySeries = computed(() => {
+  return computedTanks.value.map((tank, tIndex) => {
+    const data = [];
+    const baseT = tank.temp ?? 0;
+    if (!startDate.value) return { tank, color: getTankColor(tank, tIndex), data: [] };
+    
+    const start = new Date(startDate.value);
+    const days = diffDays.value;
+    const seed = tIndex * 13.5;
+    
+    for (let d = 0; d < days; d++) {
+      const curDate = new Date(start);
+      curDate.setDate(curDate.getDate() + d);
+      
+      for (let i = 0; i < 24; i++) {
+        const time = `${i.toString().padStart(2, '0')}:00`;
+        const variation = Math.sin((i - 6) / 24 * Math.PI * 2) * (baseT < 0 ? 1.5 : 2.5);
+        const dayVariation = Math.sin(d + seed) * 0.5;
+        const noise = (Math.sin(i * 1.5 + seed + d) * 0.8);
+        data.push({
+          time,
+          temp: parseFloat((baseT + variation + dayVariation + noise).toFixed(1)),
+          hour: i,
+          day: curDate.getDate(),
+          month: curDate.getMonth() + 1,
+          isNewDay: i === 0,
+          tankName: tank.name
+        });
+      }
+    }
+    return {
+      tank,
+      color: getTankColor(tank, tIndex),
+      data
+    };
+  });
+});
+
+const maxTemp = computed(() => {
+  if (!historySeries.value.length) return 10;
+  const allMaxes = historySeries.value.map(s => Math.max(...s.data.map(d => d.temp)));
+  if (!allMaxes.length) return 10;
+  return Math.ceil(Math.max(...allMaxes) + 1);
+});
+
+const minTemp = computed(() => {
+  if (!historySeries.value.length) return -10;
+  const allMins = historySeries.value.map(s => Math.min(...s.data.map(d => d.temp)));
+  if (!allMins.length) return -10;
+  return Math.floor(Math.min(...allMins) - 1);
+});
 
 function getBarHeight(temp: number) {
   const range = maxTemp.value - minTemp.value;
   if(range === 0) return 50; 
-  // Convert temperature to a percentage height mapping within the grid height
   return ((temp - minTemp.value) / range) * 100;
 }
 
-const svgPoints = computed(() => {
-  const total = historyData.value.length;
-  if (total === 0) return [];
-  return historyData.value.map((point, index) => {
-    const x = (index / Math.max(1, total - 1)) * 100;
-    const y = 100 - getBarHeight(point.temp);
-    return { ...point, x, y };
+const seriesPoints = computed(() => {
+  return historySeries.value.map((series) => {
+    const total = series.data.length;
+    const points = series.data.map((point, index) => {
+      const x = (index / Math.max(1, total - 1)) * 100;
+      const y = 100 - getBarHeight(point.temp);
+      return { ...point, x, y };
+    });
+    
+    const svgLine = points.length === 0 ? '' : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    const svgFill = points.length === 0 ? '' : `${svgLine} L 100 100 L 0 100 Z`;
+    
+    return {
+      ...series,
+      points,
+      svgLine,
+      svgFill
+    };
   });
 });
 
-const svgLine = computed(() => {
-  if (svgPoints.value.length === 0) return '';
-  return svgPoints.value.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-});
+const isMultiLine = computed(() => computedTanks.value.length > 1);
 
-const svgFill = computed(() => {
-  if (svgPoints.value.length === 0) return '';
-  return `${svgLine.value} L 100 100 L 0 100 Z`;
-});
-
-const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== undefined && props.baseTemp >= 0);
+// Helper for single line active fill
+const getSingleFillGradient = (color: string) => {
+  return color === '#ef4444' ? 'url(#lineFillRed)' : 'url(#lineFillBlue)';
+};
 </script>
 
 <template>
   <div class="date-range-chart-container">
     <div class="chart-header">
       <div class="header-titles">
-        <h3>기간별 모니터링</h3>
-        <span class="tank-name" v-if="titleName">{{ titleName }}</span>
+        <h3 class="header-title">기간별 모니터링</h3>
+        <span class="tank-name" v-if="!isMultiLine && computedTanks.length === 1">{{ computedTanks[0].name }}</span>
       </div>
       <div class="header-controls">
         <div class="custom-date-picker">
@@ -133,6 +184,15 @@ const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== unde
         </button>
       </div>
     </div>
+    
+    <!-- Legend for Multi-line -->
+    <div class="legend-container" v-if="isMultiLine">
+      <div class="legend-item" v-for="s in historySeries" :key="s.tank.id">
+        <div class="legend-color" :style="{ backgroundColor: s.color }"></div>
+        <span class="legend-name">{{ s.tank.name }}</span>
+      </div>
+    </div>
+
     <div class="dummy-chart">
       <!-- Y-Axis -->
       <div class="y-axis">
@@ -160,30 +220,52 @@ const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== unde
                 <stop offset="100%" stop-color="rgba(248, 113, 113, 0.0)" />
               </linearGradient>
             </defs>
-            <path :d="svgFill" :fill="isWarm ? 'url(#lineFillRed)' : 'url(#lineFillBlue)'" class="chart-area-fill" />
-            <path :d="svgLine" fill="none" :stroke="isWarm ? '#f87171' : '#3b82f6'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-line-stroke" vector-effect="non-scaling-stroke" />
+            
+            <g v-for="series in seriesPoints" :key="series.tank.id">
+              <path 
+                v-if="!isMultiLine" 
+                :d="series.svgFill" 
+                :fill="getSingleFillGradient(series.color)" 
+                class="chart-area-fill" 
+              />
+              <path 
+                :d="series.svgLine" 
+                fill="none" 
+                :stroke="series.color" 
+                stroke-width="2.5" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                class="chart-line-stroke" 
+                vector-effect="non-scaling-stroke" 
+              />
+            </g>
           </svg>
 
           <!-- Interactive Points -->
-          <div 
-            v-for="(p, index) in svgPoints" 
-            :key="index"
-            class="chart-point"
-            :style="{ 
-              left: `${p.x}%`, 
-              top: `${p.y}%`,
-              borderColor: isWarm ? '#f87171' : '#3b82f6'
-            }"
-          >
-            <div class="point-tooltip">{{ p.temp }}°C ({{ p.time }})</div>
-          </div>
+          <template v-for="series in seriesPoints" :key="'points-' + series.tank.id">
+            <div 
+              v-for="(p, index) in series.points" 
+              :key="index"
+              class="chart-point"
+              :style="{ 
+                left: `${p.x}%`, 
+                top: `${p.y}%`,
+                borderColor: series.color
+              }"
+            >
+              <div class="point-tooltip">
+                <span class="tt-name" v-if="isMultiLine">{{ p.tankName }}: </span>
+                {{ p.temp }}°C ({{ p.time }})
+              </div>
+            </div>
+          </template>
         </div>
         
         <!-- X-Axis Labels -->
         <div class="x-axis-container">
           <div 
             class="x-label" 
-            v-for="(p, index) in svgPoints" 
+            v-for="(p, index) in (seriesPoints[0]?.points || [])" 
             :key="index" 
             v-show="diffDays === 1 ? (p.hour % 4 === 0 || p.hour === 23) : p.isNewDay" 
             :style="{ left: `${p.x}%` }"
@@ -208,13 +290,14 @@ const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== unde
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-h3 {
+.header-title {
   margin: 0;
   color: #1e293b;
   font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .header-titles {
@@ -245,6 +328,22 @@ h3 {
   border: 1px solid #e2e8f0;
 }
 
+.custom-date-picker input[type="date"] {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-date-picker .separator {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
 .expand-btn {
   display: flex;
   align-items: center;
@@ -265,20 +364,30 @@ h3 {
   border-color: #cbd5e1;
 }
 
-.custom-date-picker input[type="date"] {
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-  outline: none;
-  cursor: pointer;
+.legend-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
-.custom-date-picker .separator {
-  color: #94a3b8;
-  font-weight: 500;
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
 }
 
 .dummy-chart {
@@ -289,7 +398,7 @@ h3 {
   border-radius: 12px;
   padding: 24px 24px 24px 10px;
   position: relative;
-  min-height: 250px;
+  min-height: 300px;
 }
 
 .y-axis {
@@ -352,8 +461,8 @@ h3 {
 
 .chart-point {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: #fff;
   border: 2px solid;
   border-radius: 50%;
@@ -364,7 +473,7 @@ h3 {
 }
 
 .chart-point:hover {
-  transform: translate(-50%, -50%) scale(1.5);
+  transform: translate(-50%, -50%) scale(1.8);
   z-index: 20;
 }
 
@@ -376,12 +485,17 @@ h3 {
   background: #1e293b;
   color: white;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 11px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
+}
+
+.tt-name {
+  font-weight: 700;
+  color: #93c5fd;
 }
 
 .chart-point:hover .point-tooltip {
