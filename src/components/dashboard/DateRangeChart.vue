@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 const props = defineProps<{
   baseTemp?: number | null;
+  titleName?: string;
 }>();
 
 const todayStr = new Date().toISOString().split('T')[0];
@@ -111,7 +112,10 @@ const isWarm = computed(() => props.baseTemp !== null && props.baseTemp !== unde
 <template>
   <div class="date-range-chart-container">
     <div class="chart-header">
-      <h3>기간별 모니터링</h3>
+      <div class="header-titles">
+        <h3>기간별 모니터링</h3>
+        <span class="tank-name" v-if="titleName">{{ titleName }}</span>
+      </div>
       <div class="custom-date-picker">
         <input type="date" v-model="startDate" :max="today" @change="validateRange" />
         <span class="separator">~</span>
@@ -200,6 +204,18 @@ h3 {
   margin: 0;
   color: #1e293b;
   font-weight: 700;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.tank-name {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+  font-weight: 600;
 }
 
 .custom-date-picker {

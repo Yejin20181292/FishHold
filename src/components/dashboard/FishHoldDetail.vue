@@ -42,7 +42,7 @@ const emit = defineEmits(['back']);
       </div>
 
       <div class="card premium-card chart-card">
-        <DateRangeChart :baseTemp="tank.temp" />
+        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" />
       </div>
     </div>
   </div>
