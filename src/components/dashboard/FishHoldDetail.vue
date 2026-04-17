@@ -40,6 +40,11 @@ function getBarHeight(temp: number) {
   return ((temp - minTemp.value) / range) * 100;
 }
 
+const currentDateStr = computed(() => {
+  const d = new Date();
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+});
+
 const svgPoints = computed(() => {
   return historyData.value.map((point, index) => {
     const x = (index / 23) * 100;
@@ -88,7 +93,10 @@ const svgFill = computed(() => {
       </div>
 
       <div class="card premium-card chart-card">
-        <h3>기간별 모니터링</h3>
+        <div class="chart-header">
+          <h3>기간별 모니터링</h3>
+          <span class="current-date">{{ currentDateStr }}</span>
+        </div>
         <div class="dummy-chart">
           <!-- Y-Axis -->
           <div class="y-axis">
@@ -208,6 +216,22 @@ const svgFill = computed(() => {
   min-width: 400px;
   display: flex;
   flex-direction: column;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.current-date {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  background-color: #f8fafc;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 }
 
 h2, h3 {
