@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps<{
   tank: {
@@ -11,20 +11,71 @@ const props = defineProps<{
 
 const emit = defineEmits(['back']);
 
-// Mock historical data for a 24-hour line/bar chart
+const todayStr = new Date().toISOString().split('T')[0];
+const today = ref(todayStr);
+
+const startDate = ref(todayStr);
+const endDate = ref(todayStr);
+
+function validateRange() {
+  if (!startDate.value) startDate.value = todayStr;
+  if (!endDate.value) endDate.value = todayStr;
+  
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  
+  if (end < start) {
+      endDate.value = startDate.value;
+      return;
+  }
+  
+  const diffTime = end.getTime() - start.getTime();
+  const diffDaysVal = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDaysVal > 6) {
+      const maxEnd = new Date(start);
+      maxEnd.setDate(maxEnd.getDate() + 6);
+      const tzOffset = maxEnd.getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(maxEnd.getTime() - tzOffset)).toISOString().slice(0, 10);
+      endDate.value = localISOTime;
+      alert('기간은 최대 7일까지만 지정할 수 있습니다.');
+  }
+}
+
+const diffDays = computed(() => {
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
+});
+
+// Generate dynamic data based on selected date range (24 points per day)
 const historyData = computed(() => {
   const data = [];
   const baseTemp = props.tank.temp ?? 0;
-  for (let i = 0; i < 24; i++) {
-    const time = `${i.toString().padStart(2, '0')}:00`;
-    // Create a realistic daily wave curve (colder at night, warmer in day) + slight noise
-    const variation = Math.sin((i - 6) / 24 * Math.PI * 2) * (baseTemp < 0 ? 1.5 : 2.5);
-    const noise = (Math.random() - 0.5) * 0.8;
-    data.push({
-      time,
-      temp: parseFloat((baseTemp + variation + noise).toFixed(1)),
-      hour: i
-    });
+  
+  if (!startDate.value) return [];
+  const start = new Date(startDate.value);
+  const days = diffDays.value;
+  
+  for (let d = 0; d < days; d++) {
+    const curDate = new Date(start);
+    curDate.setDate(curDate.getDate() + d);
+    
+    for (let i = 0; i < 24; i++) {
+      const time = `${i.toString().padStart(2, '0')}:00`;
+      const variation = Math.sin((i - 6) / 24 * Math.PI * 2) * (baseTemp < 0 ? 1.5 : 2.5);
+      const dayVariation = Math.sin(d) * 0.5; // Slight drift per day
+      const noise = (Math.random() - 0.5) * 0.8;
+      data.push({
+        time,
+        temp: parseFloat((baseTemp + variation + dayVariation + noise).toFixed(1)),
+        hour: i,
+        day: curDate.getDate(),
+        month: curDate.getMonth() + 1,
+        isNewDay: i === 0
+      });
+    }
   }
   return data;
 });
@@ -40,14 +91,11 @@ function getBarHeight(temp: number) {
   return ((temp - minTemp.value) / range) * 100;
 }
 
-const currentDateStr = computed(() => {
-  const d = new Date();
-  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
-});
-
 const svgPoints = computed(() => {
+  const total = historyData.value.length;
+  if (total === 0) return [];
   return historyData.value.map((point, index) => {
-    const x = (index / 23) * 100;
+    const x = (index / Math.max(1, total - 1)) * 100;
     const y = 100 - getBarHeight(point.temp);
     return { ...point, x, y };
   });
@@ -95,7 +143,11 @@ const svgFill = computed(() => {
       <div class="card premium-card chart-card">
         <div class="chart-header">
           <h3>기간별 모니터링</h3>
-          <span class="current-date">{{ currentDateStr }}</span>
+          <div class="custom-date-picker">
+            <input type="date" v-model="startDate" :max="today" @change="validateRange" />
+            <span class="separator">~</span>
+            <input type="date" v-model="endDate" :max="today" @change="validateRange" />
+          </div>
         </div>
         <div class="dummy-chart">
           <!-- Y-Axis -->
@@ -143,10 +195,16 @@ const svgFill = computed(() => {
               </div>
             </div>
             
-            <!-- X-Axis Labels (every 4 hours) -->
+            <!-- X-Axis Labels -->
             <div class="x-axis-container">
-              <div class="x-label" v-for="p in svgPoints" :key="p.hour" v-show="p.hour % 4 === 0 || p.hour === 23" :style="{ left: `${p.x}%` }">
-                {{ p.hour }}시
+              <div 
+                class="x-label" 
+                v-for="(p, index) in svgPoints" 
+                :key="index" 
+                v-show="diffDays === 1 ? (p.hour % 4 === 0 || p.hour === 23) : p.isNewDay" 
+                :style="{ left: `${p.x}%` }"
+              >
+                {{ diffDays === 1 ? p.hour + '시' : p.month + '/' + p.day }}
               </div>
             </div>
           </div>
@@ -224,14 +282,30 @@ const svgFill = computed(() => {
   align-items: center;
 }
 
-.current-date {
-  font-size: 13px;
-  font-weight: 500;
-  color: #64748b;
+.custom-date-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background-color: #f8fafc;
   padding: 4px 12px;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
+}
+
+.custom-date-picker input[type="date"] {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-date-picker .separator {
+  color: #94a3b8;
+  font-weight: 500;
 }
 
 h2, h3 {
