@@ -345,7 +345,7 @@ h2, h3 {
 
 .bar-label {
   position: absolute;
-  bottom: 0px;
+  bottom: -20px;
   font-size: 10px;
   color: #64748b;
   white-space: nowrap;
