@@ -121,6 +121,7 @@ const svgFill = computed(() => {
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
       </button>
+      <h2 class="page-title">데이터 추이</h2>
     </div>
 
     <div class="content-wrapper">
@@ -224,7 +225,17 @@ const svgFill = computed(() => {
 }
 
 .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
 }
 
 .back-btn {
