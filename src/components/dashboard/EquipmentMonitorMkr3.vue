@@ -67,7 +67,7 @@ const checkLimit = (event: Event, tank: TankData) => {
       </div>
 
       <div class="card premium-card selector-card">
-        <h4 class="selector-title">추적하고 싶은 데이터들을 선택해 주세료 (최대 4개 선택 가능)</h4>
+        <h4 class="selector-title">조회하고 싶은 창고들을 선택해 주세요. (최대 4개 선택 가능)</h4>
         <div class="checkbox-grid">
           <label class="checkbox-label" v-for="t in allTanks" :key="t.id">
             <input 
