@@ -115,11 +115,11 @@ const historyData = ref([
 
 .min-info {
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
 }
 
 .chart-card {
-  flex: 2;
+  flex: 3;
   min-width: 400px;
   display: flex;
   flex-direction: column;
