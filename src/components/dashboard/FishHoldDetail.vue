@@ -39,6 +39,24 @@ function getBarHeight(temp: number) {
   // Convert temperature to a percentage height mapping within the grid height
   return ((temp - minTemp.value) / range) * 100;
 }
+
+const svgPoints = computed(() => {
+  return historyData.value.map((point, index) => {
+    const x = (index / 23) * 100;
+    const y = 100 - getBarHeight(point.temp);
+    return { ...point, x, y };
+  });
+});
+
+const svgLine = computed(() => {
+  if (svgPoints.value.length === 0) return '';
+  return svgPoints.value.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+});
+
+const svgFill = computed(() => {
+  if (svgPoints.value.length === 0) return '';
+  return `${svgLine.value} L 100 100 L 0 100 Z`;
+});
 </script>
 
 <template>
@@ -85,21 +103,42 @@ function getBarHeight(temp: number) {
               <div class="grid-line" v-for="n in 3" :key="n"></div>
             </div>
             
-            <!-- Bars -->
-            <div class="bars-container">
-              <div class="bar-wrapper" v-for="point in historyData" :key="point.hour">
-                <div class="bar-tooltip">{{ point.temp }}°C ({{ point.time }})</div>
-                <div 
-                  class="bar" 
-                  :style="{ 
-                    height: `${getBarHeight(point.temp)}%`, 
-                    backgroundColor: point.temp < 0 ? '#60a5fa' : '#f87171' 
-                  }"
-                ></div>
-                <!-- X-Axis Labels (every 4 hours) -->
-                <div class="bar-label" v-if="point.hour % 4 === 0 || point.hour === 23">
-                  {{ point.hour }}시
-                </div>
+            <!-- Line Chart SVG -->
+            <div class="line-container">
+              <svg class="chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineFillBlue" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(59, 130, 246, 0.4)" />
+                    <stop offset="100%" stop-color="rgba(59, 130, 246, 0.0)" />
+                  </linearGradient>
+                  <linearGradient id="lineFillRed" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(248, 113, 113, 0.4)" />
+                    <stop offset="100%" stop-color="rgba(248, 113, 113, 0.0)" />
+                  </linearGradient>
+                </defs>
+                <path :d="svgFill" :fill="tank.temp && tank.temp >= 0 ? 'url(#lineFillRed)' : 'url(#lineFillBlue)'" class="chart-area-fill" />
+                <path :d="svgLine" fill="none" :stroke="tank.temp && tank.temp >= 0 ? '#f87171' : '#3b82f6'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-line-stroke" vector-effect="non-scaling-stroke" />
+              </svg>
+
+              <!-- Interactive Points -->
+              <div 
+                v-for="(p, index) in svgPoints" 
+                :key="index"
+                class="chart-point"
+                :style="{ 
+                  left: `${p.x}%`, 
+                  top: `${p.y}%`,
+                  borderColor: tank.temp && tank.temp >= 0 ? '#f87171' : '#3b82f6'
+                }"
+              >
+                <div class="point-tooltip">{{ p.temp }}°C ({{ p.time }})</div>
+              </div>
+            </div>
+            
+            <!-- X-Axis Labels (every 4 hours) -->
+            <div class="x-axis-container">
+              <div class="x-label" v-for="p in svgPoints" :key="p.hour" v-show="p.hour % 4 === 0 || p.hour === 23" :style="{ left: `${p.x}%` }">
+                {{ p.hour }}시
               </div>
             </div>
           </div>
@@ -273,45 +312,54 @@ h2, h3 {
   width: 100%;
 }
 
-.bars-container {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-grow: 1;
-  position: relative;
-  z-index: 1;
-  padding-bottom: 24px; /* Space for X-axis labels */
-  height: 100%;
-}
-
-.bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-  width: 100%;
-  position: relative;
-}
-
-.bar {
-  width: 50%;
-  max-width: 18px;
-  border-radius: 4px 4px 0 0;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 4px;
-  opacity: 0.85;
-}
-
-.bar-wrapper:hover .bar {
-  opacity: 1;
-  filter: brightness(1.15);
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-.bar-tooltip {
+.line-container {
   position: absolute;
-  top: -30px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 28px; /* Matches grid-layout */
+  z-index: 1;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.chart-area-fill {
+  transition: d 0.5s ease;
+}
+
+.chart-line-stroke {
+  transition: d 0.5s ease;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.chart-point {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2.5px solid;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+  z-index: 2;
+}
+
+.chart-point:hover {
+  transform: translate(-50%, -50%) scale(1.6);
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  z-index: 3;
+}
+
+.point-tooltip {
+  position: absolute;
+  bottom: 18px; /* Appears above the point */
+  left: 50%;
+  transform: translateX(-50%);
   background: #1e293b;
   color: #fff;
   font-size: 11px;
@@ -326,7 +374,7 @@ h2, h3 {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.bar-tooltip::after {
+.point-tooltip::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -337,14 +385,23 @@ h2, h3 {
   border-color: #1e293b transparent transparent transparent;
 }
 
-.bar-wrapper:hover .bar-tooltip {
+.chart-point:hover .point-tooltip {
   opacity: 1;
   visibility: visible;
-  top: -42px;
+  bottom: 24px;
 }
 
-.bar-label {
+.x-axis-container {
   position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+}
+
+.x-label {
+  position: absolute;
+  transform: translateX(-50%);
   bottom: -20px;
   font-size: 10px;
   color: #64748b;
