@@ -9,21 +9,41 @@ import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
-const currentTank = ref<any>(null)
 const savedView = localStorage.getItem('fishhold_view') || 'dashboard'
-const initialView = ['dashboard', 'mkr3'].includes(savedView) ? savedView : 'dashboard'
+const savedTankStr = localStorage.getItem('fishhold_tank')
+
+let initialTank = null
+if (savedTankStr && savedTankStr !== 'undefined') {
+  try {
+    initialTank = JSON.parse(savedTankStr)
+  } catch (e) {
+    console.error('Failed to parse saved tank', e)
+    initialTank = null
+  }
+}
+
+const currentTank = ref<any>(initialTank)
+const validViews = ['dashboard', 'mkr3', 'tankDetail']
+const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
+
+// 안전 장치: 만약 tankDetail 로 들어왔는데 초기 탱크 정보가 유실되었다면 대시보드로 보냄
+if (currentView.value === 'tankDetail' && !currentTank.value) {
+  currentView.value = 'dashboard'
+}
 
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
   currentView.value = 'tankDetail'
   localStorage.setItem('fishhold_view', 'tankDetail')
+  localStorage.setItem('fishhold_tank', JSON.stringify(tank))
 }
 
 const handleBack = () => {
   currentTank.value = null
   currentView.value = 'dashboard'
   localStorage.setItem('fishhold_view', 'dashboard')
+  localStorage.removeItem('fishhold_tank')
 }
 
 const handleNavigate = (viewType: string) => {
@@ -31,6 +51,7 @@ const handleNavigate = (viewType: string) => {
   localStorage.setItem('fishhold_view', viewType)
   if (viewType === 'dashboard') {
     currentTank.value = null
+    localStorage.removeItem('fishhold_tank')
   }
 }
 </script>
