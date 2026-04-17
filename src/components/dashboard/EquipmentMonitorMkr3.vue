@@ -13,7 +13,7 @@ const mkr3BaseTemp = 5.4;
 
     <div class="content">
       <div class="card premium-card full-chart-card">
-        <DateRangeChart :baseTemp="mkr3BaseTemp" titleName="신라 나오에로썬 MKR-3" />
+        <DateRangeChart :baseTemp="mkr3BaseTemp" titleName="No.10 Fish Hold (P)" />
       </div>
     </div>
   </div>
