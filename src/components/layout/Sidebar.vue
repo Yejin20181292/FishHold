@@ -16,10 +16,10 @@ const emit = defineEmits(['navigate']);
         <h3 class="nav-section-title">MONITORING</h3>
         <ul class="nav-list">
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <div class="nav-link" :class="{ active: currentView === 'mainDashboard' }" @click="emit('navigate', 'mainDashboard')">
               <span class="icon">📊</span>
               Dashboard
-            </a>
+            </div>
           </li>
           <li class="nav-item">
             <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">
