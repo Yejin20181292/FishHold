@@ -10,20 +10,25 @@ import { useAuth } from '@/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
 const currentTank = ref<any>(null)
-const currentView = ref<string>('dashboard')
+const savedView = localStorage.getItem('fishhold_view') || 'dashboard'
+const initialView = ['dashboard', 'mkr3'].includes(savedView) ? savedView : 'dashboard'
+const currentView = ref<string>(initialView)
 
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
   currentView.value = 'tankDetail'
+  localStorage.setItem('fishhold_view', 'tankDetail')
 }
 
 const handleBack = () => {
   currentTank.value = null
   currentView.value = 'dashboard'
+  localStorage.setItem('fishhold_view', 'dashboard')
 }
 
 const handleNavigate = (viewType: string) => {
   currentView.value = viewType
+  localStorage.setItem('fishhold_view', viewType)
   if (viewType === 'dashboard') {
     currentTank.value = null
   }
