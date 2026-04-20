@@ -34,7 +34,7 @@ const exportToExcel = () => {
   const exportData = logs.value.map(log => ({
     '시간': log.time,
     '타입': log.typeText,
-    '장비 이름': log.deviceName,
+    '선박 이름': log.deviceName,
     '로그 타입': log.logType,
     '내용': log.content
   }));
@@ -112,7 +112,7 @@ const exportToExcel = () => {
             <tr>
               <th style="width: 20%">시간</th>
               <th style="width: 15%">타입</th>
-              <th style="width: 25%">장비 이름</th>
+              <th style="width: 25%">선박 이름</th>
               <th style="width: 20%">로그 타입</th>
               <th style="width: 20%">내용</th>
             </tr>
