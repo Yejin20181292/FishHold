@@ -96,12 +96,10 @@ for (let i = 0; i < 30; i++) {
 
 <style scoped>
 .dataset-container {
-  padding: 16px;
   height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  background-color: #f0f2f5;
   overflow: hidden;
   gap: 16px;
 }

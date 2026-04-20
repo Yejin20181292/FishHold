@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import DateRangeChart from './DateRangeChart.vue'
+import Dataset from './Dataset.vue'
+
+const activeTab = ref('monitoring') // 'monitoring' | 'dataset'
 
 interface TankData {
   id: string;
@@ -61,7 +64,25 @@ const checkLimit = (event: Event, tank: TankData) => {
       <h2 class="title">신라 나오에로썬 MKR-3</h2>
     </div>
 
-    <div class="content">
+    <!-- TABS -->
+    <div class="tabs-container">
+      <div 
+        class="tab-item" 
+        :class="{ active: activeTab === 'monitoring' }" 
+        @click="activeTab = 'monitoring'"
+      >
+        모니터링
+      </div>
+      <div 
+        class="tab-item" 
+        :class="{ active: activeTab === 'dataset' }" 
+        @click="activeTab = 'dataset'"
+      >
+        데이터 셋
+      </div>
+    </div>
+
+    <div class="content" v-if="activeTab === 'monitoring'">
       <div class="card premium-card full-chart-card">
         <DateRangeChart :tanks="selectedTanks" />
       </div>
@@ -82,10 +103,57 @@ const checkLimit = (event: Event, tank: TankData) => {
         </div>
       </div>
     </div>
+
+    <div class="content dataset-content" v-else-if="activeTab === 'dataset'">
+      <Dataset />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.tabs-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-item {
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab-item:hover {
+  color: #3b82f6;
+}
+
+.tab-item.active {
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #3b82f6;
+  border-radius: 3px 3px 0 0;
+}
+
+.dataset-content {
+  flex-grow: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 .mkr3-container {
   padding: 32px;
   height: 100%;

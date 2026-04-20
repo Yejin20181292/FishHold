@@ -25,7 +25,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'mkr3', 'tankDetail', 'mainDashboard', 'dataset']
+const validViews = ['dashboard', 'mkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -75,7 +75,6 @@ const handleNavigate = (viewType: string) => {
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" @navigate="handleNavigate" />
-        <Dataset v-else-if="currentView === 'dataset'" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
       </main>
     </div>

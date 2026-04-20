@@ -22,12 +22,11 @@ const emit = defineEmits(['navigate']);
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'dataset' }" @click="emit('navigate', 'mkr3')">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">
               <span class="icon">🖥️</span>
               장비 모니터링
             </div>
             <ul class="sub-nav-list">
-              <li class="sub-nav-item" :class="{ active: currentView === 'dataset' }" @click="emit('navigate', 'dataset')">데이터 셋</li>
               <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
             </ul>
           </li>
