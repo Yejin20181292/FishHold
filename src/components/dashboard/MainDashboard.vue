@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import * as XLSX from 'xlsx'
 
 const emit = defineEmits(['navigate']);
 
@@ -28,6 +29,26 @@ const logs = ref<LogEntry[]>([
   { id: '9', time: '2026-04-14 오후 03:40:22', typeIcon: '📢', typeText: '알림', serialNumber: '09018445', deviceName: '원양 4호 MKR-5', deviceType: 'MKR-5', logType: '장비 연결(00001)', content: '신규 장비 등록 됨' },
   { id: '10', time: '2026-04-15 오전 08:00:00', typeIcon: '❌', typeText: '에러', serialNumber: '00018500', deviceName: '테스트 시스템 UGW', deviceType: '게이트웨이', logType: '전원 결함(E200)', content: '비정상적 전압 강하 보고' }
 ]);
+
+const exportToExcel = () => {
+  const exportData = logs.value.map(log => ({
+    '시간': log.time,
+    '타입': log.typeText,
+    '장비 이름': log.deviceName,
+    '로그 타입': log.logType,
+    '내용': log.content
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(exportData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "장비로그");
+  
+  // 파일명에 오늘 날짜 추가
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`;
+  
+  XLSX.writeFile(workbook, `통합장비로그_${dateStr}.xlsx`);
+};
 
 </script>
 
@@ -74,7 +95,7 @@ const logs = ref<LogEntry[]>([
     <div class="card premium-card logs-card">
       <div class="logs-header">
         <h3 class="logs-title">통합 장비 로그</h3>
-        <button class="export-btn" title="엑셀로 다운로드">
+        <button class="export-btn" title="엑셀로 다운로드" @click="exportToExcel">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
