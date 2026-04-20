@@ -115,6 +115,7 @@ body {
 
 .app-header {
   height: 160px;
+  flex-shrink: 0;
   background-color: #fff;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
