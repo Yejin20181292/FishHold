@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
+import Dataset from '@/components/dashboard/Dataset.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
@@ -24,7 +25,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'mkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'mkr3', 'tankDetail', 'mainDashboard', 'dataset']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -74,6 +75,7 @@ const handleNavigate = (viewType: string) => {
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" @navigate="handleNavigate" />
+        <Dataset v-else-if="currentView === 'dataset'" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
       </main>
     </div>
