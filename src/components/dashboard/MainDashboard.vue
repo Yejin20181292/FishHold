@@ -89,13 +89,11 @@ const logs = ref<LogEntry[]>([
         <table class="logs-table">
           <thead>
             <tr>
-              <th style="width: 15%">시간</th>
-              <th style="width: 10%">타입</th>
-              <th style="width: 15%">시리얼 번호</th>
-              <th style="width: 15%">장비 이름</th>
-              <th style="width: 15%">장비 타입</th>
-              <th style="width: 15%">로그 타입</th>
-              <th style="width: 15%">내용</th>
+              <th style="width: 20%">시간</th>
+              <th style="width: 15%">타입</th>
+              <th style="width: 25%">장비 이름</th>
+              <th style="width: 20%">로그 타입</th>
+              <th style="width: 20%">내용</th>
             </tr>
             <!-- Second header row for filters (mock UI) -->
             <tr class="filter-row">
@@ -109,10 +107,6 @@ const logs = ref<LogEntry[]>([
                 <select class="filter-select"><option></option></select>
               </td>
               <td><input type="text" class="filter-input" /></td>
-              <td><input type="text" class="filter-input" /></td>
-              <td>
-                <select class="filter-select"><option></option></select>
-              </td>
               <td>
                 <select class="filter-select"><option></option></select>
               </td>
@@ -126,9 +120,7 @@ const logs = ref<LogEntry[]>([
                 <span class="type-icon">{{ log.typeIcon }}</span>
                 <span class="type-text" :class="{'text-blue': log.typeText==='알림', 'text-red': log.typeText==='에러', 'text-orange': log.typeText==='경고'}">{{ log.typeText }}</span>
               </td>
-              <td><a href="#" class="blue-link" @click.prevent>{{ log.serialNumber }}</a></td>
               <td><a href="#" class="blue-link bold-link" @click.prevent="emit('navigate', 'mkr3')">{{ log.deviceName }}</a></td>
-              <td class="col-center">{{ log.deviceType }}</td>
               <td class="col-center">{{ log.logType }}</td>
               <td class="col-content">{{ log.content }}</td>
             </tr>
