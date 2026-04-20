@@ -104,7 +104,6 @@ function handleLogout() {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  overflow: hidden;
 }
 .breadcrumb {
   display: flex;

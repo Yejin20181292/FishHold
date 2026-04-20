@@ -125,6 +125,7 @@ body {
 
 .app-content {
   flex-grow: 1;
+  min-height: 0;
   background-color: #fdfce3; /* The light yellow background of the blueprint area */
   position: relative;
   overflow: auto; /* Allow scrolling */
