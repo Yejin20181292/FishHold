@@ -78,9 +78,27 @@ watch(() => props.currentView, (newView) => {
       <div class="nav-section">
         <h3 class="nav-section-title">MANAGEMENT</h3>
         <ul class="nav-list">
-          <li class="nav-item"><a href="#" class="nav-link"><span class="icon">📁</span> 장비 관리</a></li>
-          <li class="nav-item"><a href="#" class="nav-link"><span class="icon">🔧</span> 수리 이력 관리</a></li>
-          <li class="nav-item"><a href="#" class="nav-link"><span class="icon">📝</span> 정기점검 관리</a></li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <div class="nav-link-main">
+                <span class="icon">📁</span> 장비 관리
+              </div>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <div class="nav-link-main">
+                <span class="icon">🔧</span> 수리 이력 관리
+              </div>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <div class="nav-link-main">
+                <span class="icon">📝</span> 정기점검 관리
+              </div>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
