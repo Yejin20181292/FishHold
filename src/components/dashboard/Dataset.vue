@@ -43,6 +43,8 @@ for (let i = 0; i < 30; i++) {
 
 // ===== 커스텀 스크롤바 (모든 모바일에서 항상 표시) =====
 const tableScrollRef = ref<HTMLElement | null>(null)
+const headerRef = ref<HTMLElement | null>(null)
+const headerHeight = ref(0)
 const tScrollLeft = ref(0)
 const tScrollWidth = ref(0)
 const tClientWidth = ref(0)
@@ -81,6 +83,10 @@ function updateTableScrollInfo() {
   tScrollLeft.value = el.scrollLeft
   tScrollWidth.value = el.scrollWidth
   tClientWidth.value = el.clientWidth
+  
+  if (headerRef.value) {
+    headerHeight.value = headerRef.value.offsetHeight
+  }
   
   // 세로 영역 (본문 스크롤 영역 참조)
   const bodyEl = document.querySelector('.table-body-part')
@@ -190,7 +196,7 @@ onUnmounted(() => {
         <div class="table-content-fixed-width" :style="{ width: (180 + columns.length * 100) + 'px' }">
           
           <!-- (1) 고정 헤더 영역 -->
-          <div class="table-header-part">
+          <div class="table-header-part" ref="headerRef">
             <table class="logs-table header-only">
               <thead>
                 <tr>
@@ -224,21 +230,25 @@ onUnmounted(() => {
               </tbody>
             </table>
            </div>
-
-           <!-- 커스텀 세로 스크롤바 (본문 영역에만 표시) -->
-           <div class="table-vscrollbar-track" v-if="tVIsScrollable">
-            <div
-              class="table-vscrollbar-thumb"
-              :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
-              @touchstart="onVThumbTouchStart"
-              @touchmove="onVThumbTouchMove"
-              @touchend="onVThumbTouchEnd"
-              @mousedown="onVThumbTouchStart"
-            ></div>
-           </div>
           </div>
           
         </div>
+      </div>
+
+      <!-- 커스텀 세로 스크롤바 (본문 영역 우측에 고정) -->
+      <div 
+        class="table-vscrollbar-track" 
+        v-if="tVIsScrollable"
+        :style="{ top: (48 + headerHeight) + 'px', bottom: '50px' }"
+      >
+        <div
+          class="table-vscrollbar-thumb"
+          :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
+          @touchstart="onVThumbTouchStart"
+          @touchmove="onVThumbTouchMove"
+          @touchend="onVThumbTouchEnd"
+          @mousedown="onVThumbTouchStart"
+        ></div>
       </div>
 
       <!-- 커스텀 가로 스크롤바 (하단에 항상 표시) -->
@@ -385,13 +395,13 @@ onUnmounted(() => {
 /* ===== 커스텀 세로 스크롤바 ===== */
 .table-vscrollbar-track {
   position: absolute;
-  right: 0;
+  right: 25px; /* 카드 패딩 안쪽으로 */
   top: 0;
-  bottom: 0px; /* 가로바와 겹치지 않게 */
+  bottom: 0px;
   width: 7px;
   background: #e2e8f0;
   border-radius: 7px;
-  z-index: 10;
+  z-index: 100;
   flex-shrink: 0;
 }
 
