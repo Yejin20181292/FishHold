@@ -6,8 +6,8 @@ import AuthModal from '@/components/auth/AuthModal.vue'
 const { isLoggedIn, userName, userInitial, logout } = useAuth()
 
 // --- Mobile sidebar toggle ---
-defineProps<{ sidebarOpen?: boolean }>()
-const emit2 = defineEmits(['toggle-sidebar'])
+const props = defineProps<{ sidebarOpen?: boolean }>()
+const emit = defineEmits(['toggle-sidebar'])
 
 // --- Real-time clock ---
 const currentDateTime = ref('')     
@@ -57,8 +57,8 @@ function handleLogout() {
 <template>
   <header class="header">
     <!-- 모바일: 햄버거 버튼 -->
-    <button class="hamburger-btn" @click="emit2('toggle-sidebar')" aria-label="메뉴">
-      <span class="hamburger-icon" :class="{ open: sidebarOpen }">
+    <button class="hamburger-btn" @click="emit('toggle-sidebar')" aria-label="메뉴">
+      <span class="hamburger-icon" :class="{ open: props.sidebarOpen }">
         <span></span>
         <span></span>
         <span></span>
