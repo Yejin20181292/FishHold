@@ -88,7 +88,6 @@ function updateTableScrollInfo() {
     headerHeight.value = headerRef.value.offsetHeight
   }
   
-  // 세로 영역 (본문 스크롤 영역 참조)
   const bodyEl = document.querySelector('.table-body-part')
   if (bodyEl) {
     tScrollTop.value = bodyEl.scrollTop
@@ -101,46 +100,66 @@ function onTableScroll() {
   updateTableScrollInfo()
 }
 
-// 가로 thumb 드래그
+// ===== 드래그 로직 (가로) =====
 let tIsDragging = false
 let tDragStartX = 0
 let tDragStartScrollLeft = 0
 
-function onTThumbTouchStart(e: TouchEvent) {
+function onTThumbStart(e: TouchEvent | MouseEvent) {
   tIsDragging = true
-  tDragStartX = e.touches[0].clientX
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  tDragStartX = clientX
   tDragStartScrollLeft = tableScrollRef.value?.scrollLeft ?? 0
-  e.preventDefault()
+  
+  window.addEventListener('mousemove', onTDragMove)
+  window.addEventListener('mouseup', onTDragEnd)
+  window.addEventListener('touchmove', onTDragMove, { passive: false })
+  window.addEventListener('touchend', onTDragEnd)
+  
+  if (e.cancelable) e.preventDefault()
 }
 
-function onTThumbTouchMove(e: TouchEvent) {
+function onTDragMove(e: MouseEvent | TouchEvent) {
   if (!tIsDragging || !tableScrollRef.value) return
-  const dx = e.touches[0].clientX - tDragStartX
+  const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+  const dx = clientX - tDragStartX
   const maxScroll = tScrollWidth.value - tClientWidth.value
   const thumbTrackWidth = tClientWidth.value * (1 - tThumbWidth.value / 100)
   const scrollRatio = thumbTrackWidth > 0 ? maxScroll / thumbTrackWidth : 1
   tableScrollRef.value.scrollLeft = Math.max(0, Math.min(maxScroll, tDragStartScrollLeft + dx * scrollRatio))
   updateTableScrollInfo()
-  e.preventDefault()
+  if ('touches' in e && e.cancelable) e.preventDefault()
 }
 
-function onTThumbTouchEnd() { tIsDragging = false }
+function onTDragEnd() {
+  tIsDragging = false
+  window.removeEventListener('mousemove', onTDragMove)
+  window.removeEventListener('mouseup', onTDragEnd)
+  window.removeEventListener('touchmove', onTDragMove)
+  window.removeEventListener('touchend', onTDragEnd)
+}
 
-// 세로 thumb 드래그
+// ===== 드래그 로직 (세로) =====
 let tVIsDragging = false
 let tVDragStartY = 0
 let tVDragStartScrollTop = 0
 
-function onVThumbTouchStart(e: TouchEvent | MouseEvent) {
+function onVThumbStart(e: TouchEvent | MouseEvent) {
   tVIsDragging = true
   const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
   tVDragStartY = clientY
   const bodyEl = document.querySelector('.table-body-part')
   tVDragStartScrollTop = bodyEl?.scrollTop ?? 0
+  
+  window.addEventListener('mousemove', onVDragMove)
+  window.addEventListener('mouseup', onVDragEnd)
+  window.addEventListener('touchmove', onVDragMove, { passive: false })
+  window.addEventListener('touchend', onVDragEnd)
+
   if (e.cancelable) e.preventDefault()
 }
 
-function onVThumbTouchMove(e: TouchEvent | MouseEvent) {
+function onVDragMove(e: MouseEvent | TouchEvent) {
   if (!tVIsDragging) return
   const bodyEl = document.querySelector('.table-body-part') as HTMLElement
   if (!bodyEl) return
@@ -152,12 +171,17 @@ function onVThumbTouchMove(e: TouchEvent | MouseEvent) {
   const scrollRatio = thumbTrackHeight > 0 ? maxScroll / thumbTrackHeight : 1
   bodyEl.scrollTop = Math.max(0, Math.min(maxScroll, tVDragStartScrollTop + dy * scrollRatio))
   updateTableScrollInfo()
-  if (e.cancelable) e.preventDefault()
+  if ('touches' in e && e.cancelable) e.preventDefault()
 }
 
-function onVThumbTouchEnd() { tVIsDragging = false }
+function onVDragEnd() {
+  tVIsDragging = false
+  window.removeEventListener('mousemove', onVDragMove)
+  window.removeEventListener('mouseup', onVDragEnd)
+  window.removeEventListener('touchmove', onVDragMove)
+  window.removeEventListener('touchend', onVDragEnd)
+}
 
-// 가우스 휠 동기화 (PC 대응)
 function onBodyScroll() {
   updateTableScrollInfo()
 }
@@ -169,6 +193,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateTableScrollInfo)
+  // 드래그 중 종료될 경우 리스너 제거
+  onTDragEnd()
+  onVDragEnd()
 })
 </script>
 
@@ -246,10 +273,8 @@ onUnmounted(() => {
           <div
             class="table-vscrollbar-thumb"
             :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
-            @touchstart="onVThumbTouchStart"
-            @touchmove="onVThumbTouchMove"
-            @touchend="onVThumbTouchEnd"
-            @mousedown="onVThumbTouchStart"
+            @touchstart="onVThumbStart"
+            @mousedown="onVThumbStart"
           ></div>
         </div>
       </div>
@@ -259,9 +284,8 @@ onUnmounted(() => {
         <div
           class="table-custom-scrollbar-thumb"
           :style="{ width: tThumbWidth + '%', left: tThumbLeft + '%' }"
-          @touchstart="onTThumbTouchStart"
-          @touchmove="onTThumbTouchMove"
-          @touchend="onTThumbTouchEnd"
+          @touchstart="onTThumbStart"
+          @mousedown="onTThumbStart"
         ></div>
       </div>
     </div>
