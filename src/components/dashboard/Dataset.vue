@@ -239,7 +239,8 @@ onUnmounted(() => {
           class="table-vscrollbar-track" 
           v-if="tVIsScrollable"
           :style="{ 
-            top: headerHeight + 'px'
+            marginTop: headerHeight + 'px',
+            height: `calc(100% - ${headerHeight}px)`
           }"
         >
           <div
@@ -329,8 +330,8 @@ onUnmounted(() => {
 
 /* 가로 스크롤을 담당하는 최상위 컨테이너 */
 .table-horizontal-container {
-  display: flex; /* 내부 요소가 높이를 가질 수 있도록 flex 추가 */
-  flex-direction: column;
+  display: flex; 
+  flex-direction: row; /* 가로 방향 레이아웃으로 변경하여 sticky 지원 강화 */
   flex-grow: 1;
   overflow-x: auto;
   overflow-y: hidden;
@@ -349,7 +350,8 @@ onUnmounted(() => {
 .table-content-fixed-width {
   display: flex;
   flex-direction: column;
-  height: 100%; /* 부모 높이를 꽉 채우도록 설정 */
+  height: 100%;
+  flex-shrink: 0; /* 가로로 줄어들지 않도록 */
 }
 
 /* 헤더 영역 (고정) */
@@ -399,12 +401,11 @@ onUnmounted(() => {
   position: sticky;
   right: 0;
   top: 0;
-  height: calc(100% - 100px); /* 헤더 제외 남은 높이 */
+  height: 100%; /* 부모 컨테이너 높이와 일치 */
   width: 6px;
   background: rgba(241, 245, 249, 0.8);
   border-radius: 6px;
   z-index: 100;
-  margin-left: -6px; /* 테이블 콘텐츠와 겹치게 */
   flex-shrink: 0;
 }
 
