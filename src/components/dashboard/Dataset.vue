@@ -565,28 +565,33 @@ onUnmounted(() => {
 @media (max-width: 1280px) {
   .dataset-container {
     height: auto;
+    min-height: 600px; /* 전체 컨테이너 최소 높이 보장 */
     overflow: visible;
   }
 
   .logs-card {
-    height: auto; /* 내용물에 맞춰 높이 결정 */
-    overflow: hidden; /* 내부 스크롤바 정렬을 위해 다시 hidden으로 */
+    height: auto;
+    min-height: 450px; /* 카드 최소 높이 강제 */
+    overflow: hidden;
     position: relative;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     background: #fff;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0; /* 영역이 줄어드는 것 방지 */
   }
 
   .table-body-part {
-    height: 400px; /* 태블릿/모바일용 고정 높이 상향 조정 */
+    height: 450px !important; /* 태블릿 대화면에 맞춰 높이 상향 및 강제 적용 */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    flex-shrink: 0;
   }
   
   .table-horizontal-container {
     width: 100%;
     overflow-x: auto;
+    flex-shrink: 0;
   }
 }
 
