@@ -213,7 +213,8 @@ onUnmounted(() => {
           </div>
 
           <!-- (2) 세로 스크롤 본문 영역 -->
-          <div class="table-body-part" @scroll="onBodyScroll">
+          <div class="table-body-wrapper">
+           <div class="table-body-part" @scroll="onBodyScroll">
             <table class="logs-table body-only">
               <tbody>
                 <tr v-for="log in logs" :key="log.id" class="log-row">
@@ -222,20 +223,21 @@ onUnmounted(() => {
                 </tr>
               </tbody>
             </table>
+           </div>
+
+           <!-- 커스텀 세로 스크롤바 (본문 영역에만 표시) -->
+           <div class="table-vscrollbar-track" v-if="tVIsScrollable">
+            <div
+              class="table-vscrollbar-thumb"
+              :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
+              @touchstart="onVThumbTouchStart"
+              @touchmove="onVThumbTouchMove"
+              @touchend="onVThumbTouchEnd"
+              @mousedown="onVThumbTouchStart"
+            ></div>
+           </div>
           </div>
           
-        </div>
-
-        <!-- 커스텀 세로 스크롤바 -->
-        <div class="table-vscrollbar-track" v-if="tVIsScrollable">
-          <div
-            class="table-vscrollbar-thumb"
-            :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
-            @touchstart="onVThumbTouchStart"
-            @touchmove="onVThumbTouchMove"
-            @touchend="onVThumbTouchEnd"
-            @mousedown="onVThumbTouchStart"
-          ></div>
         </div>
       </div>
 
@@ -345,12 +347,21 @@ onUnmounted(() => {
   z-index: 5;
 }
 
+/* 본문 영역 래퍼 */
+.table-body-wrapper {
+  position: relative;
+  flex-grow: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 /* 본문 영역 (세로 스크롤) */
 .table-body-part {
-  flex-grow: 1;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: 0;
   /* 기본 스크롤바 숨김 */
   scrollbar-width: none;
   -ms-overflow-style: none;
