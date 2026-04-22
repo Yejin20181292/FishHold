@@ -199,16 +199,7 @@ onUnmounted(() => {
           </table>
         </div>
 
-        <!-- 커스텀 세로 스크롤바 (오른쪽 고정) -->
-        <div class="table-vscrollbar-track" v-if="tVIsScrollable">
-          <div
-            class="table-vscrollbar-thumb"
-            :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
-            @touchstart="onVThumbTouchStart"
-            @touchmove="onVThumbTouchMove"
-            @touchend="onVThumbTouchEnd"
-          ></div>
-        </div>
+        <!-- 세로 커스텀 스크롤바 제거 (터치 스크롤만 유지) -->
       </div>
 
       <!-- 커스텀 가로 스크롤바 (하단 고정) -->
