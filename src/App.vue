@@ -160,7 +160,7 @@ body {
 
 /* 데스크탑 사이드바 */
 .app-sidebar {
-  width: 130px;
+  width: 250px;
   flex-shrink: 0;
   background-color: #1a1e2b;
   color: #fff;

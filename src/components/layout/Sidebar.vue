@@ -61,15 +61,15 @@ const emit = defineEmits(['navigate']);
   height: 100%;
 }
 .sidebar-header {
-  height: 52px;
+  height: 60px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 24px;
   background-color: #121520;
   border-bottom: 1px solid #1a1e2b;
 }
 .sidebar-header .logo {
-  height: 26px;
+  height: 32px;
   max-width: 100%;
   object-fit: contain;
 }
@@ -81,11 +81,11 @@ const emit = defineEmits(['navigate']);
   margin-bottom: 24px;
 }
 .nav-section-title {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   color: #64748b;
-  margin: 0 12px 6px;
+  margin: 0 24px 8px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 .nav-list, .sub-nav-list {
   list-style: none;
@@ -98,14 +98,12 @@ const emit = defineEmits(['navigate']);
 .nav-link {
   display: flex;
   align-items: center;
-  padding: 7px 12px;
+  padding: 8px 24px;
   color: #94a3b8;
   text-decoration: none;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
 }
 .nav-link:hover {
   background-color: #272d3f;
@@ -114,11 +112,11 @@ const emit = defineEmits(['navigate']);
 .nav-link.active {
   background-color: #2d3748;
   color: #fff;
-  border-left: 3px solid #3b82f6; /* Accent color */
+  border-left: 3px solid #3b82f6;
 }
 .icon {
-  margin-right: 6px;
-  font-size: 0.85rem;
+  margin-right: 12px;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 .sub-nav-list {
@@ -126,13 +124,10 @@ const emit = defineEmits(['navigate']);
   padding: 8px 0;
 }
 .sub-nav-item {
-  padding: 5px 8px 5px 28px;
-  font-size: 0.68rem;
+  padding: 6px 24px 6px 48px;
+  font-size: 0.8rem;
   color: #94a3b8;
   cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .sub-nav-item:hover {
   color: #fff;
@@ -141,5 +136,38 @@ const emit = defineEmits(['navigate']);
   color: #fff;
   font-weight: 500;
   background-color: #1a1f33;
+}
+
+/* ===== 모바일에서만 compact 스타일 (140px 너비 대응) ===== */
+@media (max-width: 768px) {
+  .sidebar-header {
+    height: 52px;
+    padding: 0 12px;
+  }
+  .sidebar-header .logo {
+    height: 26px;
+  }
+  .nav-section-title {
+    font-size: 0.62rem;
+    margin: 0 12px 6px;
+    letter-spacing: 0.5px;
+  }
+  .nav-link {
+    padding: 7px 12px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .icon {
+    margin-right: 6px;
+    font-size: 0.85rem;
+  }
+  .sub-nav-item {
+    padding: 5px 8px 5px 28px;
+    font-size: 0.68rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
