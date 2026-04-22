@@ -59,11 +59,36 @@ const tThumbLeft = computed(() => {
   return (tScrollLeft.value / maxScroll) * (100 - tThumbWidth.value)
 })
 
+// 세로 스크롤 상태
+const tScrollTop = ref(0)
+const tScrollHeight = ref(0)
+const tClientHeight = ref(0)
+
+const tVIsScrollable = computed(() => tScrollHeight.value > tClientHeight.value + 2)
+const tVThumbHeight = computed(() => {
+  if (tScrollHeight.value <= 0) return 100
+  return Math.max(12, (tClientHeight.value / tScrollHeight.value) * 100)
+})
+const tVThumbTop = computed(() => {
+  const maxScroll = tScrollHeight.value - tClientHeight.value
+  if (maxScroll <= 0) return 0
+  return (tScrollTop.value / maxScroll) * (100 - tVThumbHeight.value)
+})
+
 function updateTableScrollInfo() {
   if (!tableScrollRef.value) return
-  tScrollLeft.value = tableScrollRef.value.scrollLeft
-  tScrollWidth.value = tableScrollRef.value.scrollWidth
-  tClientWidth.value = tableScrollRef.value.clientWidth
+  const el = tableScrollRef.value
+  tScrollLeft.value = el.scrollLeft
+  tScrollWidth.value = el.scrollWidth
+  tClientWidth.value = el.clientWidth
+  
+  // 세로 영역 (본문 스크롤 영역 참조)
+  const bodyEl = document.querySelector('.table-body-part')
+  if (bodyEl) {
+    tScrollTop.value = bodyEl.scrollTop
+    tScrollHeight.value = bodyEl.scrollHeight
+    tClientHeight.value = bodyEl.clientHeight
+  }
 }
 
 function onTableScroll() {
@@ -94,6 +119,42 @@ function onTThumbTouchMove(e: TouchEvent) {
 }
 
 function onTThumbTouchEnd() { tIsDragging = false }
+
+// 세로 thumb 드래그
+let tVIsDragging = false
+let tVDragStartY = 0
+let tVDragStartScrollTop = 0
+
+function onVThumbTouchStart(e: TouchEvent | MouseEvent) {
+  tVIsDragging = true
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+  tVDragStartY = clientY
+  const bodyEl = document.querySelector('.table-body-part')
+  tVDragStartScrollTop = bodyEl?.scrollTop ?? 0
+  if (e.cancelable) e.preventDefault()
+}
+
+function onVThumbTouchMove(e: TouchEvent | MouseEvent) {
+  if (!tVIsDragging) return
+  const bodyEl = document.querySelector('.table-body-part') as HTMLElement
+  if (!bodyEl) return
+
+  const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+  const dy = clientY - tVDragStartY
+  const maxScroll = tScrollHeight.value - tClientHeight.value
+  const thumbTrackHeight = tClientHeight.value * (1 - tVThumbHeight.value / 100)
+  const scrollRatio = thumbTrackHeight > 0 ? maxScroll / thumbTrackHeight : 1
+  bodyEl.scrollTop = Math.max(0, Math.min(maxScroll, tVDragStartScrollTop + dy * scrollRatio))
+  updateTableScrollInfo()
+  if (e.cancelable) e.preventDefault()
+}
+
+function onVThumbTouchEnd() { tVIsDragging = false }
+
+// 가우스 휠 동기화 (PC 대응)
+function onBodyScroll() {
+  updateTableScrollInfo()
+}
 
 onMounted(() => {
   nextTick(() => updateTableScrollInfo())
@@ -152,7 +213,7 @@ onUnmounted(() => {
           </div>
 
           <!-- (2) 세로 스크롤 본문 영역 -->
-          <div class="table-body-part">
+          <div class="table-body-part" @scroll="onBodyScroll">
             <table class="logs-table body-only">
               <tbody>
                 <tr v-for="log in logs" :key="log.id" class="log-row">
@@ -163,6 +224,18 @@ onUnmounted(() => {
             </table>
           </div>
           
+        </div>
+
+        <!-- 커스텀 세로 스크롤바 -->
+        <div class="table-vscrollbar-track" v-if="tVIsScrollable">
+          <div
+            class="table-vscrollbar-thumb"
+            :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
+            @touchstart="onVThumbTouchStart"
+            @touchmove="onVThumbTouchMove"
+            @touchend="onVThumbTouchEnd"
+            @mousedown="onVThumbTouchStart"
+          ></div>
         </div>
       </div>
 
@@ -249,6 +322,13 @@ onUnmounted(() => {
   overflow-y: hidden;
   background: #fff;
   min-height: 0;
+  position: relative;
+  /* 기본 스크롤바 숨김 (커스텀 사용) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.table-horizontal-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* 고정 너비를 가진 내용물 (헤더+본문 포함) */
@@ -271,6 +351,12 @@ onUnmounted(() => {
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
+  /* 기본 스크롤바 숨김 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.table-body-part::-webkit-scrollbar {
+  display: none;
 }
 
 .logs-table {
@@ -285,6 +371,35 @@ onUnmounted(() => {
 .w-time { width: 180px; min-width: 180px; }
 .w-col { width: 100px; min-width: 100px; }
 
+/* ===== 커스텀 세로 스크롤바 ===== */
+.table-vscrollbar-track {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0px; /* 가로바와 겹치지 않게 */
+  width: 7px;
+  background: #e2e8f0;
+  border-radius: 7px;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.table-vscrollbar-thumb {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  min-height: 20px;
+  background: linear-gradient(180deg, #3b82f6, #60a5fa);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: top 0.05s linear;
+  box-shadow: 1px 0 4px rgba(59, 130, 246, 0.4);
+}
+
+.table-vscrollbar-thumb:active {
+  background: linear-gradient(180deg, #2563eb, #3b82f6);
+}
+
 /* ===== 모바일: 레이아웃 조정 ===== */
 @media (max-width: 768px) {
   .dataset-container {
@@ -298,20 +413,6 @@ onUnmounted(() => {
 
   .table-body-part {
     max-height: 60vh; /* 본문 영역만 60% 높이 제한 및 스크롤 */
-    /* 모바일에서만 기본 스크롤바 숨김 (커스텀 사용) */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .table-body-part::-webkit-scrollbar {
-    display: none;
-  }
-
-  .table-horizontal-container {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .table-horizontal-container::-webkit-scrollbar {
-    display: none;
   }
 }
 
@@ -395,23 +496,16 @@ onUnmounted(() => {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* ===== 커스텀 스크롤바 (모바일에서만 표시) ===== */
+/* ===== 커스텀 스크롤바 (항상 표시) ===== */
 .table-custom-scrollbar-track {
-  display: none;
   position: relative;
-  width: calc(100% - 0px);
+  width: calc(100% - 7px); /* 세로바 영역 제외 */
   height: 7px;
   background: #e2e8f0;
   border-radius: 7px;
   margin: 6px 0 4px;
   overflow: hidden;
   flex-shrink: 0;
-}
-
-@media (max-width: 768px) {
-  .table-custom-scrollbar-track {
-    display: block;
-  }
 }
 
 .table-custom-scrollbar-thumb {
