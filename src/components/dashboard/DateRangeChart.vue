@@ -604,8 +604,8 @@ onUnmounted(() => {
   white-space: nowrap;
 }
 
-/* ===== 모바일 반응형 (768px 이하) ===== */
-@media (max-width: 768px) {
+/* ===== 태블릿/모바일 반응형 (1024px 이하) ===== */
+@media (max-width: 1024px) {
   .chart-header {
     flex-direction: column;
     align-items: flex-start;
@@ -660,9 +660,9 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .custom-scrollbar-track {
-    display: block; /* 모바일에서만 표시 */
+    display: block; /* 태블릿/모바일에서 표시 */
   }
 }
 
