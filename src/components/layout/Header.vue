@@ -311,7 +311,7 @@ function handleLogout() {
     display: none; /* 모바일에서 긴 텍스트 숨김 */
   }
   .date-time {
-    font-size: 0.72rem;
+    display: none; /* 모바일에서 날짜/시간 숨김 */
   }
   .btn-login, .btn-register {
     padding: 6px 10px;
