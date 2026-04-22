@@ -369,6 +369,25 @@ onUnmounted(() => {
   padding: 12px 20px;
   border-radius: 8px 8px 0 0;
   border: 1px solid #bfdbfe;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+  
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .custom-date-picker {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 .page-title {
