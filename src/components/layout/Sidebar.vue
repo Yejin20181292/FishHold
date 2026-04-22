@@ -9,8 +9,8 @@ const emit = defineEmits(['navigate']);
 
 // 드롭다운 상태 관리
 const expandedMenus = reactive({
-  monitoring: true,
-  status: true
+  monitoring: false,
+  status: false
 });
 
 const toggleMenu = (menu: 'monitoring' | 'status') => {
@@ -38,8 +38,10 @@ watch(() => props.currentView, (newView) => {
         <ul class="nav-list">
           <li class="nav-item">
             <div class="nav-link" :class="{ active: currentView === 'mainDashboard' }" @click="emit('navigate', 'mainDashboard')">
-              <span class="icon">📊</span>
-              Dashboard
+              <div class="nav-link-main">
+                <span class="icon">📊</span>
+                Dashboard
+              </div>
             </div>
           </li>
           <li class="nav-item">
