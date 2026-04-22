@@ -290,12 +290,8 @@ onUnmounted(() => {
   flex-grow: 1;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   background: #fff;
-}
-.table-horizontal-container::-webkit-scrollbar {
-  display: none;
+  min-height: 0;
 }
 
 /* 고정 너비를 가진 내용물 (헤더+본문 포함) */
@@ -317,11 +313,7 @@ onUnmounted(() => {
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  /* 모바일에서 기본 스크롤바 숨김 */
-  scrollbar-width: none;
-}
-.table-body-part::-webkit-scrollbar {
-  display: none;
+  min-height: 0;
 }
 
 .logs-table {
@@ -349,6 +341,20 @@ onUnmounted(() => {
 
   .table-body-part {
     max-height: 60vh; /* 본문 영역만 60% 높이 제한 및 스크롤 */
+    /* 모바일에서만 기본 스크롤바 숨김 (커스텀 사용) */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .table-body-part::-webkit-scrollbar {
+    display: none;
+  }
+
+  .table-horizontal-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .table-horizontal-container::-webkit-scrollbar {
+    display: none;
   }
 }
 
