@@ -182,21 +182,22 @@ watch(() => props.currentView, (newView) => {
 .dropdown-wrapper {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease;
+  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease, margin 0.3s ease;
   overflow: hidden;
   opacity: 0;
 }
 .dropdown-wrapper.expanded {
   grid-template-rows: 1fr;
   opacity: 1;
+  margin-bottom: 4px; /* 펼쳐졌을 때만 하단 여백 살짝 추가 */
 }
 .sub-nav-list {
   min-height: 0;
-  background-color: #121520;
+  background-color: #0f121a; /* 배경색을 사이드바보다 살짝 어둡게 시각적 분리 */
   padding: 0;
 }
 .dropdown-wrapper.expanded .sub-nav-list {
-  padding: 8px 0;
+  padding: 4px 0;
 }
 .icon {
   margin-right: 12px;
