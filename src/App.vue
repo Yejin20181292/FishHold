@@ -142,7 +142,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 260px;
+  width: 140px;
   height: 100vh;
   z-index: 9999;
   background-color: #1a1e2b;
@@ -160,7 +160,7 @@ body {
 
 /* 데스크탑 사이드바 */
 .app-sidebar {
-  width: 250px;
+  width: 130px;
   flex-shrink: 0;
   background-color: #1a1e2b;
   color: #fff;
