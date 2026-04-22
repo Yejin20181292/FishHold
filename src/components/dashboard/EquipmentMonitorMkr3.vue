@@ -6,6 +6,11 @@ import Dataset from './Dataset.vue'
 // LocalStorage에서 이전 탭 상태 불러오기 (없으면 'monitoring' 기본값)
 const activeTab = ref(localStorage.getItem('mkr3_active_tab') || 'monitoring')
 
+// 외부에서 특정 탭으로 바로 진입하고 싶을 때를 위한 함수 (추후 확장성 위해)
+const setTab = (tabName: string) => {
+  activeTab.value = tabName
+}
+
 // 탭 변경 시마다 LocalStorage에 저장
 watch(activeTab, (newTab) => {
   localStorage.setItem('mkr3_active_tab', newTab)

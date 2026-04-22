@@ -54,10 +54,17 @@ const handleBack = () => {
 const handleNavigate = (viewType: string) => {
   currentView.value = viewType
   sessionStorage.setItem('fishhold_view', viewType)
+  
   if (viewType === 'dashboard') {
     currentTank.value = null
     sessionStorage.removeItem('fishhold_tank')
   }
+
+  // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때, 항상 '모니터링' 탭이 우선 보이도록 처리
+  if (viewType === 'mkr3') {
+    localStorage.setItem('mkr3_active_tab', 'monitoring')
+  }
+
   closeSidebar() // 모바일: 메뉴 선택 시 자동으로 사이드바 닫기
 }
 </script>
