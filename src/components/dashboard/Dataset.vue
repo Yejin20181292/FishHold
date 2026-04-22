@@ -656,16 +656,17 @@ onUnmounted(() => {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* ===== 커스텀 스크롤바 (항상 표시) ===== */
+/* ===== 커스텀 가로 스크롤바 (항상 표시) ===== */
 .table-custom-scrollbar-track {
   position: relative;
-  width: calc(100% - 7px); /* 세로바 영역 제외 */
+  width: calc(100% - 12px); 
   height: 7px;
-  background: #e2e8f0;
+  background: rgba(241, 245, 249, 0.8);
   border-radius: 7px;
-  margin: 6px 0 4px;
+  margin: 10px auto 6px;
   overflow: hidden;
   flex-shrink: 0;
+  border: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .table-custom-scrollbar-thumb {
