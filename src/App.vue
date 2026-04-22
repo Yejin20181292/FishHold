@@ -51,6 +51,15 @@ const handleBack = () => {
   sessionStorage.removeItem('fishhold_tank')
 }
 
+// FishHoldMonitor ID (10p, 5s 등)를 MKR-3에서 사용하는 이름으로 변환
+const mapTankIdToMkr3Name = (id: string) => {
+  if (id === '1') return 'C No1 FH F';
+  const num = id.match(/\d+/)?.[0];
+  if (id.endsWith('p')) return `PS No${num} FH F`;
+  if (id.endsWith('s')) return `SS No${num} FH F`;
+  return null;
+}
+
 const handleNavigate = (viewType: string) => {
   currentView.value = viewType
   sessionStorage.setItem('fishhold_view', viewType)
@@ -60,9 +69,17 @@ const handleNavigate = (viewType: string) => {
     sessionStorage.removeItem('fishhold_tank')
   }
 
-  // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때, 항상 '모니터링' 탭이 우선 보이도록 처리
+  // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
   if (viewType === 'mkr3') {
     localStorage.setItem('mkr3_active_tab', 'monitoring')
+    
+    // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
+    if (currentTank.value) {
+      const targetName = mapTankIdToMkr3Name(currentTank.value.id)
+      if (targetName) {
+        localStorage.setItem('mkr3_initial_selection', targetName)
+      }
+    }
   }
 
   closeSidebar() // 모바일: 메뉴 선택 시 자동으로 사이드바 닫기

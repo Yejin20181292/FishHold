@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import DateRangeChart from './DateRangeChart.vue'
 import Dataset from './Dataset.vue'
 
@@ -15,6 +15,19 @@ const setTab = (tabName: string) => {
 watch(activeTab, (newTab) => {
   localStorage.setItem('mkr3_active_tab', newTab)
 })
+
+onMounted(() => {
+  // 장비 현황판 상세 페이지 등 외부에서 특정 창고를 선택해 들어온 경우 처리
+  const initialName = localStorage.getItem('mkr3_initial_selection');
+  if (initialName) {
+    const found = allTanks.value.find(t => t.name === initialName);
+    if (found) {
+      selectedTanks.value = [found];
+    }
+    // 사용 후 제거
+    localStorage.removeItem('mkr3_initial_selection');
+  }
+});
 
 interface TankData {
   id: string;
