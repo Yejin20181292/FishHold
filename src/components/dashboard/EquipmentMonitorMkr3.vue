@@ -48,18 +48,17 @@ const allTanks = ref<TankData[]>([
 // Initialize with one selected tank
 const selectedTanks = ref<TankData[]>([allTanks.value[18]]); // Defaulting to PS No10 FH F
 
-const checkLimit = (event: Event, tank: TankData) => {
+// Dataset 전용 선택 상태 (기본값 전체 선택)
+const datasetSelectedTanks = ref<TankData[]>([...allTanks.value]);
+
+const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   const target = event.target as HTMLInputElement;
   if (target.checked) {
-    if (selectedTanks.value.length > 4) {
+    if (!isDataset && selectedTanks.value.length > 4) {
       alert('최대 4개까지만 선택 가능합니다.');
-      // Remove the newly added item from the ref array
       selectedTanks.value = selectedTanks.value.filter(t => t.id !== tank.id);
       target.checked = false;
     }
-  } else {
-    // If unchecked and length is 0, we could theoretically prevent it or handle it.
-    // For now we allow 0 items (shows empty chart)
   }
 };
 </script>
@@ -111,7 +110,22 @@ const checkLimit = (event: Event, tank: TankData) => {
     </div>
 
     <div class="content dataset-content" v-else-if="activeTab === 'dataset'">
-      <Dataset />
+      <div class="card premium-card selector-card" style="margin-bottom: 24px;">
+        <h4 class="selector-title">데이터 표에 노출하고 싶은 창고를 선택해 주세요. (가로 스크롤 최소화 가능)</h4>
+        <div class="checkbox-grid">
+          <label class="checkbox-label" v-for="t in allTanks" :key="t.id">
+            <input 
+              type="checkbox" 
+              :value="t" 
+              v-model="datasetSelectedTanks" 
+              @change="checkLimit($event, t, true)"
+              class="custom-checkbox"
+            />
+            <span class="checkbox-text">{{ t.name }}</span>
+          </label>
+        </div>
+      </div>
+      <Dataset :selectedTanks="datasetSelectedTanks" />
     </div>
   </div>
 </template>

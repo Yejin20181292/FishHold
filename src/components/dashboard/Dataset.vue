@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+
+const props = defineProps<{
+  selectedTanks: Array<{ id: string; name: string }>;
+}>();
 
 const emit = defineEmits(['navigate']);
 
-// Generate columns
-const columns = [
-  'C No1 FH F', 'SS No2 FH F', 'PS No2 FH F', 'SS No3 FH F', 'PS No3 FH F', 
-  'SS No4 FH F', 'PS No4 FH F', 'SS No5 FH F', 'PS No5 FH F', 'SS No6 FH F', 
-  'PS No6 FH F', 'SS No7 FH F', 'PS No7 FH F', 'SS No8 FH F', 'PS No8 FH F', 'SS No9 FH F'
-];
+// 창고별 기본 온도 매핑 (24개 전체)
+const tankBaseTemps: Record<string, number> = {
+  'C No1 FH F': -10.0, 'SS No2 FH F': -1.7, 'PS No2 FH F': -1.9, 'SS No3 FH F': -1.9,
+  'PS No3 FH F': -1.8, 'SS No4 FH F': 17.8, 'PS No4 FH F': -1.7, 'SS No5 FH F': -12.5,
+  'PS No5 FH F': -13.3, 'SS No6 FH F': -13.2, 'PS No6 FH F': -7.2, 'SS No7 FH F': -13.0,
+  'PS No7 FH F': -3.2, 'SS No8 FH F': -2.6, 'PS No8 FH F': -2.2, 'SS No9 FH F': -1.9,
+  'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7,
+  'S20': -15.0, 'S21': -15.2, 'S22': -15.1, 'S23': -14.9, 'S24': -14.8
+};
+
+// 선택된 창고에 따른 컬럼 정의
+const columns = computed(() => props.selectedTanks.map(t => t.name));
 
 interface LogEntry {
   id: string;
   time: string;
-  values: string[];
+  values: Record<string, string>; // 이름 기반 매핑으로 변경
 }
 
 // Generate realistic dummy data for temperatures
@@ -21,18 +31,20 @@ const generateRandomTemp = (base: number, variance: number) => {
   return (base + (Math.random() * variance * 2 - variance)).toFixed(1) + ' ℃';
 };
 
-const baseTemps = [-10.0, -1.7, -1.9, -1.9, -1.8, 17.8, -1.7, -12.5, -13.3, -13.2, -7.2, -13.0, -3.2, -2.6, -2.2, -1.9];
-
 const logs = ref<LogEntry[]>([]);
 
 // Base time: 2026-04-20 10:47:06
 let baseTime = new Date(2026, 3, 20, 10, 47, 6);
 
 for (let i = 0; i < 30; i++) {
-  const rowTime = new Date(baseTime.getTime() - i * 60000); // subtract 1 minute per row
+  const rowTime = new Date(baseTime.getTime() - i * 60000);
   const timeStr = `${rowTime.getFullYear()}-${String(rowTime.getMonth() + 1).padStart(2, '0')}-${String(rowTime.getDate()).padStart(2, '0')} ${rowTime.getHours() < 12 ? '오전' : '오후'} ${String(rowTime.getHours() % 12 || 12).padStart(2, '0')}:${String(rowTime.getMinutes()).padStart(2, '0')}:${String(rowTime.getSeconds()).padStart(2, '0')}`;
   
-  const values = baseTemps.map(base => generateRandomTemp(base, 0.2));
+  const values: Record<string, string> = {};
+  // 모든 가능한 창고에 대한 더미 데이터 미리 생성 (성능 위해)
+  Object.keys(tankBaseTemps).forEach(name => {
+    values[name] = generateRandomTemp(tankBaseTemps[name], 0.2);
+  });
   
   logs.value.push({
     id: `log_${i}`,
@@ -99,6 +111,11 @@ function updateTableScrollInfo() {
 function onTableScroll() {
   updateTableScrollInfo()
 }
+
+// 컬럼 변화 감지하여 스크롤 정보 업데이트
+watch(() => props.selectedTanks, () => {
+  nextTick(() => updateTableScrollInfo());
+}, { deep: true });
 
 // ===== 드래그 로직 (가로) =====
 let tIsDragging = false
@@ -252,7 +269,9 @@ onUnmounted(() => {
               <tbody>
                 <tr v-for="log in logs" :key="log.id" class="log-row">
                   <td class="col-time w-time">{{ log.time }}</td>
-                  <td v-for="(val, index) in log.values" :key="index" class="col-center w-col">{{ val }}</td>
+                  <td v-for="col in columns" :key="col" class="col-center w-col">
+                    {{ log.values[col] || '-' }}
+                  </td>
                 </tr>
               </tbody>
             </table>
