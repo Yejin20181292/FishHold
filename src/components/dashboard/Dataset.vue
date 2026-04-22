@@ -353,7 +353,8 @@ onUnmounted(() => {
 
 <style scoped>
 .dataset-container {
-  height: 100%;
+  height: auto;
+  min-height: 500px; /* 고해상도 태블릿에서 표가 사라지는 것 방지 */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -372,7 +373,7 @@ onUnmounted(() => {
   gap: 12px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
@@ -561,7 +562,7 @@ onUnmounted(() => {
 }
 
 /* ===== 태블릿/모바일: 레이아웃 조정 ===== */
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .dataset-container {
     height: auto;
     overflow: visible;
@@ -578,7 +579,7 @@ onUnmounted(() => {
   }
 
   .table-body-part {
-    height: 380px; /* 태블릿/모바일용 고정 높이 조정 */
+    height: 400px; /* 태블릿/모바일용 고정 높이 상향 조정 */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }

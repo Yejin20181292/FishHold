@@ -191,7 +191,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   flex-direction: column;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .dataset-content {
     overflow: visible;
     display: block; /* 태블릿/모바일에서는 자연스러운 흐름을 위해 block으로 변경 */
@@ -207,7 +207,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   overflow-y: auto;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .mkr3-container {
     padding: 16px;
   }
@@ -217,7 +217,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   margin-bottom: 24px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .header {
     margin-bottom: 12px;
   }
@@ -230,7 +230,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   color: #1e293b;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .title {
     font-size: 22px;
   }
@@ -242,7 +242,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   gap: 24px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .content {
     gap: 16px;
   }
@@ -259,7 +259,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   padding: 32px 40px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .selector-card {
     padding: 20px;
   }
@@ -279,7 +279,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   row-gap: 20px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .checkbox-grid {
     grid-template-columns: 1fr 1fr;
     column-gap: 12px;
