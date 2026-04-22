@@ -17,8 +17,12 @@ const tankBaseTemps: Record<string, number> = {
   'S20': -15.0, 'S21': -15.2, 'S22': -15.1, 'S23': -14.9, 'S24': -14.8
 };
 
-// 선택된 창고에 따른 컬럼 정의
-const columns = computed(() => props.selectedTanks.map(t => t.name));
+// 선택된 창고에 따른 컬럼 정의 (항상 ID 순서대로 정렬하여 유지)
+const columns = computed(() => {
+  return [...props.selectedTanks]
+    .sort((a, b) => parseInt(a.id) - parseInt(b.id))
+    .map(t => t.name);
+});
 
 interface LogEntry {
   id: string;
