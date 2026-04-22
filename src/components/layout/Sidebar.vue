@@ -52,11 +52,11 @@ watch(() => props.currentView, (newView) => {
               </div>
               <span class="chevron" :class="{ expanded: expandedMenus.monitoring }">▼</span>
             </div>
-            <transition name="dropdown">
-              <ul v-if="expandedMenus.monitoring" class="sub-nav-list">
+            <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.monitoring }">
+              <ul class="sub-nav-list">
                 <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
               </ul>
-            </transition>
+            </div>
           </li>
           <li class="nav-item">
             <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="toggleMenu('status')">
@@ -66,11 +66,11 @@ watch(() => props.currentView, (newView) => {
               </div>
               <span class="chevron" :class="{ expanded: expandedMenus.status }">▼</span>
             </div>
-            <transition name="dropdown">
-              <ul v-if="expandedMenus.status" class="sub-nav-list">
+            <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
+              <ul class="sub-nav-list">
                 <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
               </ul>
-            </transition>
+            </div>
           </li>
         </ul>
       </div>
@@ -178,18 +178,25 @@ watch(() => props.currentView, (newView) => {
 .chevron.expanded {
   transform: rotate(180deg);
 }
-/* 드롭다운 트랜지션 개선 */
-.dropdown-enter-active, .dropdown-leave-active {
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.3s ease, 
-              transform 0.3s ease;
-  max-height: 80px; /* 메뉴 항목 수에 맞춰 최적화된 값 */
+/* 드롭다운 애니메이션 (Grid 방식 - 가장 부드러움) */
+.dropdown-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease;
   overflow: hidden;
-}
-.dropdown-enter-from, .dropdown-leave-to {
-  max-height: 0;
   opacity: 0;
-  transform: translateY(-5px);
+}
+.dropdown-wrapper.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.sub-nav-list {
+  min-height: 0;
+  background-color: #121520;
+  padding: 0;
+}
+.dropdown-wrapper.expanded .sub-nav-list {
+  padding: 8px 0;
 }
 .icon {
   margin-right: 12px;
