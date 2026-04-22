@@ -110,7 +110,9 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
     </div>
 
     <div class="content dataset-content" v-else-if="activeTab === 'dataset'">
-      <div class="card premium-card selector-card" style="margin-bottom: 24px;">
+      <Dataset :selectedTanks="datasetSelectedTanks" />
+
+      <div class="card premium-card selector-card" style="margin-top: 24px;">
         <h4 class="selector-title">데이터 표에 노출하고 싶은 창고를 선택해 주세요. (가로 스크롤 최소화 가능)</h4>
         <div class="checkbox-grid">
           <label class="checkbox-label" v-for="t in allTanks" :key="t.id">
@@ -125,7 +127,6 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
           </label>
         </div>
       </div>
-      <Dataset :selectedTanks="datasetSelectedTanks" />
     </div>
   </div>
 </template>
