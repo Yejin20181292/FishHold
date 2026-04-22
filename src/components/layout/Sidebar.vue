@@ -1,9 +1,30 @@
 <script setup lang="ts">
-defineProps<{
+import { reactive, watch } from 'vue'
+
+const props = defineProps<{
   currentView?: string;
 }>();
 
 const emit = defineEmits(['navigate']);
+
+// 드롭다운 상태 관리
+const expandedMenus = reactive({
+  monitoring: true,
+  status: true
+});
+
+const toggleMenu = (menu: 'monitoring' | 'status') => {
+  expandedMenus[menu] = !expandedMenus[menu];
+};
+
+// 현재 뷰에 따라 드롭다운 자동 펼침
+watch(() => props.currentView, (newView) => {
+  if (newView === 'mkr3') {
+    expandedMenus.monitoring = true;
+  } else if (newView === 'dashboard' || newView === 'tankDetail') {
+    expandedMenus.status = true;
+  }
+}, { immediate: true });
 </script>
 
 <template>
@@ -22,22 +43,32 @@ const emit = defineEmits(['navigate']);
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">
-              <span class="icon">🖥️</span>
-              장비 모니터링
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="toggleMenu('monitoring')">
+              <div class="nav-link-main">
+                <span class="icon">🖥️</span>
+                장비 모니터링
+              </div>
+              <span class="chevron" :class="{ expanded: expandedMenus.monitoring }">▼</span>
             </div>
-            <ul class="sub-nav-list">
-              <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
-            </ul>
+            <transition name="dropdown">
+              <ul v-if="expandedMenus.monitoring" class="sub-nav-list">
+                <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
+              </ul>
+            </transition>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">
-              <span class="icon">🚢</span>
-              장비 현황판
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="toggleMenu('status')">
+              <div class="nav-link-main">
+                <span class="icon">🚢</span>
+                장비 현황판
+              </div>
+              <span class="chevron" :class="{ expanded: expandedMenus.status }">▼</span>
             </div>
-            <ul class="sub-nav-list">
-              <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
-            </ul>
+            <transition name="dropdown">
+              <ul v-if="expandedMenus.status" class="sub-nav-list">
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
+              </ul>
+            </transition>
           </li>
         </ul>
       </div>
@@ -98,12 +129,17 @@ const emit = defineEmits(['navigate']);
 .nav-link {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 꺽쇠 아이콘을 우측으로 밀기 위해 추가 */
   padding: 8px 24px;
   color: #94a3b8;
   text-decoration: none;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+.nav-link-main {
+  display: flex;
+  align-items: center;
 }
 .nav-link:hover {
   background-color: #272d3f;
@@ -113,6 +149,24 @@ const emit = defineEmits(['navigate']);
   background-color: #2d3748;
   color: #fff;
   border-left: 3px solid #3b82f6;
+}
+.chevron {
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+  color: #64748b;
+}
+.chevron.expanded {
+  transform: rotate(180deg);
+}
+/* 드롭다운 트랜지션 */
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: all 0.3s ease;
+  max-height: 100px;
+  overflow: hidden;
+}
+.dropdown-enter-from, .dropdown-leave-to {
+  max-height: 0;
+  opacity: 0;
 }
 .icon {
   margin-right: 12px;
