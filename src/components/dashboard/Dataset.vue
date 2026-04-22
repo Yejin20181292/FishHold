@@ -7,6 +7,36 @@ const props = defineProps<{
 
 const emit = defineEmits(['navigate']);
 
+const todayStr = new Date().toISOString().split('T')[0];
+const today = ref(todayStr);
+const startDate = ref('2026-04-20');
+const endDate = ref('2026-04-20');
+
+function validateRange() {
+  if (!startDate.value) startDate.value = todayStr;
+  if (!endDate.value) endDate.value = todayStr;
+  
+  const start = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  
+  if (end < start) {
+      endDate.value = startDate.value;
+      return;
+  }
+  
+  const diffTime = end.getTime() - start.getTime();
+  const diffDaysVal = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDaysVal > 6) {
+      const maxEnd = new Date(start);
+      maxEnd.setDate(maxEnd.getDate() + 6);
+      const tzOffset = maxEnd.getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(maxEnd.getTime() - tzOffset)).toISOString().slice(0, 10);
+      endDate.value = localISOTime;
+      alert('기간은 최대 7일까지만 지정할 수 있습니다.');
+  }
+}
+
 // 창고별 기본 온도 매핑 (24개 전체)
 const tankBaseTemps: Record<string, number> = {
   'C No1 FH F': -10.0, 'SS No2 FH F': -1.7, 'PS No2 FH F': -1.9, 'SS No3 FH F': -1.9,
@@ -226,15 +256,22 @@ onUnmounted(() => {
       <h2 class="page-title">
         기간별 데이터
       </h2>
-      <button class="export-btn" title="엑셀로 다운로드">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-      </button>
+      <div class="header-right">
+        <div class="custom-date-picker">
+          <input type="date" v-model="startDate" :max="today" @change="validateRange" />
+          <span class="separator">~</span>
+          <input type="date" v-model="endDate" :max="today" @change="validateRange" />
+        </div>
+        <button class="export-btn" title="엑셀로 다운로드">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- 데이터셋 테이블 영역 (리팩토링됨) -->
@@ -254,7 +291,7 @@ onUnmounted(() => {
                 <tr class="filter-row">
                   <td class="filter-cell w-time">
                     <div class="filter-input-wrap">
-                      <input type="text" class="filter-input" value="2026-04-20 ~ 2026-04-20" readonly />
+                      <input type="text" class="filter-input" :value="`${startDate} ~ ${endDate}`" readonly />
                       <span class="filter-icon" style="color: #3b82f6;">❌</span>
                     </div>
                   </td>
@@ -342,6 +379,39 @@ onUnmounted(() => {
   color: #1e3a8a;
   display: flex;
   align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.custom-date-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+}
+
+.custom-date-picker input[type="date"] {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e3a8a;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-date-picker .separator {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 .export-btn {
