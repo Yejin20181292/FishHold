@@ -87,8 +87,6 @@ function handleLogout() {
       <span class="icon">🏠</span>
       <span class="separator">/</span>
       <span>{{ viewDisplayName }}</span>
-      <span class="separator">-</span>
-      <span class="current">[신라 나오에로썬 FISH HOLD MONITOR 🖊️]</span>
     </div>
     
     <div class="header-right">
