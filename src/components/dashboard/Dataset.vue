@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 
 const emit = defineEmits(['navigate']);
 
@@ -41,6 +41,71 @@ for (let i = 0; i < 30; i++) {
   });
 }
 
+// ===== 커스텀 스크롤바 (모든 모바일에서 항상 표시) =====
+const tableScrollRef = ref<HTMLElement | null>(null)
+const tScrollLeft = ref(0)
+const tScrollWidth = ref(0)
+const tClientWidth = ref(0)
+
+const tIsScrollable = computed(() => tScrollWidth.value > tClientWidth.value + 2)
+
+const tThumbWidth = computed(() => {
+  if (tScrollWidth.value <= 0) return 100
+  return Math.max(12, (tClientWidth.value / tScrollWidth.value) * 100)
+})
+
+const tThumbLeft = computed(() => {
+  const maxScroll = tScrollWidth.value - tClientWidth.value
+  if (maxScroll <= 0) return 0
+  return (tScrollLeft.value / maxScroll) * (100 - tThumbWidth.value)
+})
+
+function updateTableScrollInfo() {
+  if (!tableScrollRef.value) return
+  tScrollLeft.value = tableScrollRef.value.scrollLeft
+  tScrollWidth.value = tableScrollRef.value.scrollWidth
+  tClientWidth.value = tableScrollRef.value.clientWidth
+}
+
+function onTableScroll() {
+  updateTableScrollInfo()
+}
+
+// 섬 드래그
+let tIsDragging = false
+let tDragStartX = 0
+let tDragStartScrollLeft = 0
+
+function onTThumbTouchStart(e: TouchEvent) {
+  tIsDragging = true
+  tDragStartX = e.touches[0].clientX
+  tDragStartScrollLeft = tableScrollRef.value?.scrollLeft ?? 0
+  e.preventDefault()
+}
+
+function onTThumbTouchMove(e: TouchEvent) {
+  if (!tIsDragging || !tableScrollRef.value) return
+  const dx = e.touches[0].clientX - tDragStartX
+  const maxScroll = tScrollWidth.value - tClientWidth.value
+  const thumbTrackWidth = tClientWidth.value * (1 - tThumbWidth.value / 100)
+  const scrollRatio = thumbTrackWidth > 0 ? maxScroll / thumbTrackWidth : 1
+  tableScrollRef.value.scrollLeft = Math.max(0, Math.min(maxScroll, tDragStartScrollLeft + dx * scrollRatio))
+  updateTableScrollInfo()
+  e.preventDefault()
+}
+
+function onTThumbTouchEnd() {
+  tIsDragging = false
+}
+
+onMounted(() => {
+  nextTick(() => updateTableScrollInfo())
+  window.addEventListener('resize', updateTableScrollInfo)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateTableScrollInfo)
+})
 </script>
 
 <template>
@@ -60,9 +125,9 @@ for (let i = 0; i < 30; i++) {
       </button>
     </div>
 
-    <!-- Integrated Logs Table -->
+    <!-- 테이블 스크롤 영역 -->
     <div class="card premium-card logs-card">
-      <div class="table-responsive">
+      <div class="table-responsive" ref="tableScrollRef" @scroll="onTableScroll">
         <table class="logs-table">
           <thead>
             <tr>
@@ -89,6 +154,17 @@ for (let i = 0; i < 30; i++) {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- 커스텀 스크롤바: 모바일처럼 항상 보임 -->
+      <div class="table-custom-scrollbar-track" v-if="tIsScrollable">
+        <div
+          class="table-custom-scrollbar-thumb"
+          :style="{ width: tThumbWidth + '%', left: tThumbLeft + '%' }"
+          @touchstart="onTThumbTouchStart"
+          @touchmove="onTThumbTouchMove"
+          @touchend="onTThumbTouchEnd"
+        ></div>
       </div>
     </div>
   </div>
@@ -158,6 +234,13 @@ for (let i = 0; i < 30; i++) {
   flex-grow: 1;
   overflow: auto;
   background: #fff;
+  /* 네이티브 스크롤바 모바일에서 숨김 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.table-responsive::-webkit-scrollbar {
+  display: none;
 }
 
 .logs-table {
@@ -244,5 +327,39 @@ for (let i = 0; i < 30; i++) {
 
 .premium-card {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== 커스텀 스크롤바 (모바일에서만 표시) ===== */
+.table-custom-scrollbar-track {
+  display: none;
+  position: relative;
+  width: calc(100% - 0px);
+  height: 7px;
+  background: #e2e8f0;
+  border-radius: 7px;
+  margin: 6px 0 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .table-custom-scrollbar-track {
+    display: block;
+  }
+}
+
+.table-custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: left 0.05s linear;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.4);
+}
+
+.table-custom-scrollbar-thumb:active {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
 }
 </style>
