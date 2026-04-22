@@ -233,25 +233,24 @@ onUnmounted(() => {
           </div>
           
         </div>
-      </div>
 
-      <!-- 커스텀 세로 스크롤바 (본문 영역 우측에 고정) -->
-      <div 
-        class="table-vscrollbar-track" 
-        v-if="tVIsScrollable"
-        :style="{ 
-          top: (24 + headerHeight) + 'px', 
-          bottom: '54px' 
-        }"
-      >
-        <div
-          class="table-vscrollbar-thumb"
-          :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
-          @touchstart="onVThumbTouchStart"
-          @touchmove="onVThumbTouchMove"
-          @touchend="onVThumbTouchEnd"
-          @mousedown="onVThumbTouchStart"
-        ></div>
+        <!-- 커스텀 세로 스크롤바 (테이블 내부 우측에 고정) -->
+        <div 
+          class="table-vscrollbar-track" 
+          v-if="tVIsScrollable"
+          :style="{ 
+            top: headerHeight + 'px'
+          }"
+        >
+          <div
+            class="table-vscrollbar-thumb"
+            :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
+            @touchstart="onVThumbTouchStart"
+            @touchmove="onVThumbTouchMove"
+            @touchend="onVThumbTouchEnd"
+            @mousedown="onVThumbTouchStart"
+          ></div>
+        </div>
       </div>
 
       <!-- 커스텀 가로 스크롤바 (하단에 항상 표시) -->
@@ -397,12 +396,15 @@ onUnmounted(() => {
 
 /* ===== 커스텀 세로 스크롤바 ===== */
 .table-vscrollbar-track {
-  position: absolute;
-  right: 25px; /* 카드 패딩(24px) + 보더 오차(1px) */
+  position: sticky;
+  right: 0;
+  top: 0;
+  height: calc(100% - 100px); /* 헤더 제외 남은 높이 */
   width: 6px;
-  background: #f1f5f9;
+  background: rgba(241, 245, 249, 0.8);
   border-radius: 6px;
   z-index: 100;
+  margin-left: -6px; /* 테이블 콘텐츠와 겹치게 */
   flex-shrink: 0;
 }
 
