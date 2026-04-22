@@ -564,20 +564,23 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .dataset-container {
     height: auto;
-    overflow: visible; /* 전체 스크롤을 위해 차단 해제 */
+    overflow: visible;
   }
 
   .logs-card {
-    height: auto;
-    overflow: visible;
+    height: auto; /* 내용물에 맞춰 높이 결정 */
+    overflow: hidden; /* 내부 스크롤바 정렬을 위해 다시 hidden으로 */
     position: relative;
     border-radius: 8px;
-    margin-bottom: 30px; /* 가로 스크롤바 공간 확보 */
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   }
 
   .table-body-part {
-    max-height: none; /* 데이터 양에 맞춰 자동으로 늘어나도록 설정 */
-    overflow: visible;
+    height: 300px; /* 표 내부 세로 스크롤을 위한 고정 높이 복구 */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .table-horizontal-container {
