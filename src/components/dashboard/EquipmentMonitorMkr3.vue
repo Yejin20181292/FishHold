@@ -16,18 +16,24 @@ watch(activeTab, (newTab) => {
   localStorage.setItem('mkr3_active_tab', newTab)
 })
 
-onMounted(() => {
-  // 장비 현황판 상세 페이지 등 외부에서 특정 창고를 선택해 들어온 경우 처리
+// --- 창고 선택 초기화 로직 (외부 전송 데이터 우선) ---
+const getInitialSelection = (): TankData[] => {
   const initialName = localStorage.getItem('mkr3_initial_selection');
   if (initialName) {
-    const found = allTanks.value.find(t => t.name === initialName);
-    if (found) {
-      selectedTanks.value = [found];
-    }
-    // 사용 후 제거
+    // 공백 및 대소문자 무시 매칭 (더 확실한 매칭 위해)
+    const normalizedTarget = initialName.replace(/\s+/g, '').toLowerCase();
+    const found = allTanks.value.find(t => 
+      t.name.replace(/\s+/g, '').toLowerCase() === normalizedTarget
+    );
+    
+    // 사용 후 즉시 제거
     localStorage.removeItem('mkr3_initial_selection');
+    
+    if (found) return [found];
   }
-});
+  // 기본값: PS No10 FH F (인덱스 18)
+  return [allTanks.value[18]];
+};
 
 interface TankData {
   id: string;
@@ -63,8 +69,8 @@ const allTanks = ref<TankData[]>([
   { id: '24', name: 'S24', temp: -14.8 }
 ]);
 
-// Initialize with one selected tank
-const selectedTanks = ref<TankData[]>([allTanks.value[18]]); // Defaulting to PS No10 FH F
+// Initialize with selection logic
+const selectedTanks = ref<TankData[]>(getInitialSelection());
 
 // Dataset 전용 선택 상태 (기본값 전체 선택)
 const datasetSelectedTanks = ref<TankData[]>([...allTanks.value]);

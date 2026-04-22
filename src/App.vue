@@ -53,10 +53,16 @@ const handleBack = () => {
 
 // FishHoldMonitor ID (10p, 5s 등)를 MKR-3에서 사용하는 이름으로 변환
 const mapTankIdToMkr3Name = (id: string) => {
-  if (id === '1') return 'C No1 FH F';
-  const num = id.match(/\d+/)?.[0];
-  if (id.endsWith('p')) return `PS No${num} FH F`;
-  if (id.endsWith('s')) return `SS No${num} FH F`;
+  if (!id) return null;
+  const lowerId = id.toLowerCase();
+  if (lowerId === '1') return 'C No1 FH F';
+  
+  const numMatch = lowerId.match(/\d+/);
+  if (!numMatch) return null;
+  const num = numMatch[0];
+
+  if (lowerId.endsWith('p')) return `PS No${num} FH F`;
+  if (lowerId.endsWith('s')) return `SS No${num} FH F`;
   return null;
 }
 
