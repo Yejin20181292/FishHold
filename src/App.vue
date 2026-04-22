@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
@@ -12,12 +12,6 @@ import { useAuth } from '@/composables/useAuth'
 const sidebarOpen = ref(false)
 const toggleSidebar = () => { sidebarOpen.value = !sidebarOpen.value }
 const closeSidebar = () => { sidebarOpen.value = false }
-
-// 모바일 여부 판단
-const isMobile = ref(false)
-const checkMobile = () => { isMobile.value = window.innerWidth <= 768 }
-onMounted(() => { checkMobile(); window.addEventListener('resize', checkMobile) })
-onUnmounted(() => { window.removeEventListener('resize', checkMobile) })
 
 const { isLoggedIn } = useAuth()
 const savedView = sessionStorage.getItem('fishhold_view') || 'dashboard'
@@ -77,17 +71,20 @@ const handleNavigate = (viewType: string) => {
     @close="() => {}"
   />
 
-  <!-- 모바일: 오버레이 + 사이드바를 body 레벨로 Teleport (오버플로우 클리핑 회피) -->
+  <!--
+    모바일 사이드바: Teleport로 body에 렌더링.
+    v-if 없이 항상 DOM에 존재, CSS 미디어쿼리로만 show/hide 컨트롤.
+  -->
   <Teleport to="body">
-    <div v-if="isMobile" class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
-    <aside v-if="isMobile" class="mobile-sidebar" :class="{ 'mobile-sidebar-open': sidebarOpen }">
+    <div class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
+    <aside class="mobile-sidebar" :class="{ 'mobile-sidebar-open': sidebarOpen }">
       <Sidebar :currentView="currentView" @navigate="handleNavigate" />
     </aside>
   </Teleport>
 
   <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
-    <!-- 데스크탑에서만 보이는 사이드바 -->
-    <Sidebar v-if="!isMobile" class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
+    <!-- 데스크탑에서만 CSS로 보여지는 사이드바 -->
+    <Sidebar class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
     <div class="app-main-wrapper">
       <Header class="app-header" :sidebarOpen="sidebarOpen" @toggle-sidebar="toggleSidebar" />
       <main class="app-content">
@@ -118,14 +115,17 @@ body {
   position: relative;
 }
 
-/* 사이드바 오버레이 (body에 Teleport된) */
+/* ========================================
+   모바일 오버레이 (Teleport로 body에 렌더링)
+   데스크탑에서는 포인터이벤트로만 숨김
+======================================== */
 .sidebar-overlay {
-  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 9998;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease;
   backdrop-filter: blur(2px);
 }
@@ -134,7 +134,10 @@ body {
   pointer-events: auto;
 }
 
-/* 모바일 사이드바 (body에 Teleport된, 항상 fixed) */
+/* ========================================
+   모바일 사이드바 (Teleport로 body에 렌더링)
+   데스크탑에서는 숨김, 모바일에서만 표시
+======================================== */
 .mobile-sidebar {
   position: fixed;
   top: 0;
@@ -143,13 +146,16 @@ body {
   height: 100vh;
   z-index: 9999;
   background-color: #1a1e2b;
+  color: #fff;
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
   overflow-y: auto;
+  /* 데스크탑에서는 보이지 않음 */
+  display: none;
 }
-.mobile-sidebar-open {
-  transform: translateX(0) !important;
+.mobile-sidebar.mobile-sidebar-open {
+  transform: translateX(0);
 }
 
 /* 데스크탑 사이드바 */
@@ -197,8 +203,15 @@ body {
 
 /* ===== 모바일 반응형 (768px 이하) ===== */
 @media (max-width: 768px) {
-  .sidebar-overlay {
-    display: block;
+  /* 모바일에서 데스크탑 사이드바 숨김 */
+  .app-sidebar {
+    display: none;
+  }
+
+  /* 모바일 사이드바 활성화 */
+  .mobile-sidebar {
+    display: flex;
+    flex-direction: column;
   }
 
   .app-header {
