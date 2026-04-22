@@ -9,8 +9,8 @@ const emit = defineEmits(['navigate']);
 
 const todayStr = new Date().toISOString().split('T')[0];
 const today = ref(todayStr);
-const startDate = ref('2026-04-20');
-const endDate = ref('2026-04-20');
+const startDate = ref(todayStr);
+const endDate = ref(todayStr);
 
 function validateRange() {
   if (!startDate.value) startDate.value = todayStr;
