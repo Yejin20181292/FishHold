@@ -234,13 +234,30 @@ onUnmounted(() => {
   flex-grow: 1;
   overflow: auto;
   background: #fff;
-  /* 네이티브 스크롤바 모바일에서 숨김 */
+  /* 네이티브 스크롤바 숨김 (커스텀 스크롤바 사용) */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .table-responsive::-webkit-scrollbar {
   display: none;
+}
+
+/* ===== 모바일: 세로 스크롤 활성화 ===== */
+@media (max-width: 768px) {
+  .dataset-container {
+    height: auto;       /* 고정 높이 해제 */
+    overflow: visible;  /* 클리핑 제거 */
+  }
+
+  .logs-card {
+    overflow: visible; /* 카드 클리핑 해제 */
+  }
+
+  .table-responsive {
+    max-height: 60vh; /* 화면의 60% 높이로 제한 → 세로 스크롤 활성화 */
+    overflow: auto;   /* 가로 + 세로 모두 스크롤 */
+  }
 }
 
 .logs-table {
