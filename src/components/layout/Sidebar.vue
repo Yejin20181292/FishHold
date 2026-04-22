@@ -144,13 +144,13 @@ watch(() => props.currentView, (newView) => {
   margin: 0;
 }
 .nav-item {
-  margin: 2px 0;
+  margin: 0;
 }
 .nav-link {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 꺽쇠 아이콘을 우측으로 밀기 위해 추가 */
-  padding: 8px 24px;
+  justify-content: space-between;
+  padding: 6px 24px; /* 여백을 줄여 틈을 제거 */
   color: #94a3b8;
   text-decoration: none;
   font-size: 0.875rem;
@@ -182,14 +182,18 @@ watch(() => props.currentView, (newView) => {
 .dropdown-wrapper {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease, margin 0.3s ease;
+  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease;
   overflow: hidden;
   opacity: 0;
+  visibility: hidden; /* 닫혀 있을 때 완벽하게 숨김 */
+  height: 0; /* 강제로 높이를 0으로 고정하여 틈 제거 */
 }
 .dropdown-wrapper.expanded {
   grid-template-rows: 1fr;
   opacity: 1;
-  margin-bottom: 4px; /* 펼쳐졌을 때만 하단 여백 살짝 추가 */
+  visibility: visible;
+  height: auto;
+  margin-bottom: 2px;
 }
 .sub-nav-list {
   min-height: 0;
@@ -209,7 +213,7 @@ watch(() => props.currentView, (newView) => {
   padding: 8px 0;
 }
 .sub-nav-item {
-  padding: 6px 24px 6px 48px;
+  padding: 4px 24px 4px 48px; /* 하위 항목 간격도 최적화 */
   font-size: 0.8rem;
   color: #94a3b8;
   cursor: pointer;
