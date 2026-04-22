@@ -653,9 +653,9 @@ onUnmounted(() => {
   display: none; /* PC에서는 숨김 */
   position: relative;
   width: 100%;
-  height: 10px;
+  height: 7px;
   background: #e2e8f0;
-  border-radius: 10px;
+  border-radius: 7px;
   margin-top: 10px;
   overflow: hidden;
 }
