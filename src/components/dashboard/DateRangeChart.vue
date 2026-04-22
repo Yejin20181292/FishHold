@@ -291,6 +291,8 @@ const getSingleFillGradient = (color: string) => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .header-title {
@@ -517,5 +519,31 @@ const getSingleFillGradient = (color: string) => {
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
+}
+
+/* ===== 모바일 반응형 (768px 이하) ===== */
+@media (max-width: 768px) {
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-controls {
+    width: 100%;
+  }
+
+  .custom-date-picker {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+
+  .custom-date-picker input[type="date"] {
+    font-size: 11px;
+  }
+
+  .header-title {
+    font-size: 0.95rem;
+  }
 }
 </style>
