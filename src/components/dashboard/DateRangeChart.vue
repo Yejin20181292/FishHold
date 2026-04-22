@@ -185,92 +185,95 @@ const getSingleFillGradient = (color: string) => {
       </div>
     </div>
     
-    <!-- Legend for Multi-line -->
-    <div class="legend-container" v-if="isMultiLine">
-      <div class="legend-item" v-for="s in historySeries" :key="s.tank.id">
-        <div class="legend-color" :style="{ backgroundColor: s.color }"></div>
-        <span class="legend-name">{{ s.tank.name }}</span>
+    <!-- 차트 가로 스크롤 래퍼 (모바일에서만 2배 확장) -->
+    <div class="chart-scroll-area">
+      <!-- Legend for Multi-line -->
+      <div class="legend-container" v-if="isMultiLine">
+        <div class="legend-item" v-for="s in historySeries" :key="s.tank.id">
+          <div class="legend-color" :style="{ backgroundColor: s.color }"></div>
+          <span class="legend-name">{{ s.tank.name }}</span>
+        </div>
       </div>
-    </div>
 
-    <div class="dummy-chart">
-      <!-- Y-Axis -->
-      <div class="y-axis">
-        <span>{{ maxTemp }}°C</span>
-        <span>{{ Math.round((maxTemp + minTemp) / 2) }}°C</span>
-        <span>{{ minTemp }}°C</span>
-      </div>
-      
-      <div class="chart-content">
-        <!-- Grid Lines -->
-        <div class="grid-layout">
-          <div class="grid-line" v-for="n in 3" :key="n"></div>
+      <div class="dummy-chart">
+        <!-- Y-Axis -->
+        <div class="y-axis">
+          <span>{{ maxTemp }}°C</span>
+          <span>{{ Math.round((maxTemp + minTemp) / 2) }}°C</span>
+          <span>{{ minTemp }}°C</span>
         </div>
         
-        <!-- Line Chart SVG -->
-        <div class="line-container">
-          <svg class="chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="lineFillBlue" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="rgba(59, 130, 246, 0.4)" />
-                <stop offset="100%" stop-color="rgba(59, 130, 246, 0.0)" />
-              </linearGradient>
-              <linearGradient id="lineFillRed" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="rgba(248, 113, 113, 0.4)" />
-                <stop offset="100%" stop-color="rgba(248, 113, 113, 0.0)" />
-              </linearGradient>
-            </defs>
-            
-            <g v-for="series in seriesPoints" :key="series.tank.id">
-              <path 
-                v-if="!isMultiLine" 
-                :d="series.svgFill" 
-                :fill="getSingleFillGradient(series.color)" 
-                class="chart-area-fill" 
-              />
-              <path 
-                :d="series.svgLine" 
-                fill="none" 
-                :stroke="series.color" 
-                stroke-width="2.5" 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                class="chart-line-stroke" 
-                vector-effect="non-scaling-stroke" 
-              />
-            </g>
-          </svg>
+        <div class="chart-content">
+          <!-- Grid Lines -->
+          <div class="grid-layout">
+            <div class="grid-line" v-for="n in 3" :key="n"></div>
+          </div>
+          
+          <!-- Line Chart SVG -->
+          <div class="line-container">
+            <svg class="chart-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lineFillBlue" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(59, 130, 246, 0.4)" />
+                  <stop offset="100%" stop-color="rgba(59, 130, 246, 0.0)" />
+                </linearGradient>
+                <linearGradient id="lineFillRed" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(248, 113, 113, 0.4)" />
+                  <stop offset="100%" stop-color="rgba(248, 113, 113, 0.0)" />
+                </linearGradient>
+              </defs>
+              
+              <g v-for="series in seriesPoints" :key="series.tank.id">
+                <path 
+                  v-if="!isMultiLine" 
+                  :d="series.svgFill" 
+                  :fill="getSingleFillGradient(series.color)" 
+                  class="chart-area-fill" 
+                />
+                <path 
+                  :d="series.svgLine" 
+                  fill="none" 
+                  :stroke="series.color" 
+                  stroke-width="2.5" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  class="chart-line-stroke" 
+                  vector-effect="non-scaling-stroke" 
+                />
+              </g>
+            </svg>
 
-          <!-- Interactive Points -->
-          <template v-for="series in seriesPoints" :key="'points-' + series.tank.id">
-            <div 
-              v-for="(p, index) in series.points" 
-              :key="index"
-              class="chart-point"
-              :style="{ 
-                left: `${p.x}%`, 
-                top: `${p.y}%`,
-                borderColor: series.color
-              }"
-            >
-              <div class="point-tooltip">
-                <span class="tt-name" v-if="isMultiLine">{{ p.tankName }}: </span>
-                {{ p.temp }}°C ({{ p.time }})
+            <!-- Interactive Points -->
+            <template v-for="series in seriesPoints" :key="'points-' + series.tank.id">
+              <div 
+                v-for="(p, index) in series.points" 
+                :key="index"
+                class="chart-point"
+                :style="{ 
+                  left: `${p.x}%`, 
+                  top: `${p.y}%`,
+                  borderColor: series.color
+                }"
+              >
+                <div class="point-tooltip">
+                  <span class="tt-name" v-if="isMultiLine">{{ p.tankName }}: </span>
+                  {{ p.temp }}°C ({{ p.time }})
+                </div>
               </div>
+            </template>
+          </div>
+          
+          <!-- X-Axis Labels -->
+          <div class="x-axis-container">
+            <div 
+              class="x-label" 
+              v-for="(p, index) in (seriesPoints[0]?.points || [])" 
+              :key="index" 
+              v-show="diffDays === 1 ? (p.hour % 4 === 0 || p.hour === 23) : p.isNewDay" 
+              :style="{ left: `${p.x}%` }"
+            >
+              {{ diffDays === 1 ? p.hour + '시' : p.month + '/' + p.day }}
             </div>
-          </template>
-        </div>
-        
-        <!-- X-Axis Labels -->
-        <div class="x-axis-container">
-          <div 
-            class="x-label" 
-            v-for="(p, index) in (seriesPoints[0]?.points || [])" 
-            :key="index" 
-            v-show="diffDays === 1 ? (p.hour % 4 === 0 || p.hour === 23) : p.isNewDay" 
-            :style="{ left: `${p.x}%` }"
-          >
-            {{ diffDays === 1 ? p.hour + '시' : p.month + '/' + p.day }}
           </div>
         </div>
       </div>
@@ -544,6 +547,33 @@ const getSingleFillGradient = (color: string) => {
 
   .header-title {
     font-size: 0.95rem;
+  }
+
+  /* 차트 가로 스크롤 (모바일에서만 활성화) */
+  .chart-scroll-area {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* iOS 모멘텀 스크롤 */
+    width: 100%;
+    /* 스크롤바 얇게 */
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
+  }
+
+  .chart-scroll-area::-webkit-scrollbar {
+    height: 4px;
+  }
+  .chart-scroll-area::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  .chart-scroll-area::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 4px;
+  }
+
+  /* 차트 내부를 2배 너비로 확장 */
+  .dummy-chart {
+    min-width: 200vw;
   }
 }
 </style>
