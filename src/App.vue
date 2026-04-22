@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
@@ -12,6 +12,12 @@ import { useAuth } from '@/composables/useAuth'
 const sidebarOpen = ref(false)
 const toggleSidebar = () => { sidebarOpen.value = !sidebarOpen.value }
 const closeSidebar = () => { sidebarOpen.value = false }
+
+// 모바일 여부 판단
+const isMobile = ref(false)
+const checkMobile = () => { isMobile.value = window.innerWidth <= 768 }
+onMounted(() => { checkMobile(); window.addEventListener('resize', checkMobile) })
+onUnmounted(() => { window.removeEventListener('resize', checkMobile) })
 
 const { isLoggedIn } = useAuth()
 const savedView = sessionStorage.getItem('fishhold_view') || 'dashboard'
@@ -71,16 +77,17 @@ const handleNavigate = (viewType: string) => {
     @close="() => {}"
   />
 
-  <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
-    <!-- 모바일 오버레이 (사이드바 열렸을 때 배경 클릭으로 닫기) -->
-    <div class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
+  <!-- 모바일: 오버레이 + 사이드바를 body 레벨로 Teleport (오버플로우 클리핑 회피) -->
+  <Teleport to="body">
+    <div v-if="isMobile" class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
+    <aside v-if="isMobile" class="mobile-sidebar" :class="{ 'mobile-sidebar-open': sidebarOpen }">
+      <Sidebar :currentView="currentView" @navigate="handleNavigate" />
+    </aside>
+  </Teleport>
 
-    <Sidebar
-      class="app-sidebar"
-      :class="{ 'sidebar-open': sidebarOpen }"
-      :currentView="currentView"
-      @navigate="handleNavigate"
-    />
+  <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
+    <!-- 데스크탑에서만 보이는 사이드바 -->
+    <Sidebar v-if="!isMobile" class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
     <div class="app-main-wrapper">
       <Header class="app-header" :sidebarOpen="sidebarOpen" @toggle-sidebar="toggleSidebar" />
       <main class="app-content">
@@ -111,17 +118,41 @@ body {
   position: relative;
 }
 
+/* 사이드바 오버레이 (body에 Teleport된) */
 .sidebar-overlay {
   display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  z-index: 9998;
   opacity: 0;
   transition: opacity 0.3s ease;
   backdrop-filter: blur(2px);
 }
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 
+/* 모바일 사이드바 (body에 Teleport된, 항상 fixed) */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  z-index: 9999;
+  background-color: #1a1e2b;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+  overflow-y: auto;
+}
+.mobile-sidebar-open {
+  transform: translateX(0) !important;
+}
+
+/* 데스크탑 사이드바 */
 .app-sidebar {
   width: 250px;
   flex-shrink: 0;
@@ -129,8 +160,6 @@ body {
   color: #fff;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100;
 }
 
 .app-main-wrapper {
@@ -168,25 +197,8 @@ body {
 
 /* ===== 모바일 반응형 (768px 이하) ===== */
 @media (max-width: 768px) {
-  .app-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    transform: translateX(-100%);
-  }
-
-  .app-sidebar.sidebar-open {
-    transform: translateX(0);
-  }
-
   .sidebar-overlay {
     display: block;
-  }
-
-  .sidebar-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
   }
 
   .app-header {
