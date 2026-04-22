@@ -40,10 +40,25 @@ const tempColor = computed(() => {
   /* text-shadow: 1px 1px 2px rgba(0,0,0,0.8); */
 }
 
-/* Fallback/Adjustment for smaller screens or fixed sizes */
+/* 태블릿 이하 */
 @media (max-width: 1200px) {
   .temp-text {
-    font-size: 13px; /* Reduced fallback font size */
+    font-size: 13px;
+  }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .temp-text {
+    font-size: 8px;
+    font-weight: 700;
+  }
+}
+
+/* 소형 모바일 */
+@media (max-width: 480px) {
+  .temp-text {
+    font-size: 6px;
   }
 }
 </style>
