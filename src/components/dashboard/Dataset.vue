@@ -47,11 +47,6 @@ const tScrollLeft = ref(0)
 const tScrollWidth = ref(0)
 const tClientWidth = ref(0)
 
-// 세로 스크롤 상태
-const tScrollTop = ref(0)
-const tScrollHeight = ref(0)
-const tClientHeight = ref(0)
-
 // 가로
 const tIsScrollable = computed(() => tScrollWidth.value > tClientWidth.value + 2)
 const tThumbWidth = computed(() => {
@@ -64,26 +59,11 @@ const tThumbLeft = computed(() => {
   return (tScrollLeft.value / maxScroll) * (100 - tThumbWidth.value)
 })
 
-// 세로
-const tVIsScrollable = computed(() => tScrollHeight.value > tClientHeight.value + 2)
-const tVThumbHeight = computed(() => {
-  if (tScrollHeight.value <= 0) return 100
-  return Math.max(12, (tClientHeight.value / tScrollHeight.value) * 100)
-})
-const tVThumbTop = computed(() => {
-  const maxScroll = tScrollHeight.value - tClientHeight.value
-  if (maxScroll <= 0) return 0
-  return (tScrollTop.value / maxScroll) * (100 - tVThumbHeight.value)
-})
-
 function updateTableScrollInfo() {
   if (!tableScrollRef.value) return
   tScrollLeft.value = tableScrollRef.value.scrollLeft
   tScrollWidth.value = tableScrollRef.value.scrollWidth
   tClientWidth.value = tableScrollRef.value.clientWidth
-  tScrollTop.value = tableScrollRef.value.scrollTop
-  tScrollHeight.value = tableScrollRef.value.scrollHeight
-  tClientHeight.value = tableScrollRef.value.clientHeight
 }
 
 function onTableScroll() {
@@ -114,31 +94,6 @@ function onTThumbTouchMove(e: TouchEvent) {
 }
 
 function onTThumbTouchEnd() { tIsDragging = false }
-
-// 세로 thumb 드래그
-let tVIsDragging = false
-let tVDragStartY = 0
-let tVDragStartScrollTop = 0
-
-function onVThumbTouchStart(e: TouchEvent) {
-  tVIsDragging = true
-  tVDragStartY = e.touches[0].clientY
-  tVDragStartScrollTop = tableScrollRef.value?.scrollTop ?? 0
-  e.preventDefault()
-}
-
-function onVThumbTouchMove(e: TouchEvent) {
-  if (!tVIsDragging || !tableScrollRef.value) return
-  const dy = e.touches[0].clientY - tVDragStartY
-  const maxScroll = tScrollHeight.value - tClientHeight.value
-  const thumbTrackHeight = tClientHeight.value * (1 - tVThumbHeight.value / 100)
-  const scrollRatio = thumbTrackHeight > 0 ? maxScroll / thumbTrackHeight : 1
-  tableScrollRef.value.scrollTop = Math.max(0, Math.min(maxScroll, tVDragStartScrollTop + dy * scrollRatio))
-  updateTableScrollInfo()
-  e.preventDefault()
-}
-
-function onVThumbTouchEnd() { tVIsDragging = false }
 
 onMounted(() => {
   nextTick(() => updateTableScrollInfo())
