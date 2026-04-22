@@ -190,6 +190,13 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .dataset-content {
+    overflow: visible;
+    display: block; /* 모바일에서는 자연스러운 흐름을 위해 block으로 변경 */
+  }
+}
 .mkr3-container {
   padding: 32px;
   height: 100%;
