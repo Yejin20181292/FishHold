@@ -648,8 +648,9 @@ onUnmounted(() => {
   }
 }
 
-/* ===== 커스텀 스크롤바 (항상 표시, 모든 디바이스) ===== */
+/* ===== 커스텀 스크롤바 (모바일에서만 표시) ===== */
 .custom-scrollbar-track {
+  display: none; /* PC에서는 숨김 */
   position: relative;
   width: 100%;
   height: 10px;
@@ -657,6 +658,12 @@ onUnmounted(() => {
   border-radius: 10px;
   margin-top: 10px;
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .custom-scrollbar-track {
+    display: block; /* 모바일에서만 표시 */
+  }
 }
 
 .custom-scrollbar-thumb {
