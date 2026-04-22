@@ -10,8 +10,8 @@ import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
-const savedView = localStorage.getItem('fishhold_view') || 'dashboard'
-const savedTankStr = localStorage.getItem('fishhold_tank')
+const savedView = sessionStorage.getItem('fishhold_view') || 'dashboard'
+const savedTankStr = sessionStorage.getItem('fishhold_tank')
 
 let initialTank = null
 if (savedTankStr && savedTankStr !== 'undefined') {
@@ -36,23 +36,23 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
   currentView.value = 'tankDetail'
-  localStorage.setItem('fishhold_view', 'tankDetail')
-  localStorage.setItem('fishhold_tank', JSON.stringify(tank))
+  sessionStorage.setItem('fishhold_view', 'tankDetail')
+  sessionStorage.setItem('fishhold_tank', JSON.stringify(tank))
 }
 
 const handleBack = () => {
   currentTank.value = null
   currentView.value = 'dashboard'
-  localStorage.setItem('fishhold_view', 'dashboard')
-  localStorage.removeItem('fishhold_tank')
+  sessionStorage.setItem('fishhold_view', 'dashboard')
+  sessionStorage.removeItem('fishhold_tank')
 }
 
 const handleNavigate = (viewType: string) => {
   currentView.value = viewType
-  localStorage.setItem('fishhold_view', viewType)
+  sessionStorage.setItem('fishhold_view', viewType)
   if (viewType === 'dashboard') {
     currentTank.value = null
-    localStorage.removeItem('fishhold_tank')
+    sessionStorage.removeItem('fishhold_tank')
   }
 }
 </script>
