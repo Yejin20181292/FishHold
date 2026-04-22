@@ -57,12 +57,7 @@ const allTanks = ref<TankData[]>([
   { id: '16', name: 'SS No9 FH F', temp: -16.1 },
   { id: '17', name: 'PS No9 FH F', temp: -15.6 },
   { id: '18', name: 'SS No10 FH F', temp: -14.4 },
-  { id: '19', name: 'PS No10 FH F', temp: -14.7 }, // Equivalent to "No.10 Fish Hold (P)"
-  { id: '20', name: 'S20', temp: -15.0 },
-  { id: '21', name: 'S21', temp: -15.2 },
-  { id: '22', name: 'S22', temp: -15.1 },
-  { id: '23', name: 'S23', temp: -14.9 },
-  { id: '24', name: 'S24', temp: -14.8 }
+  { id: '19', name: 'PS No10 FH F', temp: -14.7 } // Equivalent to "No.10 Fish Hold (P)"
 ]);
 
 // Initialize with selection logic

@@ -43,8 +43,7 @@ const tankBaseTemps: Record<string, number> = {
   'PS No3 FH F': -1.8, 'SS No4 FH F': 17.8, 'PS No4 FH F': -1.7, 'SS No5 FH F': -12.5,
   'PS No5 FH F': -13.3, 'SS No6 FH F': -13.2, 'PS No6 FH F': -7.2, 'SS No7 FH F': -13.0,
   'PS No7 FH F': -3.2, 'SS No8 FH F': -2.6, 'PS No8 FH F': -2.2, 'SS No9 FH F': -1.9,
-  'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7,
-  'S20': -15.0, 'S21': -15.2, 'S22': -15.1, 'S23': -14.9, 'S24': -14.8
+  'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7
 };
 
 // 선택된 창고에 따른 컬럼 정의 (항상 ID 순서대로 정렬하여 유지)
