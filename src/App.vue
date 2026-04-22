@@ -203,9 +203,9 @@ body {
 
 /* ===== 모바일 반응형 (768px 이하) ===== */
 @media (max-width: 768px) {
-  /* 모바일에서 데스크탑 사이드바 숨김 */
+  /* 모바일에서 데스크탑 사이드바 숨김 (!important로 scoped CSS 특이도 우선순위 문제 해결) */
   .app-sidebar {
-    display: none;
+    display: none !important;
   }
 
   /* 모바일 사이드바 활성화 */
