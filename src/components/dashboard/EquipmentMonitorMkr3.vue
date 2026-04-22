@@ -200,8 +200,20 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   overflow-y: auto;
 }
 
+@media (max-width: 768px) {
+  .mkr3-container {
+    padding: 16px;
+  }
+}
+
 .header {
   margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 12px;
+  }
 }
 
 .title {
@@ -211,10 +223,22 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   color: #1e293b;
 }
 
+@media (max-width: 768px) {
+  .title {
+    font-size: 22px;
+  }
+}
+
 .content {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    gap: 16px;
+  }
 }
 
 .full-chart-card {
@@ -226,6 +250,12 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   display: flex;
   flex-direction: column;
   padding: 32px 40px;
+}
+
+@media (max-width: 768px) {
+  .selector-card {
+    padding: 20px;
+  }
 }
 
 .selector-title {
@@ -240,6 +270,14 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   column-gap: 24px;
   row-gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .checkbox-grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 12px;
+    row-gap: 12px;
+  }
 }
 
 .checkbox-label {
