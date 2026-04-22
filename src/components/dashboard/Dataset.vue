@@ -564,15 +564,22 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .dataset-container {
     height: auto;
-    overflow: visible;
+    overflow: hidden; /* 영역을 제한하여 내부에서 스크롤 발생 유도 */
   }
 
   .logs-card {
-    overflow: visible;
+    overflow: hidden;
+    position: relative;
+    max-height: 80vh; /* 전체 카드 높이 제한 */
   }
 
   .table-body-part {
-    max-height: 60vh; /* 본문 영역만 60% 높이 제한 및 스크롤 */
+    max-height: 50vh; /* 데이터 영역 높이 제한 */
+  }
+  
+  .table-horizontal-container {
+    width: 100%;
+    overflow-x: auto;
   }
 }
 
@@ -658,15 +665,19 @@ onUnmounted(() => {
 
 /* ===== 커스텀 가로 스크롤바 (항상 표시) ===== */
 .table-custom-scrollbar-track {
-  position: relative;
+  position: sticky;
+  bottom: 0;
+  left: 0;
   width: calc(100% - 12px); 
-  height: 7px;
-  background: rgba(241, 245, 249, 0.8);
+  height: 8px;
+  background: rgba(241, 245, 249, 0.95);
   border-radius: 7px;
-  margin: 10px auto 6px;
+  margin: 4px auto 4px;
   overflow: hidden;
   flex-shrink: 0;
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  z-index: 101; /* 세로바(100)보다 위에 표시 */
+  backdrop-filter: blur(4px);
 }
 
 .table-custom-scrollbar-thumb {
