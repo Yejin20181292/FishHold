@@ -549,26 +549,32 @@ const getSingleFillGradient = (color: string) => {
     font-size: 0.95rem;
   }
 
-  /* 차트 가로 스크롤 (모바일에서만 활성화) */
+  /* 차트 가로 스크롤 (모바일에서만 활성화) - 항상 스크롤바 표시 */
   .chart-scroll-area {
-    overflow-x: auto;
+    overflow-x: scroll; /* auto→scroll: 항상 스크롤바 공간 확보 */
     -webkit-overflow-scrolling: touch; /* iOS 모멘텀 스크롤 */
     width: 100%;
-    /* 스크롤바 얇게 */
-    scrollbar-width: thin;
-    scrollbar-color: #94a3b8 #f1f5f9;
+    scrollbar-width: auto; /* thin 대신 auto로 더 잘 보이도록 */
+    scrollbar-color: #3b82f6 #e2e8f0;
+    padding-bottom: 4px; /* 스크롤바와 차트 사이 여백 */
   }
 
+  /* 웹킷 계열 (Chrome/Android/Safari) 스크롤바 항상 표시 */
   .chart-scroll-area::-webkit-scrollbar {
-    height: 4px;
+    height: 8px; /* 4→8px 더 두껍게 */
+    display: block; /* 항상 표시 */
   }
   .chart-scroll-area::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
+    background: #e2e8f0; /* 더 진한 트랙 색상으로 항상 눈에 띄게 */
+    border-radius: 8px;
   }
   .chart-scroll-area::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-    border-radius: 4px;
+    background: #3b82f6; /* 파란색 thumb */
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  .chart-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
   }
 
   /* 차트 내부를 2배 너비로 확장 */
