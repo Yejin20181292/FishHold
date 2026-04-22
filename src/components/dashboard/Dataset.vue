@@ -167,42 +167,51 @@ onUnmounted(() => {
       </button>
     </div>
 
-    <!-- 테이블 스크롤 영역 -->
+    <!-- 데이터셋 테이블 영역 (리팩토링됨) -->
     <div class="card premium-card logs-card">
-      <!-- 가로+세로 스크롤 래퍼 -->
-      <div class="table-scroll-wrapper">
-        <div class="table-responsive" ref="tableScrollRef" @scroll="onTableScroll">
-          <table class="logs-table">
-            <thead>
-              <tr>
-                <th style="min-width: 180px">시간</th>
-                <th v-for="col in columns" :key="col" style="min-width: 100px">{{ col }}</th>
-              </tr>
-              <tr class="filter-row">
-                <td class="filter-cell">
-                  <div class="filter-input-wrap">
-                    <input type="text" class="filter-input" value="2026-04-20 ~ 2026-04-20" readonly />
-                    <span class="filter-icon" style="color: #3b82f6;">❌</span>
-                  </div>
-                </td>
-                <td v-for="col in columns" :key="'filter_'+col" class="filter-cell">
-                  <input type="text" class="filter-input" />
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="log in logs" :key="log.id" class="log-row">
-                <td class="col-time">{{ log.time }}</td>
-                <td v-for="(val, index) in log.values" :key="index" class="col-center">{{ val }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- 전체 가로 스크롤을 담당하는 래퍼 -->
+      <div class="table-horizontal-container" ref="tableScrollRef" @scroll="onTableScroll">
+        <div class="table-content-fixed-width" :style="{ width: (180 + columns.length * 100) + 'px' }">
+          
+          <!-- (1) 고정 헤더 영역 -->
+          <div class="table-header-part">
+            <table class="logs-table header-only">
+              <thead>
+                <tr>
+                  <th class="w-time">시간</th>
+                  <th v-for="col in columns" :key="col" class="w-col">{{ col }}</th>
+                </tr>
+                <tr class="filter-row">
+                  <td class="filter-cell w-time">
+                    <div class="filter-input-wrap">
+                      <input type="text" class="filter-input" value="2026-04-20 ~ 2026-04-20" readonly />
+                      <span class="filter-icon" style="color: #3b82f6;">❌</span>
+                    </div>
+                  </td>
+                  <td v-for="col in columns" :key="'filter_'+col" class="filter-cell w-col">
+                    <input type="text" class="filter-input" />
+                  </td>
+                </tr>
+              </thead>
+            </table>
+          </div>
 
-        <!-- 세로 커스텀 스크롤바 제거 (터치 스크롤만 유지) -->
+          <!-- (2) 세로 스크롤 본문 영역 -->
+          <div class="table-body-part">
+            <table class="logs-table body-only">
+              <tbody>
+                <tr v-for="log in logs" :key="log.id" class="log-row">
+                  <td class="col-time w-time">{{ log.time }}</td>
+                  <td v-for="(val, index) in log.values" :key="index" class="col-center w-col">{{ val }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
       </div>
 
-      <!-- 커스텀 가로 스크롤바 (하단 고정) -->
+      <!-- 커스텀 가로 스크롤바 (하단에 항상 표시) -->
       <div class="table-custom-scrollbar-track" v-if="tIsScrollable">
         <div
           class="table-custom-scrollbar-thumb"
@@ -276,78 +285,70 @@ onUnmounted(() => {
   border-radius: 0 0 8px 8px;
 }
 
-/* 테이블 + 세로 스크롤바 래퍼 */
-.table-scroll-wrapper {
+/* 가로 스크롤을 담당하는 최상위 컨테이너 */
+.table-horizontal-container {
   flex-grow: 1;
-  position: relative;
-  display: flex;
-  overflow: hidden;
-  min-height: 0;
-}
-
-.table-responsive {
-  flex-grow: 1;
-  overflow: auto;
-  background: #fff;
-  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  background: #fff;
 }
-
-.table-responsive::-webkit-scrollbar {
+.table-horizontal-container::-webkit-scrollbar {
   display: none;
 }
 
-/* ===== 커스텀 세로 스크롤바 ===== */
-.table-vscrollbar-track {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 7px;
-  background: #e2e8f0;
-  border-radius: 7px;
-  z-index: 5;
+/* 고정 너비를 가진 내용물 (헤더+본문 포함) */
+.table-content-fixed-width {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* 헤더 영역 (고정) */
+.table-header-part {
   flex-shrink: 0;
+  background: #f8fafc;
+  z-index: 5;
 }
 
-@media (max-width: 768px) {
-  .table-vscrollbar-track {
-    display: block;
-  }
+/* 본문 영역 (세로 스크롤) */
+.table-body-part {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* 모바일에서 기본 스크롤바 숨김 */
+  scrollbar-width: none;
+}
+.table-body-part::-webkit-scrollbar {
+  display: none;
 }
 
-.table-vscrollbar-thumb {
-  position: absolute;
-  left: 0;
+.logs-table {
   width: 100%;
-  min-height: 20px;
-  background: linear-gradient(180deg, #3b82f6, #60a5fa);
-  border-radius: 7px;
-  cursor: pointer;
-  transition: top 0.05s linear;
-  box-shadow: 1px 0 4px rgba(59, 130, 246, 0.4);
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
+  table-layout: fixed; /* 컬럼 너비 고정 */
 }
 
-.table-vscrollbar-thumb:active {
-  background: linear-gradient(180deg, #2563eb, #3b82f6);
-}
+/* 컬럼 너비 정의 */
+.w-time { width: 180px; min-width: 180px; }
+.w-col { width: 100px; min-width: 100px; }
 
-/* ===== 모바일: 세로 스크롤 활성화 ===== */
+/* ===== 모바일: 레이아웃 조정 ===== */
 @media (max-width: 768px) {
   .dataset-container {
-    height: auto;       /* 고정 높이 해제 */
-    overflow: visible;  /* 클리핑 제거 */
+    height: auto;
+    overflow: visible;
   }
 
   .logs-card {
-    overflow: visible; /* 카드 클리핑 해제 */
+    overflow: visible;
   }
 
-  .table-responsive {
-    max-height: 60vh; /* 화면의 60% 높이로 제한 → 세로 스크롤 활성화 */
-    overflow: auto;   /* 가로 + 세로 모두 스크롤 */
+  .table-body-part {
+    max-height: 60vh; /* 본문 영역만 60% 높이 제한 및 스크롤 */
   }
 }
 
@@ -366,9 +367,6 @@ onUnmounted(() => {
   border-bottom: 2px solid #e2e8f0;
   border-right: 1px solid #e2e8f0;
   text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
 .logs-table td {
@@ -387,9 +385,6 @@ onUnmounted(() => {
   padding: 4px 8px;
   background-color: #f8fafc;
   border-bottom: 2px solid #e2e8f0;
-  position: sticky;
-  top: 35px; /* depends on th height */
-  z-index: 9;
 }
 
 .filter-cell {
