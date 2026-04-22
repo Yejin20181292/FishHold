@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 
 interface TankData {
   id: string;
@@ -161,6 +161,73 @@ const isMultiLine = computed(() => computedTanks.value.length > 1);
 const getSingleFillGradient = (color: string) => {
   return color === '#ef4444' ? 'url(#lineFillRed)' : 'url(#lineFillBlue)';
 };
+
+// ===== 커스텀 스크롤바 (iOS를 포함한 모든 모바일에서 항상 표시) =====
+const scrollRef = ref<HTMLElement | null>(null)
+const scrollLeft = ref(0)
+const scrollWidthVal = ref(0)
+const clientWidthVal = ref(0)
+
+const isScrollable = computed(() => scrollWidthVal.value > clientWidthVal.value + 2)
+
+const thumbWidthPercent = computed(() => {
+  if (scrollWidthVal.value <= 0) return 100
+  return Math.max(12, (clientWidthVal.value / scrollWidthVal.value) * 100)
+})
+
+const thumbLeftPercent = computed(() => {
+  const maxScroll = scrollWidthVal.value - clientWidthVal.value
+  if (maxScroll <= 0) return 0
+  return (scrollLeft.value / maxScroll) * (100 - thumbWidthPercent.value)
+})
+
+function updateScrollInfo() {
+  if (!scrollRef.value) return
+  scrollLeft.value = scrollRef.value.scrollLeft
+  scrollWidthVal.value = scrollRef.value.scrollWidth
+  clientWidthVal.value = scrollRef.value.clientWidth
+}
+
+function onChartScroll() {
+  updateScrollInfo()
+}
+
+// 섬 드래그 (touch)
+let isDragging = false
+let dragStartX = 0
+let dragStartScrollLeft = 0
+
+function onThumbTouchStart(e: TouchEvent) {
+  isDragging = true
+  dragStartX = e.touches[0].clientX
+  dragStartScrollLeft = scrollRef.value?.scrollLeft ?? 0
+  e.preventDefault()
+}
+
+function onThumbTouchMove(e: TouchEvent) {
+  if (!isDragging || !scrollRef.value) return
+  const dx = e.touches[0].clientX - dragStartX
+  const maxScroll = scrollWidthVal.value - clientWidthVal.value
+  const trackWidth = clientWidthVal.value
+  const thumbTrackWidth = trackWidth * (1 - thumbWidthPercent.value / 100)
+  const scrollRatio = thumbTrackWidth > 0 ? maxScroll / thumbTrackWidth : 1
+  scrollRef.value.scrollLeft = Math.max(0, Math.min(maxScroll, dragStartScrollLeft + dx * scrollRatio))
+  updateScrollInfo()
+  e.preventDefault()
+}
+
+function onThumbTouchEnd() {
+  isDragging = false
+}
+
+onMounted(() => {
+  nextTick(() => updateScrollInfo())
+  window.addEventListener('resize', updateScrollInfo)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateScrollInfo)
+})
 </script>
 
 <template>
@@ -186,7 +253,7 @@ const getSingleFillGradient = (color: string) => {
     </div>
     
     <!-- 차트 가로 스크롤 래퍼 (모바일에서만 2배 확장) -->
-    <div class="chart-scroll-area">
+    <div class="chart-scroll-area" ref="scrollRef" @scroll="onChartScroll">
       <!-- Legend for Multi-line -->
       <div class="legend-container" v-if="isMultiLine">
         <div class="legend-item" v-for="s in historySeries" :key="s.tank.id">
@@ -277,6 +344,19 @@ const getSingleFillGradient = (color: string) => {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- 커스텀 스크롤바: 양수에 표시, 터치 없어도 항상 보임 -->
+    <div class="custom-scrollbar-track" v-if="isScrollable">
+      <div
+        class="custom-scrollbar-thumb"
+        :style="{ width: thumbWidthPercent + '%', left: thumbLeftPercent + '%' }"
+        @touchstart.passive="false"
+        @touchstart="onThumbTouchStart"
+        @touchmove.passive="false"
+        @touchmove="onThumbTouchMove"
+        @touchend="onThumbTouchEnd"
+      ></div>
     </div>
   </div>
 </template>
@@ -549,32 +629,17 @@ const getSingleFillGradient = (color: string) => {
     font-size: 0.95rem;
   }
 
-  /* 차트 가로 스크롤 (모바일에서만 활성화) - 항상 스크롤바 표시 */
+  /* 네이티브 스크롤바 완전히 숨김 → 커스텀 스크롤바 사용 */
   .chart-scroll-area {
-    overflow-x: scroll; /* auto→scroll: 항상 스크롤바 공간 확보 */
-    -webkit-overflow-scrolling: touch; /* iOS 모멘텀 스크롤 */
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
-    scrollbar-width: auto; /* thin 대신 auto로 더 잘 보이도록 */
-    scrollbar-color: #3b82f6 #e2e8f0;
-    padding-bottom: 4px; /* 스크롤바와 차트 사이 여백 */
+    /* 네이티브 스크롤바 숨기기 */
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
   }
-
-  /* 웹킷 계열 (Chrome/Android/Safari) 스크롤바 항상 표시 */
   .chart-scroll-area::-webkit-scrollbar {
-    height: 8px; /* 4→8px 더 두껍게 */
-    display: block; /* 항상 표시 */
-  }
-  .chart-scroll-area::-webkit-scrollbar-track {
-    background: #e2e8f0; /* 더 진한 트랙 색상으로 항상 눈에 띄게 */
-    border-radius: 8px;
-  }
-  .chart-scroll-area::-webkit-scrollbar-thumb {
-    background: #3b82f6; /* 파란색 thumb */
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-  }
-  .chart-scroll-area::-webkit-scrollbar-thumb:hover {
-    background: #2563eb;
+    display: none; /* Chrome/Safari/Android */
   }
 
   /* 차트 내부를 2배 너비로 확장 */
@@ -582,4 +647,31 @@ const getSingleFillGradient = (color: string) => {
     min-width: 200vw;
   }
 }
+
+/* ===== 커스텀 스크롤바 (항상 표시, 모든 디바이스) ===== */
+.custom-scrollbar-track {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: left 0.05s linear;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.4);
+}
+
+.custom-scrollbar-thumb:active {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+}
 </style>
+
