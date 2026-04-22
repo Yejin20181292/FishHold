@@ -564,17 +564,19 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .dataset-container {
     height: auto;
-    overflow: hidden; /* 영역을 제한하여 내부에서 스크롤 발생 유도 */
+    min-height: 450px; /* 최소 높이 보장 */
+    overflow: hidden;
   }
 
   .logs-card {
+    flex: 1; /* 가용 공간 차지 */
+    min-height: 350px;
     overflow: hidden;
     position: relative;
-    max-height: 80vh; /* 전체 카드 높이 제한 */
   }
 
   .table-body-part {
-    max-height: 50vh; /* 데이터 영역 높이 제한 */
+    max-height: 45vh; /* 본문 영역 높이 최적화 */
   }
   
   .table-horizontal-container {
