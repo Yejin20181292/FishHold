@@ -178,15 +178,18 @@ watch(() => props.currentView, (newView) => {
 .chevron.expanded {
   transform: rotate(180deg);
 }
-/* 드롭다운 트랜지션 */
+/* 드롭다운 트랜지션 개선 */
 .dropdown-enter-active, .dropdown-leave-active {
-  transition: all 0.3s ease;
-  max-height: 100px;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s ease, 
+              transform 0.3s ease;
+  max-height: 80px; /* 메뉴 항목 수에 맞춰 최적화된 값 */
   overflow: hidden;
 }
 .dropdown-enter-from, .dropdown-leave-to {
   max-height: 0;
   opacity: 0;
+  transform: translateY(-5px);
 }
 .icon {
   margin-right: 12px;
