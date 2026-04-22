@@ -66,8 +66,8 @@ const generateRandomTemp = (base: number, variance: number) => {
 
 const logs = ref<LogEntry[]>([]);
 
-// Base time: 2026-04-20 10:47:06
-let baseTime = new Date(2026, 3, 20, 10, 47, 6);
+// Base time: Today
+let baseTime = new Date();
 
 for (let i = 0; i < 30; i++) {
   const rowTime = new Date(baseTime.getTime() - i * 60000);
