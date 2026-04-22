@@ -358,7 +358,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  gap: 16px;
+  gap: 0;
 }
 
 .header {
