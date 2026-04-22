@@ -47,17 +47,33 @@ const tScrollLeft = ref(0)
 const tScrollWidth = ref(0)
 const tClientWidth = ref(0)
 
-const tIsScrollable = computed(() => tScrollWidth.value > tClientWidth.value + 2)
+// 세로 스크롤 상태
+const tScrollTop = ref(0)
+const tScrollHeight = ref(0)
+const tClientHeight = ref(0)
 
+// 가로
+const tIsScrollable = computed(() => tScrollWidth.value > tClientWidth.value + 2)
 const tThumbWidth = computed(() => {
   if (tScrollWidth.value <= 0) return 100
   return Math.max(12, (tClientWidth.value / tScrollWidth.value) * 100)
 })
-
 const tThumbLeft = computed(() => {
   const maxScroll = tScrollWidth.value - tClientWidth.value
   if (maxScroll <= 0) return 0
   return (tScrollLeft.value / maxScroll) * (100 - tThumbWidth.value)
+})
+
+// 세로
+const tVIsScrollable = computed(() => tScrollHeight.value > tClientHeight.value + 2)
+const tVThumbHeight = computed(() => {
+  if (tScrollHeight.value <= 0) return 100
+  return Math.max(12, (tClientHeight.value / tScrollHeight.value) * 100)
+})
+const tVThumbTop = computed(() => {
+  const maxScroll = tScrollHeight.value - tClientHeight.value
+  if (maxScroll <= 0) return 0
+  return (tScrollTop.value / maxScroll) * (100 - tVThumbHeight.value)
 })
 
 function updateTableScrollInfo() {
@@ -65,13 +81,16 @@ function updateTableScrollInfo() {
   tScrollLeft.value = tableScrollRef.value.scrollLeft
   tScrollWidth.value = tableScrollRef.value.scrollWidth
   tClientWidth.value = tableScrollRef.value.clientWidth
+  tScrollTop.value = tableScrollRef.value.scrollTop
+  tScrollHeight.value = tableScrollRef.value.scrollHeight
+  tClientHeight.value = tableScrollRef.value.clientHeight
 }
 
 function onTableScroll() {
   updateTableScrollInfo()
 }
 
-// 섬 드래그
+// 가로 thumb 드래그
 let tIsDragging = false
 let tDragStartX = 0
 let tDragStartScrollLeft = 0
@@ -94,9 +113,32 @@ function onTThumbTouchMove(e: TouchEvent) {
   e.preventDefault()
 }
 
-function onTThumbTouchEnd() {
-  tIsDragging = false
+function onTThumbTouchEnd() { tIsDragging = false }
+
+// 세로 thumb 드래그
+let tVIsDragging = false
+let tVDragStartY = 0
+let tVDragStartScrollTop = 0
+
+function onVThumbTouchStart(e: TouchEvent) {
+  tVIsDragging = true
+  tVDragStartY = e.touches[0].clientY
+  tVDragStartScrollTop = tableScrollRef.value?.scrollTop ?? 0
+  e.preventDefault()
 }
+
+function onVThumbTouchMove(e: TouchEvent) {
+  if (!tVIsDragging || !tableScrollRef.value) return
+  const dy = e.touches[0].clientY - tVDragStartY
+  const maxScroll = tScrollHeight.value - tClientHeight.value
+  const thumbTrackHeight = tClientHeight.value * (1 - tVThumbHeight.value / 100)
+  const scrollRatio = thumbTrackHeight > 0 ? maxScroll / thumbTrackHeight : 1
+  tableScrollRef.value.scrollTop = Math.max(0, Math.min(maxScroll, tVDragStartScrollTop + dy * scrollRatio))
+  updateTableScrollInfo()
+  e.preventDefault()
+}
+
+function onVThumbTouchEnd() { tVIsDragging = false }
 
 onMounted(() => {
   nextTick(() => updateTableScrollInfo())
@@ -127,36 +169,49 @@ onUnmounted(() => {
 
     <!-- 테이블 스크롤 영역 -->
     <div class="card premium-card logs-card">
-      <div class="table-responsive" ref="tableScrollRef" @scroll="onTableScroll">
-        <table class="logs-table">
-          <thead>
-            <tr>
-              <th style="min-width: 180px">시간</th>
-              <th v-for="col in columns" :key="col" style="min-width: 100px">{{ col }}</th>
-            </tr>
-            <!-- Second header row for filters (mock UI) -->
-            <tr class="filter-row">
-              <td class="filter-cell">
-                <div class="filter-input-wrap">
-                  <input type="text" class="filter-input" value="2026-04-20 ~ 2026-04-20" readonly />
-                  <span class="filter-icon" style="color: #3b82f6;">❌</span>
-                </div>
-              </td>
-              <td v-for="col in columns" :key="'filter_'+col" class="filter-cell">
-                <input type="text" class="filter-input" />
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="log in logs" :key="log.id" class="log-row">
-              <td class="col-time">{{ log.time }}</td>
-              <td v-for="(val, index) in log.values" :key="index" class="col-center">{{ val }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- 가로+세로 스크롤 래퍼 -->
+      <div class="table-scroll-wrapper">
+        <div class="table-responsive" ref="tableScrollRef" @scroll="onTableScroll">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th style="min-width: 180px">시간</th>
+                <th v-for="col in columns" :key="col" style="min-width: 100px">{{ col }}</th>
+              </tr>
+              <tr class="filter-row">
+                <td class="filter-cell">
+                  <div class="filter-input-wrap">
+                    <input type="text" class="filter-input" value="2026-04-20 ~ 2026-04-20" readonly />
+                    <span class="filter-icon" style="color: #3b82f6;">❌</span>
+                  </div>
+                </td>
+                <td v-for="col in columns" :key="'filter_'+col" class="filter-cell">
+                  <input type="text" class="filter-input" />
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="log in logs" :key="log.id" class="log-row">
+                <td class="col-time">{{ log.time }}</td>
+                <td v-for="(val, index) in log.values" :key="index" class="col-center">{{ val }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 커스텀 세로 스크롤바 (오른쪽 고정) -->
+        <div class="table-vscrollbar-track" v-if="tVIsScrollable">
+          <div
+            class="table-vscrollbar-thumb"
+            :style="{ height: tVThumbHeight + '%', top: tVThumbTop + '%' }"
+            @touchstart="onVThumbTouchStart"
+            @touchmove="onVThumbTouchMove"
+            @touchend="onVThumbTouchEnd"
+          ></div>
+        </div>
       </div>
 
-      <!-- 커스텀 스크롤바: 모바일처럼 항상 보임 -->
+      <!-- 커스텀 가로 스크롤바 (하단 고정) -->
       <div class="table-custom-scrollbar-track" v-if="tIsScrollable">
         <div
           class="table-custom-scrollbar-thumb"
@@ -230,17 +285,62 @@ onUnmounted(() => {
   border-radius: 0 0 8px 8px;
 }
 
+/* 테이블 + 세로 스크롤바 래퍼 */
+.table-scroll-wrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .table-responsive {
   flex-grow: 1;
   overflow: auto;
   background: #fff;
-  /* 네이티브 스크롤바 숨김 (커스텀 스크롤바 사용) */
+  min-width: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .table-responsive::-webkit-scrollbar {
   display: none;
+}
+
+/* ===== 커스텀 세로 스크롤바 ===== */
+.table-vscrollbar-track {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  background: #e2e8f0;
+  border-radius: 7px;
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .table-vscrollbar-track {
+    display: block;
+  }
+}
+
+.table-vscrollbar-thumb {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  min-height: 20px;
+  background: linear-gradient(180deg, #3b82f6, #60a5fa);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: top 0.05s linear;
+  box-shadow: 1px 0 4px rgba(59, 130, 246, 0.4);
+}
+
+.table-vscrollbar-thumb:active {
+  background: linear-gradient(180deg, #2563eb, #3b82f6);
 }
 
 /* ===== 모바일: 세로 스크롤 활성화 ===== */
