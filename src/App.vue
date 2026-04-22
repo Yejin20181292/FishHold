@@ -86,7 +86,7 @@ const handleNavigate = (viewType: string) => {
     <!-- 데스크탑에서만 CSS로 보여지는 사이드바 -->
     <Sidebar class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
     <div class="app-main-wrapper">
-      <Header class="app-header" :sidebarOpen="sidebarOpen" @toggle-sidebar="toggleSidebar" />
+      <Header class="app-header" :sidebarOpen="sidebarOpen" :currentView="currentView" @toggle-sidebar="toggleSidebar" />
       <main class="app-content">
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />

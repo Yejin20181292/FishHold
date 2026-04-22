@@ -1,13 +1,31 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import AuthModal from '@/components/auth/AuthModal.vue'
 
 const { isLoggedIn, userName, userInitial, logout } = useAuth()
 
 // --- Mobile sidebar toggle ---
-const props = defineProps<{ sidebarOpen?: boolean }>()
+const props = defineProps<{ 
+  sidebarOpen?: boolean,
+  currentView?: string
+}>()
 const emit = defineEmits(['toggle-sidebar'])
+
+// --- Breadcrumb Title mapping ---
+const viewDisplayName = computed(() => {
+  switch (props.currentView) {
+    case 'mainDashboard':
+      return 'Dashboard'
+    case 'mkr3':
+      return '장비 모니터링'
+    case 'dashboard':
+    case 'tankDetail':
+      return '장비 현황판'
+    default:
+      return '장비 현황판'
+  }
+})
 
 // --- Real-time clock ---
 const currentDateTime = ref('')     
@@ -68,7 +86,7 @@ function handleLogout() {
     <div class="breadcrumb">
       <span class="icon">🏠</span>
       <span class="separator">/</span>
-      <span>장비 현황판</span>
+      <span>{{ viewDisplayName }}</span>
       <span class="separator">-</span>
       <span class="current">[신라 나오에로썬 FISH HOLD MONITOR 🖊️]</span>
     </div>
