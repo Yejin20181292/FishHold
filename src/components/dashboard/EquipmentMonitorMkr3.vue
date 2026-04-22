@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import DateRangeChart from './DateRangeChart.vue'
 import Dataset from './Dataset.vue'
 
-const activeTab = ref('monitoring') // 'monitoring' | 'dataset'
+// LocalStorage에서 이전 탭 상태 불러오기 (없으면 'monitoring' 기본값)
+const activeTab = ref(localStorage.getItem('mkr3_active_tab') || 'monitoring')
+
+// 탭 변경 시마다 LocalStorage에 저장
+watch(activeTab, (newTab) => {
+  localStorage.setItem('mkr3_active_tab', newTab)
+})
 
 interface TankData {
   id: string;
