@@ -239,7 +239,10 @@ onUnmounted(() => {
       <div 
         class="table-vscrollbar-track" 
         v-if="tVIsScrollable"
-        :style="{ top: (48 + headerHeight) + 'px', bottom: '50px' }"
+        :style="{ 
+          top: (24 + headerHeight) + 'px', 
+          bottom: '54px' 
+        }"
       >
         <div
           class="table-vscrollbar-thumb"
@@ -395,12 +398,10 @@ onUnmounted(() => {
 /* ===== 커스텀 세로 스크롤바 ===== */
 .table-vscrollbar-track {
   position: absolute;
-  right: 25px; /* 카드 패딩 안쪽으로 */
-  top: 0;
-  bottom: 0px;
-  width: 7px;
-  background: #e2e8f0;
-  border-radius: 7px;
+  right: 25px; /* 카드 패딩(24px) + 보더 오차(1px) */
+  width: 6px;
+  background: #f1f5f9;
+  border-radius: 6px;
   z-index: 100;
   flex-shrink: 0;
 }
