@@ -242,6 +242,8 @@ onUnmounted(() => {
 
 /* 가로 스크롤을 담당하는 최상위 컨테이너 */
 .table-horizontal-container {
+  display: flex; /* 내부 요소가 높이를 가질 수 있도록 flex 추가 */
+  flex-direction: column;
   flex-grow: 1;
   overflow-x: auto;
   overflow-y: hidden;
@@ -253,7 +255,7 @@ onUnmounted(() => {
 .table-content-fixed-width {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100%; /* 부모 높이를 꽉 채우도록 설정 */
 }
 
 /* 헤더 영역 (고정) */
