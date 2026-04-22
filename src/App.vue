@@ -9,6 +9,10 @@ import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
 
+const sidebarOpen = ref(false)
+const toggleSidebar = () => { sidebarOpen.value = !sidebarOpen.value }
+const closeSidebar = () => { sidebarOpen.value = false }
+
 const { isLoggedIn } = useAuth()
 const savedView = sessionStorage.getItem('fishhold_view') || 'dashboard'
 const savedTankStr = sessionStorage.getItem('fishhold_tank')
@@ -54,6 +58,7 @@ const handleNavigate = (viewType: string) => {
     currentTank.value = null
     sessionStorage.removeItem('fishhold_tank')
   }
+  closeSidebar() // 모바일: 메뉴 선택 시 자동으로 사이드바 닫기
 }
 </script>
 
@@ -67,9 +72,17 @@ const handleNavigate = (viewType: string) => {
   />
 
   <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
-    <Sidebar class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
+    <!-- 모바일 오버레이 (사이드바 열렸을 때 배경 클릭으로 닫기) -->
+    <div class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
+
+    <Sidebar
+      class="app-sidebar"
+      :class="{ 'sidebar-open': sidebarOpen }"
+      :currentView="currentView"
+      @navigate="handleNavigate"
+    />
     <div class="app-main-wrapper">
-      <Header class="app-header" />
+      <Header class="app-header" :sidebarOpen="sidebarOpen" @toggle-sidebar="toggleSidebar" />
       <main class="app-content">
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
@@ -95,6 +108,18 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
 }
 
 .app-sidebar {
@@ -104,6 +129,8 @@ body {
   color: #fff;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
 }
 
 .app-main-wrapper {
@@ -111,6 +138,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
 }
 
 .app-header {
@@ -126,9 +154,9 @@ body {
 .app-content {
   flex-grow: 1;
   min-height: 0;
-  background-color: #fdfce3; /* The light yellow background of the blueprint area */
+  background-color: #fdfce3;
   position: relative;
-  overflow: auto; /* Allow scrolling */
+  overflow: auto;
 }
 
 /* 비로그인 시 화면 잠금 */
@@ -136,5 +164,35 @@ body {
   filter: blur(6px);
   pointer-events: none;
   user-select: none;
+}
+
+/* ===== 모바일 반응형 (768px 이하) ===== */
+@media (max-width: 768px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+  }
+
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .app-header {
+    height: auto;
+    min-height: 70px;
+    padding: 12px 16px;
+  }
 }
 </style>

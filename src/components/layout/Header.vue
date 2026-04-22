@@ -5,6 +5,10 @@ import AuthModal from '@/components/auth/AuthModal.vue'
 
 const { isLoggedIn, userName, userInitial, logout } = useAuth()
 
+// --- Mobile sidebar toggle ---
+defineProps<{ sidebarOpen?: boolean }>()
+const emit2 = defineEmits(['toggle-sidebar'])
+
 // --- Real-time clock ---
 const currentDateTime = ref('')     
 
@@ -52,6 +56,15 @@ function handleLogout() {
 
 <template>
   <header class="header">
+    <!-- 모바일: 햄버거 버튼 -->
+    <button class="hamburger-btn" @click="emit2('toggle-sidebar')" aria-label="메뉴">
+      <span class="hamburger-icon" :class="{ open: sidebarOpen }">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
     <div class="breadcrumb">
       <span class="icon">🏠</span>
       <span class="separator">/</span>
@@ -104,6 +117,47 @@ function handleLogout() {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  gap: 12px;
+}
+
+/* 햄버거 버튼 - 데스크탑에서는 숨김 */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.hamburger-btn:hover {
+  background: #f1f5f9;
+}
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 22px;
+}
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  background: #334155;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+/* X 모양으로 변환 */
+.hamburger-icon.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger-icon.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 .breadcrumb {
   display: flex;
@@ -115,6 +169,7 @@ function handleLogout() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
 }
 .separator {
   margin: 0 8px;
@@ -242,5 +297,35 @@ function handleLogout() {
   background: #fef2f2;
   color: #ef4444;
   border-color: #fecaca;
+}
+
+/* ===== 모바일 반응형 (768px 이하) ===== */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block;
+  }
+  .breadcrumb {
+    font-size: 0.75rem;
+  }
+  .current {
+    display: none; /* 모바일에서 긴 텍스트 숨김 */
+  }
+  .date-time {
+    font-size: 0.72rem;
+  }
+  .btn-login, .btn-register {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+  .user-name {
+    display: none; /* 아바타만 보여줌 */
+  }
+  .auth-buttons, .user-info {
+    padding-left: 10px;
+    gap: 6px;
+  }
+  .header-right {
+    gap: 8px;
+  }
 }
 </style>
