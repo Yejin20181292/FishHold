@@ -185,26 +185,16 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
 }
 
 .dataset-content {
-  flex-grow: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 1280px) {
-  .dataset-content {
-    overflow: visible;
-    display: block; /* 태블릿/모바일에서는 자연스러운 흐름을 위해 block으로 변경 */
-  }
+  display: block; /* flex 제거 — 자식 높이가 자연스럽게 늘어나도록 */
 }
 .mkr3-container {
   padding: 32px;
-  height: 100%;
+  min-height: 100%; /* height:100% → min-height:100%: 콘텐츠가 많으면 늘어나도록 */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   background-color: #f0f2f5;
-  overflow-y: auto;
+  /* overflow-y:auto 제거 — 스크롤은 부모 .app-content가 담당 */
 }
 
 @media (max-width: 1280px) {
@@ -246,6 +236,11 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
   .content {
     gap: 16px;
   }
+}
+
+/* dataset-content 내부는 block 흐름으로 */
+.dataset-content .card {
+  margin-bottom: 24px;
 }
 
 .full-chart-card {

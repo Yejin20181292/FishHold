@@ -353,12 +353,9 @@ onUnmounted(() => {
 
 <style scoped>
 .dataset-container {
-  height: auto;
-  min-height: 500px; /* 고해상도 태블릿에서 표가 사라지는 것 방지 */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   gap: 0;
 }
 
@@ -454,7 +451,7 @@ onUnmounted(() => {
 }
 
 .logs-card {
-  flex-grow: 1;
+  height: 450px; /* 고정 높이 — 내부 테이블이 스크롤되고 아래 체크박스 카드가 정상 표시 */
   display: flex;
   flex-direction: column;
   padding: 0;
