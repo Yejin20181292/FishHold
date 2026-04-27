@@ -20,7 +20,7 @@ const fishHolds = ref<FishHold[]>([
   // Port (P) Side - Top Row (from stern to bow)
   { id: '10p', name: 'No.10 (P)', temp: -14.5, top: '39.9%', left: '8.6%', width: '6%', height: '5%' },
   { id: '9p', name: 'No.9 (P)', temp: -1.6, top: '39.9%', left: '17.8%', width: '6%', height: '5%' },
-  { id: '8p', name: 'No.8 (P)', temp: 3.5, top: '43.5%', left: '26.7%', width: '6%', height: '5%' },
+  { id: '8p', name: 'No.8 (P)', temp: 3.5, top: '43.5%', left: '26.8%', width: '6%', height: '5%' },
   { id: '7p', name: 'No.7 (P)', temp: -8.9, top: '43.5%', left: '35.4%', width: '6%', height: '5%' },
   { id: '6p', name: 'No.6 (P)', temp: -2.2, top: '43.5%', left: '44.2%', width: '6%', height: '5%' },
   { id: '5p', name: 'No.5 (P)', temp: -3.6, top: '43.5%', left: '53%', width: '6%', height: '5%' },
@@ -34,7 +34,7 @@ const fishHolds = ref<FishHold[]>([
   // Starboard (S) Side - Bottom Row (from stern to bow)
   { id: '10s', name: 'No.10 (S)', temp: -11.1, top: '69.2%', left: '8.6%', width: '6%', height: '5%' },
   { id: '9s', name: 'No.9 (S)', temp: -1.9, top: '69.2%', left: '17.8%', width: '6%', height: '5%' },
-  { id: '8s', name: 'No.8 (S)', temp: -1.0, top: '65.7%', left: '26.7%', width: '6%', height: '5%' },
+  { id: '8s', name: 'No.8 (S)', temp: -1.0, top: '65.7%', left: '26.8%', width: '6%', height: '5%' },
   { id: '7s', name: 'No.7 (S)', temp: -12.1, top: '65.7%', left: '35.4%', width: '6%', height: '5%' },
   { id: '6s', name: 'No.6 (S)', temp: 0.1, top: '65.7%', left: '44.2%', width: '6%', height: '5%' },
   { id: '5s', name: 'No.5 (S)', temp: 0.1, top: '65.7%', left: '53%', width: '6%', height: '5%' },
