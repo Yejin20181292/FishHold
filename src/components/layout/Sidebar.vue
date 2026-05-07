@@ -21,7 +21,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 watch(() => props.currentView, (newView) => {
   if (newView === 'mkr3') {
     expandedMenus.monitoring = true;
-  } else if (newView === 'dashboard' || newView === 'tankDetail') {
+  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard') {
     expandedMenus.status = true;
   }
 }, { immediate: true });
@@ -59,7 +59,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="toggleMenu('status')">
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' }" @click="toggleMenu('status')">
               <div class="nav-link-main">
                 <span class="icon">🚢</span>
                 장비 현황판
@@ -69,6 +69,7 @@ watch(() => props.currentView, (newView) => {
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
                 <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' }" @click="emit('navigate', 'challengerDashboard')">신라 첼린저 FISH...</li>
               </ul>
             </div>
           </li>

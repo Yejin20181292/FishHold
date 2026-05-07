@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
+import ChallengerFishHoldMonitor from '@/components/dashboard/ChallengerFishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
@@ -28,7 +29,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'mkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'mkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -120,6 +121,7 @@ const handleNavigate = (viewType: string) => {
       <main class="app-content">
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
+        <ChallengerFishHoldMonitor v-else-if="currentView === 'challengerDashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
       </main>
