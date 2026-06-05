@@ -52,7 +52,7 @@ const allTanks = ref<TankData[]>([
   { id: '12', name: 'SS No7 FH F', temp: -15.8 },
   { id: '13', name: 'PS No7 FH F', temp: -16.2 },
   { id: '14', name: 'SS No8 FH F', temp: -15.4 },
-  { id: '15', name: 'PS No8 FH A', temp: -15.7 }, // Challenger has "PS No8 FH A" instead of "PS No8 FH F"
+  { id: '15', name: 'PS No8 FH F', temp: -15.7 },
   { id: '16', name: 'SS No9 FH F', temp: -16.1 },
   { id: '17', name: 'PS No9 FH F', temp: -15.6 },
   { id: '18', name: 'SS No10 FH F', temp: -14.4 },

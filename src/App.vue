@@ -104,11 +104,8 @@ const handleNavigate = (viewType: string) => {
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
     if (currentTank.value) {
-      let targetName = mapTankIdToMkr3Name(currentTank.value.id)
+      const targetName = mapTankIdToMkr3Name(currentTank.value.id)
       if (targetName) {
-        if (viewType === 'challengerMkr3' && targetName === 'PS No8 FH F') {
-          targetName = 'PS No8 FH A';
-        }
         localStorage.setItem('mkr3_initial_selection', targetName)
       }
     }
