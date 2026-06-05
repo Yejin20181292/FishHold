@@ -14,32 +14,34 @@ interface FishHold {
   height: string;
 }
 
-// Approximate positions based on the provided image (identical to Naoero Sun)
+// Approximate positions based on the provided image, adapted for 11 holds distributed uniformly
 const fishHolds = ref<FishHold[]>([
-  // Port (P) Side - Top Row (from stern to bow)
-  { id: '10p', name: 'No.10 (P)', temp: -14.5, top: '39.9%', left: '8.6%', width: '6%', height: '5%' },
-  { id: '9p', name: 'No.9 (P)', temp: -1.6, top: '39.9%', left: '17.8%', width: '6%', height: '5%' },
-  { id: '8p', name: 'No.8 (P)', temp: 3.5, top: '43.5%', left: '26.8%', width: '6%', height: '5%' },
-  { id: '7p', name: 'No.7 (P)', temp: -8.9, top: '43.5%', left: '35.4%', width: '6%', height: '5%' },
-  { id: '6p', name: 'No.6 (P)', temp: -2.2, top: '43.5%', left: '44.2%', width: '6%', height: '5%' },
-  { id: '5p', name: 'No.5 (P)', temp: -3.6, top: '43.5%', left: '53%', width: '6%', height: '5%' },
-  { id: '4p', name: 'No.4 (P)', temp: -1.5, top: '43.5%', left: '61.8%', width: '6%', height: '5%' },
-  { id: '3p', name: 'No.3 (P)', temp: -0.1, top: '43.5%', left: '70.7%', width: '6%', height: '5%' },
-  { id: '2p', name: 'No.2 (P)', temp: -10.2, top: '43.5%', left: '79.5%', width: '6%', height: '5%' },
+  // Port (P) Side - Top Row (from stern to bow, holds 11 down to 2)
+  { id: '11p', name: 'No.11 (P)', temp: -14.7, top: '39.9%', left: '8.6%', width: '5.5%', height: '5%' },
+  { id: '10p', name: 'No.10 (P)', temp: -15.7, top: '39.9%', left: '16.0%', width: '5.5%', height: '5%' },
+  { id: '9p', name: 'No.9 (P)', temp: -15.3, top: '43.5%', left: '23.4%', width: '5.5%', height: '5%' },
+  { id: '8p', name: 'No.8 (P)', temp: -14.2, top: '43.5%', left: '30.8%', width: '5.5%', height: '5%' },
+  { id: '7p', name: 'No.7 (P)', temp: -15.5, top: '43.5%', left: '38.2%', width: '5.5%', height: '5%' },
+  { id: '6p', name: 'No.6 (P)', temp: -14.7, top: '43.5%', left: '45.6%', width: '5.5%', height: '5%' },
+  { id: '5p', name: 'No.5 (P)', temp: -15.7, top: '43.5%', left: '53.0%', width: '5.5%', height: '5%' },
+  { id: '4p', name: 'No.4 (P)', temp: -15.3, top: '43.5%', left: '60.4%', width: '5.5%', height: '5%' },
+  { id: '3p', name: 'No.3 (P)', temp: -14.2, top: '43.5%', left: '67.8%', width: '5.5%', height: '5%' },
+  { id: '2p', name: 'No.2 (P)', temp: -15.5, top: '43.5%', left: '75.2%', width: '5.5%', height: '5%' },
 
   // Bow
-  { id: '1', name: 'No.1', temp: 20.5, top: '54.9%', left: '88.5%', width: '5%', height: '5%' },
+  { id: '1', name: 'No.1', temp: -15.2, top: '54.9%', left: '82.6%', width: '5.5%', height: '5%' },
 
-  // Starboard (S) Side - Bottom Row (from stern to bow)
-  { id: '10s', name: 'No.10 (S)', temp: -11.1, top: '69.2%', left: '8.6%', width: '6%', height: '5%' },
-  { id: '9s', name: 'No.9 (S)', temp: -1.9, top: '69.2%', left: '17.8%', width: '6%', height: '5%' },
-  { id: '8s', name: 'No.8 (S)', temp: -1.0, top: '65.7%', left: '26.8%', width: '6%', height: '5%' },
-  { id: '7s', name: 'No.7 (S)', temp: -12.1, top: '65.7%', left: '35.4%', width: '6%', height: '5%' },
-  { id: '6s', name: 'No.6 (S)', temp: 0.1, top: '65.7%', left: '44.2%', width: '6%', height: '5%' },
-  { id: '5s', name: 'No.5 (S)', temp: 0.1, top: '65.7%', left: '53%', width: '6%', height: '5%' },
-  { id: '4s', name: 'No.4 (S)', temp: 12.5, top: '65.7%', left: '61.8%', width: '6%', height: '5%' },
-  { id: '3s', name: 'No.3 (S)', temp: -0.6, top: '65.7%', left: '70.7%', width: '6%', height: '5%' },
-  { id: '2s', name: 'No.2 (S)', temp: -0.8, top: '65.7%', left: '79.5%', width: '6%', height: '5%' },
+  // Starboard (S) Side - Bottom Row (from stern to bow, holds 11 down to 2)
+  { id: '11s', name: 'No.11 (S)', temp: -14.8, top: '69.2%', left: '8.6%', width: '5.5%', height: '5%' },
+  { id: '10s', name: 'No.10 (S)', temp: -14.4, top: '69.2%', left: '16.0%', width: '5.5%', height: '5%' },
+  { id: '9s', name: 'No.9 (S)', temp: -15.4, top: '65.7%', left: '23.4%', width: '5.5%', height: '5%' },
+  { id: '8s', name: 'No.8 (S)', temp: -14.9, top: '65.7%', left: '30.8%', width: '5.5%', height: '5%' },
+  { id: '7s', name: 'No.7 (S)', temp: -14.5, top: '65.7%', left: '38.2%', width: '5.5%', height: '5%' },
+  { id: '6s', name: 'No.6 (S)', temp: -14.8, top: '65.7%', left: '45.6%', width: '5.5%', height: '5%' },
+  { id: '5s', name: 'No.5 (S)', temp: -14.4, top: '65.7%', left: '53.0%', width: '5.5%', height: '5%' },
+  { id: '4s', name: 'No.4 (S)', temp: -16.2, top: '65.7%', left: '60.4%', width: '5.5%', height: '5%' },
+  { id: '3s', name: 'No.3 (S)', temp: -15.0, top: '65.7%', left: '67.8%', width: '5.5%', height: '5%' },
+  { id: '2s', name: 'No.2 (S)', temp: -15.9, top: '65.7%', left: '75.2%', width: '5.5%', height: '5%' },
 ]);
 
 const emit = defineEmits(['select-tank']);
