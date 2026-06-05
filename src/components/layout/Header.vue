@@ -22,14 +22,22 @@ const viewDisplayName = computed(() => {
       return '장비 모니터링 / 신라 나오에로썬'
     case 'challengerMkr3':
       return '장비 모니터링 / 신라 첼린저'
+    case 'moaconaMkr3':
+      return '장비 모니터링 / 신라 모아코나'
     case 'dashboard':
       return '장비 현황판 / 신라 나오에로썬'
     case 'challengerDashboard':
       return '장비 현황판 / 신라 첼린저'
+    case 'moaconaDashboard':
+      return '장비 현황판 / 신라 모아코나'
     case 'tankDetail':
-      return props.currentShip === 'challenger'
-        ? '장비 현황판 / 신라 첼린저'
-        : '장비 현황판 / 신라 나오에로썬'
+      if (props.currentShip === 'challenger') {
+        return '장비 현황판 / 신라 첼린저'
+      } else if (props.currentShip === 'moacona') {
+        return '장비 현황판 / 신라 모아코나'
+      } else {
+        return '장비 현황판 / 신라 나오에로썬'
+      }
     default:
       return '장비 현황판'
   }

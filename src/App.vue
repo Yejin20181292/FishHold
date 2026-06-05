@@ -4,9 +4,11 @@ import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
 import ChallengerFishHoldMonitor from '@/components/dashboard/ChallengerFishHoldMonitor.vue'
+import MoaconaFishHoldMonitor from '@/components/dashboard/MoaconaFishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import ChallengerEquipmentMonitorMkr3 from '@/components/dashboard/ChallengerEquipmentMonitorMkr3.vue'
+import MoaconaEquipmentMonitorMkr3 from '@/components/dashboard/MoaconaEquipmentMonitorMkr3.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
@@ -30,7 +32,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'mkr3', 'challengerMkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -40,7 +42,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : 'naoero'))
 
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
@@ -54,6 +56,9 @@ const handleBack = () => {
   if (currentShip.value === 'challenger') {
     currentView.value = 'challengerDashboard'
     sessionStorage.setItem('fishhold_view', 'challengerDashboard')
+  } else if (currentShip.value === 'moacona') {
+    currentView.value = 'moaconaDashboard'
+    sessionStorage.setItem('fishhold_view', 'moaconaDashboard')
   } else {
     currentView.value = 'dashboard'
     sessionStorage.setItem('fishhold_view', 'dashboard')
@@ -62,9 +67,20 @@ const handleBack = () => {
 }
 
 // FishHoldMonitor ID (10p, 5s 등)를 MKR-3에서 사용하는 이름으로 변환
-const mapTankIdToMkr3Name = (id: string) => {
+const mapTankIdToMkr3Name = (id: string, shipType: string) => {
   if (!id) return null;
   const lowerId = id.toLowerCase();
+  
+  if (shipType === 'moacona') {
+    if (lowerId === '1') return 'FH01C PV1';
+    const numMatch = lowerId.match(/\d+/);
+    if (!numMatch) return null;
+    const num = numMatch[0].padStart(2, '0');
+    if (lowerId.endsWith('p')) return `FH${num}P PV1`;
+    if (lowerId.endsWith('s')) return `FH${num}S PV1`;
+    return null;
+  }
+  
   if (lowerId === '1') return 'C No1 FH F';
   
   const numMatch = lowerId.match(/\d+/);
@@ -90,21 +106,29 @@ const handleNavigate = (viewType: string) => {
     sessionStorage.removeItem('fishhold_tank')
     currentShip.value = 'challenger'
     sessionStorage.setItem('fishhold_ship', 'challenger')
+  } else if (viewType === 'moaconaDashboard') {
+    currentTank.value = null
+    sessionStorage.removeItem('fishhold_tank')
+    currentShip.value = 'moacona'
+    sessionStorage.setItem('fishhold_ship', 'moacona')
   } else if (viewType === 'mkr3') {
     currentShip.value = 'naoero'
     sessionStorage.setItem('fishhold_ship', 'naoero')
   } else if (viewType === 'challengerMkr3') {
     currentShip.value = 'challenger'
     sessionStorage.setItem('fishhold_ship', 'challenger')
+  } else if (viewType === 'moaconaMkr3') {
+    currentShip.value = 'moacona'
+    sessionStorage.setItem('fishhold_ship', 'moacona')
   }
 
   // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
-  if (viewType === 'mkr3' || viewType === 'challengerMkr3') {
+  if (viewType === 'mkr3' || viewType === 'challengerMkr3' || viewType === 'moaconaMkr3') {
     localStorage.setItem('mkr3_active_tab', 'monitoring')
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
     if (currentTank.value) {
-      const targetName = mapTankIdToMkr3Name(currentTank.value.id)
+      const targetName = mapTankIdToMkr3Name(currentTank.value.id, currentShip.value)
       if (targetName) {
         localStorage.setItem('mkr3_initial_selection', targetName)
       }
@@ -144,9 +168,11 @@ const handleNavigate = (viewType: string) => {
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
         <ChallengerFishHoldMonitor v-else-if="currentView === 'challengerDashboard'" @select-tank="handleTankSelect" />
+        <MoaconaFishHoldMonitor v-else-if="currentView === 'moaconaDashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" :currentShip="currentShip" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
         <ChallengerEquipmentMonitorMkr3 v-else-if="currentView === 'challengerMkr3'" />
+        <MoaconaEquipmentMonitorMkr3 v-else-if="currentView === 'moaconaMkr3'" />
       </main>
     </div>
   </div>

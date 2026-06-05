@@ -20,9 +20,9 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 
 // 현재 뷰에 따라 드롭다운 자동 펼침
 watch(() => props.currentView, (newView) => {
-  if (newView === 'mkr3' || newView === 'challengerMkr3') {
+  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3') {
     expandedMenus.monitoring = true;
-  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard') {
+  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard') {
     expandedMenus.status = true;
   }
 }, { immediate: true });
@@ -46,7 +46,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' }" @click="toggleMenu('monitoring')">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' || currentView === 'moaconaMkr3' }" @click="toggleMenu('monitoring')">
               <div class="nav-link-main">
                 <span class="icon">🖥️</span>
                 장비 모니터링
@@ -57,11 +57,12 @@ watch(() => props.currentView, (newView) => {
               <ul class="sub-nav-list">
                 <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 첼린저 MKR-3</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaMkr3' }" @click="emit('navigate', 'moaconaMkr3')">신라 모아코나 MKR-3</li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' }" @click="toggleMenu('status')">
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' || currentView === 'moaconaDashboard' }" @click="toggleMenu('status')">
               <div class="nav-link-main">
                 <span class="icon">🚢</span>
                 장비 현황판
@@ -70,8 +71,9 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 첼린저 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moacona') }" @click="emit('navigate', 'moaconaDashboard')">신라 모아코나 FISH...</li>
               </ul>
             </div>
           </li>
