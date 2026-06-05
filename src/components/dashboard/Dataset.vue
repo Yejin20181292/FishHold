@@ -37,25 +37,13 @@ function validateRange() {
   }
 }
 
-// 창고별 기본 온도 매핑 (24개 전체)
+// 창고별 기본 온도 매핑
 const tankBaseTemps: Record<string, number> = {
   'C No1 FH F': -10.0, 'SS No2 FH F': -1.7, 'PS No2 FH F': -1.9, 'SS No3 FH F': -1.9,
   'PS No3 FH F': -1.8, 'SS No4 FH F': 17.8, 'PS No4 FH F': -1.7, 'SS No5 FH F': -12.5,
   'PS No5 FH F': -13.3, 'SS No6 FH F': -13.2, 'PS No6 FH F': -7.2, 'SS No7 FH F': -13.0,
   'PS No7 FH F': -3.2, 'SS No8 FH F': -2.6, 'PS No8 FH F': -2.2, 'SS No9 FH F': -1.9,
-  'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7,
-  // Moacona NMC sensors
-  'C No1 FH PV1': -15.2, 'C No1 FH PV2': -14.8,
-  'PS No2 FH PV1': -15.5, 'PS No2 FH PV2': -16.0, 'SS No2 FH PV1': -15.9, 'SS No2 FH PV2': -14.5,
-  'PS No3 FH PV1': -14.2, 'PS No3 FH PV2': -15.1, 'SS No3 FH PV1': -15.0, 'SS No3 FH PV2': -14.9,
-  'PS No4 FH PV1': -15.3, 'PS No4 FH PV2': -15.8, 'SS No4 FH PV1': -16.2, 'SS No4 FH PV2': -15.4,
-  'PS No5 FH PV1': -15.7, 'PS No5 FH PV2': -16.1, 'SS No5 FH PV1': -15.6, 'SS No5 FH PV2': -14.4,
-  'PS No6 FH PV1': -14.7, 'PS No6 FH PV2': -15.0, 'SS No6 FH PV1': -15.2, 'SS No6 FH PV2': -14.8,
-  'PS No7 FH PV1': -15.5, 'PS No7 FH PV2': -16.0, 'SS No7 FH PV1': -15.9, 'SS No7 FH PV2': -14.5,
-  'PS No8 FH PV1': -14.2, 'PS No8 FH PV2': -15.1, 'SS No8 FH PV1': -15.0, 'SS No8 FH PV2': -14.9,
-  'PS No9 FH PV1': -15.3, 'PS No9 FH PV2': -15.8, 'SS No9 FH PV1': -16.2, 'SS No9 FH PV2': -15.4,
-  'PS No10 FH PV1': -15.7, 'PS No10 FH PV2': -16.1, 'SS No10 FH PV1': -15.6, 'SS No10 FH PV2': -14.4,
-  'PS No11 FH PV1': -14.7, 'PS No11 FH PV2': -15.0, 'SS No11 FH PV1': -15.2, 'SS No11 FH PV2': -14.8
+  'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7
 };
 
 // 선택된 창고에 따른 컬럼 정의 (항상 ID 순서대로 정렬하여 유지)

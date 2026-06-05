@@ -67,19 +67,9 @@ const handleBack = () => {
 }
 
 // FishHoldMonitor ID (10p, 5s 등)를 MKR-3에서 사용하는 이름으로 변환
-const mapTankIdToMkr3Name = (id: string, shipType: string) => {
+const mapTankIdToMkr3Name = (id: string) => {
   if (!id) return null;
   const lowerId = id.toLowerCase();
-  
-  if (shipType === 'moacona') {
-    if (lowerId === '1') return 'C No1 FH PV1';
-    const numMatch = lowerId.match(/\d+/);
-    if (!numMatch) return null;
-    const num = numMatch[0];
-    if (lowerId.endsWith('p')) return `PS No${num} FH PV1`;
-    if (lowerId.endsWith('s')) return `SS No${num} FH PV1`;
-    return null;
-  }
   
   if (lowerId === '1') return 'C No1 FH F';
   
@@ -128,7 +118,7 @@ const handleNavigate = (viewType: string) => {
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
     if (currentTank.value) {
-      const targetName = mapTankIdToMkr3Name(currentTank.value.id, currentShip.value)
+      const targetName = mapTankIdToMkr3Name(currentTank.value.id)
       if (targetName) {
         localStorage.setItem('mkr3_initial_selection', targetName)
       }

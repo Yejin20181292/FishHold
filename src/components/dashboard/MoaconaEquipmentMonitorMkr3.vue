@@ -24,8 +24,8 @@ const getInitialSelection = (): TankData[] => {
     
     if (found) return [found];
   }
-  // 기본값: FH01C PV1 (인덱스 0)
-  return [allTanks.value[0]];
+  // 기본값: PS No10 FH F (인덱스 18)
+  return [allTanks.value[18]];
 };
 
 interface TankData {
@@ -34,50 +34,27 @@ interface TankData {
   temp: number;
 }
 
-// Generate realistic mocked tanks for 42 sensors of Shilla Moacona
+// Generate realistic mocked tanks mimicking the screenshot
 const allTanks = ref<TankData[]>([
-  { id: '1', name: 'C No1 FH PV1', temp: -15.2 },
-  { id: '2', name: 'C No1 FH PV2', temp: -14.8 },
-  { id: '3', name: 'PS No2 FH PV1', temp: -15.5 },
-  { id: '4', name: 'PS No2 FH PV2', temp: -16.0 },
-  { id: '5', name: 'SS No2 FH PV1', temp: -15.9 },
-  { id: '6', name: 'SS No2 FH PV2', temp: -14.5 },
-  { id: '7', name: 'PS No3 FH PV1', temp: -14.2 },
-  { id: '8', name: 'PS No3 FH PV2', temp: -15.1 },
-  { id: '9', name: 'SS No3 FH PV1', temp: -15.0 },
-  { id: '10', name: 'SS No3 FH PV2', temp: -14.9 },
-  { id: '11', name: 'PS No4 FH PV1', temp: -15.3 },
-  { id: '12', name: 'PS No4 FH PV2', temp: -15.8 },
-  { id: '13', name: 'SS No4 FH PV1', temp: -16.2 },
-  { id: '14', name: 'SS No4 FH PV2', temp: -15.4 },
-  { id: '15', name: 'PS No5 FH PV1', temp: -15.7 },
-  { id: '16', name: 'PS No5 FH PV2', temp: -16.1 },
-  { id: '17', name: 'SS No5 FH PV1', temp: -15.6 },
-  { id: '18', name: 'SS No5 FH PV2', temp: -14.4 },
-  { id: '19', name: 'PS No6 FH PV1', temp: -14.7 },
-  { id: '20', name: 'PS No6 FH PV2', temp: -15.0 },
-  { id: '21', name: 'SS No6 FH PV1', temp: -15.2 },
-  { id: '22', name: 'SS No6 FH PV2', temp: -14.8 },
-  { id: '23', name: 'PS No7 FH PV1', temp: -15.5 },
-  { id: '24', name: 'PS No7 FH PV2', temp: -16.0 },
-  { id: '25', name: 'SS No7 FH PV1', temp: -15.9 },
-  { id: '26', name: 'SS No7 FH PV2', temp: -14.5 },
-  { id: '27', name: 'PS No8 FH PV1', temp: -14.2 },
-  { id: '28', name: 'PS No8 FH PV2', temp: -15.1 },
-  { id: '29', name: 'SS No8 FH PV1', temp: -15.0 },
-  { id: '30', name: 'SS No8 FH PV2', temp: -14.9 },
-  { id: '31', name: 'PS No9 FH PV1', temp: -15.3 },
-  { id: '32', name: 'PS No9 FH PV2', temp: -15.8 },
-  { id: '33', name: 'SS No9 FH PV1', temp: -16.2 },
-  { id: '34', name: 'SS No9 FH PV2', temp: -15.4 },
-  { id: '35', name: 'PS No10 FH PV1', temp: -15.7 },
-  { id: '36', name: 'PS No10 FH PV2', temp: -16.1 },
-  { id: '37', name: 'SS No10 FH PV1', temp: -15.6 },
-  { id: '38', name: 'SS No10 FH PV2', temp: -14.4 },
-  { id: '39', name: 'PS No11 FH PV1', temp: -14.7 },
-  { id: '40', name: 'PS No11 FH PV2', temp: -15.0 },
-  { id: '41', name: 'SS No11 FH PV1', temp: -15.2 },
-  { id: '42', name: 'SS No11 FH PV2', temp: -14.8 }
+  { id: '1', name: 'C No1 FH F', temp: -15.2 },
+  { id: '2', name: 'SS No2 FH F', temp: -14.8 },
+  { id: '3', name: 'PS No2 FH F', temp: -15.5 },
+  { id: '4', name: 'SS No3 FH F', temp: -16.0 },
+  { id: '5', name: 'PS No3 FH F', temp: -15.9 },
+  { id: '6', name: 'SS No4 FH F', temp: -14.5 },
+  { id: '7', name: 'PS No4 FH F', temp: -14.2 },
+  { id: '8', name: 'SS No5 FH F', temp: -15.1 },
+  { id: '9', name: 'PS No5 FH F', temp: -15.0 },
+  { id: '10', name: 'SS No6 FH F', temp: -14.9 },
+  { id: '11', name: 'PS No6 FH F', temp: -15.3 },
+  { id: '12', name: 'SS No7 FH F', temp: -15.8 },
+  { id: '13', name: 'PS No7 FH F', temp: -16.2 },
+  { id: '14', name: 'SS No8 FH F', temp: -15.4 },
+  { id: '15', name: 'PS No8 FH F', temp: -15.7 },
+  { id: '16', name: 'SS No9 FH F', temp: -16.1 },
+  { id: '17', name: 'PS No9 FH F', temp: -15.6 },
+  { id: '18', name: 'SS No10 FH F', temp: -14.4 },
+  { id: '19', name: 'PS No10 FH F', temp: -14.7 }
 ]);
 
 // Initialize with selection logic
