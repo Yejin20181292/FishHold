@@ -20,7 +20,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 
 // 현재 뷰에 따라 드롭다운 자동 펼침
 watch(() => props.currentView, (newView) => {
-  if (newView === 'mkr3') {
+  if (newView === 'mkr3' || newView === 'challengerMkr3') {
     expandedMenus.monitoring = true;
   } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard') {
     expandedMenus.status = true;
@@ -46,7 +46,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' }" @click="toggleMenu('monitoring')">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' }" @click="toggleMenu('monitoring')">
               <div class="nav-link-main">
                 <span class="icon">🖥️</span>
                 장비 모니터링
@@ -56,6 +56,7 @@ watch(() => props.currentView, (newView) => {
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.monitoring }">
               <ul class="sub-nav-list">
                 <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 첼린저 MKR-3</li>
               </ul>
             </div>
           </li>

@@ -6,6 +6,7 @@ import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
 import ChallengerFishHoldMonitor from '@/components/dashboard/ChallengerFishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
+import ChallengerEquipmentMonitorMkr3 from '@/components/dashboard/ChallengerEquipmentMonitorMkr3.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
@@ -29,7 +30,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'mkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'mkr3', 'challengerMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -39,7 +40,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || (currentView.value === 'challengerDashboard' ? 'challenger' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : 'naoero'))
 
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
@@ -89,16 +90,25 @@ const handleNavigate = (viewType: string) => {
     sessionStorage.removeItem('fishhold_tank')
     currentShip.value = 'challenger'
     sessionStorage.setItem('fishhold_ship', 'challenger')
+  } else if (viewType === 'mkr3') {
+    currentShip.value = 'naoero'
+    sessionStorage.setItem('fishhold_ship', 'naoero')
+  } else if (viewType === 'challengerMkr3') {
+    currentShip.value = 'challenger'
+    sessionStorage.setItem('fishhold_ship', 'challenger')
   }
 
   // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
-  if (viewType === 'mkr3') {
+  if (viewType === 'mkr3' || viewType === 'challengerMkr3') {
     localStorage.setItem('mkr3_active_tab', 'monitoring')
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
     if (currentTank.value) {
-      const targetName = mapTankIdToMkr3Name(currentTank.value.id)
+      let targetName = mapTankIdToMkr3Name(currentTank.value.id)
       if (targetName) {
+        if (viewType === 'challengerMkr3' && targetName === 'PS No8 FH F') {
+          targetName = 'PS No8 FH A';
+        }
         localStorage.setItem('mkr3_initial_selection', targetName)
       }
     }
@@ -137,8 +147,9 @@ const handleNavigate = (viewType: string) => {
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
         <ChallengerFishHoldMonitor v-else-if="currentView === 'challengerDashboard'" @select-tank="handleTankSelect" />
-        <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" @back="handleBack" @navigate="handleNavigate" />
+        <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" :currentShip="currentShip" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
+        <ChallengerEquipmentMonitorMkr3 v-else-if="currentView === 'challengerMkr3'" />
       </main>
     </div>
   </div>

@@ -7,7 +7,8 @@ defineProps<{
     id: string;
     name: string;
     temp: number | null;
-  }
+  };
+  currentShip?: string;
 }>();
 
 const emit = defineEmits(['back', 'navigate']);
@@ -42,7 +43,7 @@ const emit = defineEmits(['back', 'navigate']);
       </div>
 
       <div class="card premium-card chart-card">
-        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" :showExpand="true" @navigate="(v) => emit('navigate', v)" />
+        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" :showExpand="true" :expandTarget="currentShip === 'challenger' ? 'challengerMkr3' : 'mkr3'" @navigate="(v) => emit('navigate', v)" />
       </div>
     </div>
   </div>

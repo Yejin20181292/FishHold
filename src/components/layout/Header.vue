@@ -19,7 +19,9 @@ const viewDisplayName = computed(() => {
     case 'mainDashboard':
       return 'Dashboard'
     case 'mkr3':
-      return '장비 모니터링'
+      return '장비 모니터링 / 신라 나오에로썬'
+    case 'challengerMkr3':
+      return '장비 모니터링 / 신라 첼린저'
     case 'dashboard':
       return '장비 현황판 / 신라 나오에로썬'
     case 'challengerDashboard':
