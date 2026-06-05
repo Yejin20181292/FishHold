@@ -3,6 +3,7 @@ import { reactive, watch } from 'vue'
 
 const props = defineProps<{
   currentView?: string;
+  currentShip?: string;
 }>();
 
 const emit = defineEmits(['navigate']);
@@ -68,8 +69,8 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
-                <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' }" @click="emit('navigate', 'challengerDashboard')">신라 첼린저 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 첼린저 FISH...</li>
               </ul>
             </div>
           </li>

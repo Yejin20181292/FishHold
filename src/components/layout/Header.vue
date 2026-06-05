@@ -8,7 +8,8 @@ const { isLoggedIn, userName, userInitial, logout } = useAuth()
 // --- Mobile sidebar toggle ---
 const props = defineProps<{ 
   sidebarOpen?: boolean,
-  currentView?: string
+  currentView?: string,
+  currentShip?: string
 }>()
 const emit = defineEmits(['toggle-sidebar'])
 
@@ -20,8 +21,13 @@ const viewDisplayName = computed(() => {
     case 'mkr3':
       return '장비 모니터링'
     case 'dashboard':
+      return '장비 현황판 / 신라 나오에로썬'
+    case 'challengerDashboard':
+      return '장비 현황판 / 신라 첼린저'
     case 'tankDetail':
-      return '장비 현황판'
+      return props.currentShip === 'challenger'
+        ? '장비 현황판 / 신라 첼린저'
+        : '장비 현황판 / 신라 나오에로썬'
     default:
       return '장비 현황판'
   }

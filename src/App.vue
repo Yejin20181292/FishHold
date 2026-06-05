@@ -38,6 +38,9 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
   currentView.value = 'dashboard'
 }
 
+const savedShip = sessionStorage.getItem('fishhold_ship')
+const currentShip = ref<string>(savedShip || (currentView.value === 'challengerDashboard' ? 'challenger' : 'naoero'))
+
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
   currentView.value = 'tankDetail'
@@ -47,8 +50,13 @@ const handleTankSelect = (tank: any) => {
 
 const handleBack = () => {
   currentTank.value = null
-  currentView.value = 'dashboard'
-  sessionStorage.setItem('fishhold_view', 'dashboard')
+  if (currentShip.value === 'challenger') {
+    currentView.value = 'challengerDashboard'
+    sessionStorage.setItem('fishhold_view', 'challengerDashboard')
+  } else {
+    currentView.value = 'dashboard'
+    sessionStorage.setItem('fishhold_view', 'dashboard')
+  }
   sessionStorage.removeItem('fishhold_tank')
 }
 
@@ -74,6 +82,13 @@ const handleNavigate = (viewType: string) => {
   if (viewType === 'dashboard') {
     currentTank.value = null
     sessionStorage.removeItem('fishhold_tank')
+    currentShip.value = 'naoero'
+    sessionStorage.setItem('fishhold_ship', 'naoero')
+  } else if (viewType === 'challengerDashboard') {
+    currentTank.value = null
+    sessionStorage.removeItem('fishhold_tank')
+    currentShip.value = 'challenger'
+    sessionStorage.setItem('fishhold_ship', 'challenger')
   }
 
   // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
@@ -109,15 +124,15 @@ const handleNavigate = (viewType: string) => {
   <Teleport to="body">
     <div class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="closeSidebar"></div>
     <aside class="mobile-sidebar" :class="{ 'mobile-sidebar-open': sidebarOpen }">
-      <Sidebar :currentView="currentView" @navigate="handleNavigate" />
+      <Sidebar :currentView="currentView" :currentShip="currentShip" @navigate="handleNavigate" />
     </aside>
   </Teleport>
 
   <div class="app-container" :class="{ 'app-locked': !isLoggedIn }">
     <!-- 데스크탑에서만 CSS로 보여지는 사이드바 -->
-    <Sidebar class="app-sidebar" :currentView="currentView" @navigate="handleNavigate" />
+    <Sidebar class="app-sidebar" :currentView="currentView" :currentShip="currentShip" @navigate="handleNavigate" />
     <div class="app-main-wrapper">
-      <Header class="app-header" :sidebarOpen="sidebarOpen" :currentView="currentView" @toggle-sidebar="toggleSidebar" />
+      <Header class="app-header" :sidebarOpen="sidebarOpen" :currentView="currentView" :currentShip="currentShip" @toggle-sidebar="toggleSidebar" />
       <main class="app-content">
         <MainDashboard v-if="currentView === 'mainDashboard'" @navigate="handleNavigate" />
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
