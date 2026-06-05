@@ -72,12 +72,12 @@ const mapTankIdToMkr3Name = (id: string, shipType: string) => {
   const lowerId = id.toLowerCase();
   
   if (shipType === 'moacona') {
-    if (lowerId === '1') return 'FH01C PV1';
+    if (lowerId === '1') return 'C No1 FH PV1';
     const numMatch = lowerId.match(/\d+/);
     if (!numMatch) return null;
-    const num = numMatch[0].padStart(2, '0');
-    if (lowerId.endsWith('p')) return `FH${num}P PV1`;
-    if (lowerId.endsWith('s')) return `FH${num}S PV1`;
+    const num = numMatch[0];
+    if (lowerId.endsWith('p')) return `PS No${num} FH PV1`;
+    if (lowerId.endsWith('s')) return `SS No${num} FH PV1`;
     return null;
   }
   

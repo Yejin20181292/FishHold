@@ -45,17 +45,17 @@ const tankBaseTemps: Record<string, number> = {
   'PS No7 FH F': -3.2, 'SS No8 FH F': -2.6, 'PS No8 FH F': -2.2, 'SS No9 FH F': -1.9,
   'PS No9 FH F': -15.6, 'SS No10 FH F': -14.4, 'PS No10 FH F': -14.7,
   // Moacona NMC sensors
-  'FH01C PV1': -15.2, 'FH01C PV2': -14.8,
-  'FH02P PV1': -15.5, 'FH02P PV2': -16.0, 'FH02S PV1': -15.9, 'FH02S PV2': -14.5,
-  'FH03P PV1': -14.2, 'FH03P PV2': -15.1, 'FH03S PV1': -15.0, 'FH03S PV2': -14.9,
-  'FH04P PV1': -15.3, 'FH04P PV2': -15.8, 'FH04S PV1': -16.2, 'FH04S PV2': -15.4,
-  'FH05P PV1': -15.7, 'FH05P PV2': -16.1, 'FH05S PV1': -15.6, 'FH05S PV2': -14.4,
-  'FH06P PV1': -14.7, 'FH06P PV2': -15.0, 'FH06S PV1': -15.2, 'FH06S PV2': -14.8,
-  'FH07P PV1': -15.5, 'FH07P PV2': -16.0, 'FH07S PV1': -15.9, 'FH07S PV2': -14.5,
-  'FH08P PV1': -14.2, 'FH08P PV2': -15.1, 'FH08S PV1': -15.0, 'FH08S PV2': -14.9,
-  'FH09P PV1': -15.3, 'FH09P PV2': -15.8, 'FH09S PV1': -16.2, 'FH09S PV2': -15.4,
-  'FH10P PV1': -15.7, 'FH10P PV2': -16.1, 'FH10S PV1': -15.6, 'FH10S PV2': -14.4,
-  'FH11P PV1': -14.7, 'FH11P PV2': -15.0, 'FH11S PV1': -15.2, 'FH11S PV2': -14.8
+  'C No1 FH PV1': -15.2, 'C No1 FH PV2': -14.8,
+  'PS No2 FH PV1': -15.5, 'PS No2 FH PV2': -16.0, 'SS No2 FH PV1': -15.9, 'SS No2 FH PV2': -14.5,
+  'PS No3 FH PV1': -14.2, 'PS No3 FH PV2': -15.1, 'SS No3 FH PV1': -15.0, 'SS No3 FH PV2': -14.9,
+  'PS No4 FH PV1': -15.3, 'PS No4 FH PV2': -15.8, 'SS No4 FH PV1': -16.2, 'SS No4 FH PV2': -15.4,
+  'PS No5 FH PV1': -15.7, 'PS No5 FH PV2': -16.1, 'SS No5 FH PV1': -15.6, 'SS No5 FH PV2': -14.4,
+  'PS No6 FH PV1': -14.7, 'PS No6 FH PV2': -15.0, 'SS No6 FH PV1': -15.2, 'SS No6 FH PV2': -14.8,
+  'PS No7 FH PV1': -15.5, 'PS No7 FH PV2': -16.0, 'SS No7 FH PV1': -15.9, 'SS No7 FH PV2': -14.5,
+  'PS No8 FH PV1': -14.2, 'PS No8 FH PV2': -15.1, 'SS No8 FH PV1': -15.0, 'SS No8 FH PV2': -14.9,
+  'PS No9 FH PV1': -15.3, 'PS No9 FH PV2': -15.8, 'SS No9 FH PV1': -16.2, 'SS No9 FH PV2': -15.4,
+  'PS No10 FH PV1': -15.7, 'PS No10 FH PV2': -16.1, 'SS No10 FH PV1': -15.6, 'SS No10 FH PV2': -14.4,
+  'PS No11 FH PV1': -14.7, 'PS No11 FH PV2': -15.0, 'SS No11 FH PV1': -15.2, 'SS No11 FH PV2': -14.8
 };
 
 // 선택된 창고에 따른 컬럼 정의 (항상 ID 순서대로 정렬하여 유지)
