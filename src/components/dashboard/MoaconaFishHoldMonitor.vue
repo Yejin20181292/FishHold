@@ -29,7 +29,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '2p', name: 'No.2 (P)', temp: -15.5, top: '43.5%', left: '75.2%', width: '5.5%', height: '5%' },
 
   // Bow
-  { id: '1', name: 'No.1', temp: -15.2, top: '54.9%', left: '87%', width: '5.5%', height: '5%' },
+  { id: '1', name: 'No.1', temp: -15.2, top: '54.9%', left: '88%', width: '5.5%', height: '5%' },
 
   // Starboard (S) Side - Bottom Row (from stern to bow, holds 11 down to 2)
   { id: '11s', name: 'No.11 (S)', temp: -14.8, top: '69.2%', left: '7.8%', width: '5.5%', height: '5%' },
