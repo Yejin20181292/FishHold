@@ -71,9 +71,9 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬 FISH...</li>
-                <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 첼린저 FISH...</li>
-                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moacona') }" @click="emit('navigate', 'moaconaDashboard')">신라 모아코나 FISH...</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 챌린저</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moacona') }" @click="emit('navigate', 'moaconaDashboard')">신라 모아코나</li>
               </ul>
             </div>
           </li>
