@@ -45,11 +45,15 @@ const savedShip = sessionStorage.getItem('fishhold_ship')
 const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : 'naoero'))
 
 const pushHistoryState = () => {
-  history.pushState({
-    view: currentView.value,
-    tank: currentTank.value,
-    ship: currentShip.value
-  }, '')
+  try {
+    history.pushState({
+      view: currentView.value,
+      tank: currentTank.value ? JSON.parse(JSON.stringify(currentTank.value)) : null,
+      ship: currentShip.value
+    }, '')
+  } catch (e) {
+    console.error('Failed to push history state', e)
+  }
 }
 
 const handleTankSelect = (tank: any) => {
@@ -144,24 +148,33 @@ const handlePopState = (event: PopStateEvent) => {
     currentView.value = event.state.view
     currentTank.value = event.state.tank
     currentShip.value = event.state.ship
-    
-    // Sync sessionStorage
-    sessionStorage.setItem('fishhold_view', event.state.view)
-    if (event.state.tank) {
-      sessionStorage.setItem('fishhold_tank', JSON.stringify(event.state.tank))
-    } else {
-      sessionStorage.removeItem('fishhold_tank')
-    }
-    sessionStorage.setItem('fishhold_ship', event.state.ship)
+  } else {
+    // Fallback to initial values if browser state is null
+    currentView.value = initialView
+    currentTank.value = initialTank
+    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : 'naoero')
   }
+  
+  // Sync sessionStorage
+  sessionStorage.setItem('fishhold_view', currentView.value)
+  if (currentTank.value) {
+    sessionStorage.setItem('fishhold_tank', JSON.stringify(currentTank.value))
+  } else {
+    sessionStorage.removeItem('fishhold_tank')
+  }
+  sessionStorage.setItem('fishhold_ship', currentShip.value)
 }
 
 onMounted(() => {
-  history.replaceState({
-    view: currentView.value,
-    tank: currentTank.value,
-    ship: currentShip.value
-  }, '')
+  try {
+    history.replaceState({
+      view: currentView.value,
+      tank: currentTank.value ? JSON.parse(JSON.stringify(currentTank.value)) : null,
+      ship: currentShip.value
+    }, '')
+  } catch (e) {
+    console.error('Failed to replace initial history state', e)
+  }
   window.addEventListener('popstate', handlePopState)
 })
 
