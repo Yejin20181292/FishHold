@@ -17,9 +17,9 @@ interface FishHold {
 // Approximate positions based on the provided image, adapted for 11 holds distributed uniformly
 const fishHolds = ref<FishHold[]>([
   // Port (P) Side - Top Row (from stern to bow, holds 11 down to 2)
-  { id: '11p', name: 'No.11 (P)', temp: -14.7, top: '39.9%', left: '3%', width: '5.5%', height: '5%' },
-  { id: '10p', name: 'No.10 (P)', temp: -15.7, top: '39.9%', left: '9.5%', width: '5.5%', height: '5%' },
-  { id: '9p', name: 'No.9 (P)', temp: -15.3, top: '39.9%', left: '19%', width: '5.5%', height: '5%' },
+  { id: '11p', name: 'No.11 (P)', temp: -14.7, top: '39.9%', left: '2%', width: '5.5%', height: '5%' },
+  { id: '10p', name: 'No.10 (P)', temp: -15.7, top: '39.9%', left: '9.2%', width: '5.5%', height: '5%' },
+  { id: '9p', name: 'No.9 (P)', temp: -15.3, top: '39.9%', left: '18%', width: '5.5%', height: '5%' },
   { id: '8p', name: 'No.8 (P)', temp: -14.2, top: '43.5%', left: '26.5%', width: '5.5%', height: '5%' },
   { id: '7p', name: 'No.7 (P)', temp: -15.5, top: '43.5%', left: '35.5%', width: '5.5%', height: '5%' },
   { id: '6p', name: 'No.6 (P)', temp: -14.7, top: '43.5%', left: '44.1%', width: '5.5%', height: '5%' },
@@ -32,9 +32,9 @@ const fishHolds = ref<FishHold[]>([
   { id: '1', name: 'No.1', temp: -15.2, top: '54.9%', left: '88%', width: '5.5%', height: '5%' },
 
   // Starboard (S) Side - Bottom Row (from stern to bow, holds 11 down to 2)
-  { id: '11s', name: 'No.11 (S)', temp: -14.8, top: '69.2%', left: '3%', width: '5.5%', height: '5%' },
-  { id: '10s', name: 'No.10 (S)', temp: -14.4, top: '69.2%', left: '9.5%', width: '5.5%', height: '5%' },
-  { id: '9s', name: 'No.9 (S)', temp: -15.4, top: '69.2%', left: '19%', width: '5.5%', height: '5%' },
+  { id: '11s', name: 'No.11 (S)', temp: -14.8, top: '69.2%', left: '2%', width: '5.5%', height: '5%' },
+  { id: '10s', name: 'No.10 (S)', temp: -14.4, top: '69.2%', left: '9.2%', width: '5.5%', height: '5%' },
+  { id: '9s', name: 'No.9 (S)', temp: -15.4, top: '69.2%', left: '18%', width: '5.5%', height: '5%' },
   { id: '8s', name: 'No.8 (S)', temp: -14.9, top: '65.7%', left: '26.5%', width: '5.5%', height: '5%' },
   { id: '7s', name: 'No.7 (S)', temp: -14.5, top: '65.7%', left: '35.5%', width: '5.5%', height: '5%' },
   { id: '6s', name: 'No.6 (S)', temp: -14.8, top: '65.7%', left: '44.1%', width: '5.5%', height: '5%' },
