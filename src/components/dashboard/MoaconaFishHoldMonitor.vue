@@ -26,7 +26,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '5p', name: 'No.5 (P)', temp: -15.7, top: '43.5%', left: '53.0%', width: '5.5%', height: '5%' },
   { id: '4p', name: 'No.4 (P)', temp: -15.3, top: '43.5%', left: '60.4%', width: '5.5%', height: '5%' },
   { id: '3p', name: 'No.3 (P)', temp: -14.2, top: '43.5%', left: '67.8%', width: '5.5%', height: '5%' },
-  { id: '2p', name: 'No.2 (P)', temp: -15.5, top: '43.5%', left: '80%', width: '5.5%', height: '5%' },
+  { id: '2p', name: 'No.2 (P)', temp: -15.5, top: '43.5%', left: '79%', width: '5.5%', height: '5%' },
 
   // Bow
   { id: '1', name: 'No.1', temp: -15.2, top: '54.9%', left: '88%', width: '5.5%', height: '5%' },
@@ -41,7 +41,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '5s', name: 'No.5 (S)', temp: -14.4, top: '65.7%', left: '53.0%', width: '5.5%', height: '5%' },
   { id: '4s', name: 'No.4 (S)', temp: -16.2, top: '65.7%', left: '60.4%', width: '5.5%', height: '5%' },
   { id: '3s', name: 'No.3 (S)', temp: -15.0, top: '65.7%', left: '67.8%', width: '5.5%', height: '5%' },
-  { id: '2s', name: 'No.2 (S)', temp: -15.9, top: '65.7%', left: '80%', width: '5.5%', height: '5%' },
+  { id: '2s', name: 'No.2 (S)', temp: -15.9, top: '65.7%', left: '79%', width: '5.5%', height: '5%' },
 ]);
 
 const emit = defineEmits(['select-tank']);
