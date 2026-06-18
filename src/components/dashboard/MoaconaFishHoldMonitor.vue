@@ -22,10 +22,10 @@ const fishHolds = ref<FishHold[]>([
   { id: '9p', name: 'No.9 (P)', temp: -15.3, top: '43.5%', left: '23.4%', width: '5.5%', height: '5%' },
   { id: '8p', name: 'No.8 (P)', temp: -14.2, top: '43.5%', left: '30.8%', width: '5.5%', height: '5%' },
   { id: '7p', name: 'No.7 (P)', temp: -15.5, top: '43.5%', left: '38.2%', width: '5.5%', height: '5%' },
-  { id: '6p', name: 'No.6 (P)', temp: -14.7, top: '43.5%', left: '45.6%', width: '5.5%', height: '5%' },
+  { id: '6p', name: 'No.6 (P)', temp: -14.7, top: '43.5%', left: '44%', width: '5.5%', height: '5%' },
   { id: '5p', name: 'No.5 (P)', temp: -15.7, top: '43.5%', left: '53.0%', width: '5.5%', height: '5%' },
-  { id: '4p', name: 'No.4 (P)', temp: -15.3, top: '43.5%', left: '61.5%', width: '5.5%', height: '5%' },
-  { id: '3p', name: 'No.3 (P)', temp: -14.2, top: '43.5%', left: '70.4%', width: '5.5%', height: '5%' },
+  { id: '4p', name: 'No.4 (P)', temp: -15.3, top: '43.5%', left: '61.6%', width: '5.5%', height: '5%' },
+  { id: '3p', name: 'No.3 (P)', temp: -14.2, top: '43.5%', left: '70.5%', width: '5.5%', height: '5%' },
   { id: '2p', name: 'No.2 (P)', temp: -15.5, top: '43.5%', left: '79.4%', width: '5.5%', height: '5%' },
 
   // Bow
@@ -37,10 +37,10 @@ const fishHolds = ref<FishHold[]>([
   { id: '9s', name: 'No.9 (S)', temp: -15.4, top: '65.7%', left: '23.4%', width: '5.5%', height: '5%' },
   { id: '8s', name: 'No.8 (S)', temp: -14.9, top: '65.7%', left: '30.8%', width: '5.5%', height: '5%' },
   { id: '7s', name: 'No.7 (S)', temp: -14.5, top: '65.7%', left: '38.2%', width: '5.5%', height: '5%' },
-  { id: '6s', name: 'No.6 (S)', temp: -14.8, top: '65.7%', left: '45.6%', width: '5.5%', height: '5%' },
+  { id: '6s', name: 'No.6 (S)', temp: -14.8, top: '65.7%', left: '44%', width: '5.5%', height: '5%' },
   { id: '5s', name: 'No.5 (S)', temp: -14.4, top: '65.7%', left: '53.0%', width: '5.5%', height: '5%' },
-  { id: '4s', name: 'No.4 (S)', temp: -16.2, top: '65.7%', left: '61.5%', width: '5.5%', height: '5%' },
-  { id: '3s', name: 'No.3 (S)', temp: -15.0, top: '65.7%', left: '70.4%', width: '5.5%', height: '5%' },
+  { id: '4s', name: 'No.4 (S)', temp: -16.2, top: '65.7%', left: '61.6%', width: '5.5%', height: '5%' },
+  { id: '3s', name: 'No.3 (S)', temp: -15.0, top: '65.7%', left: '70.5%', width: '5.5%', height: '5%' },
   { id: '2s', name: 'No.2 (S)', temp: -15.9, top: '65.7%', left: '79.4%', width: '5.5%', height: '5%' },
 ]);
 
