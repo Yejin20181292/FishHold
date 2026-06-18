@@ -55,9 +55,9 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.monitoring }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬 MKR-3</li>
-                <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 첼린저 MKR-3</li>
-                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaMkr3' }" @click="emit('navigate', 'moaconaMkr3')">신라 모아코나 MKR-3</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 챌린저</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'moaconaMkr3' }" @click="emit('navigate', 'moaconaMkr3')">신라 모아코나</li>
               </ul>
             </div>
           </li>
