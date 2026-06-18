@@ -45,6 +45,11 @@ const fishHolds = ref<FishHold[]>([
 ]);
 
 const emit = defineEmits(['select-tank']);
+
+const getPv2Top = (topStr: string) => {
+  const topVal = parseFloat(topStr);
+  return (topVal + 5.5) + '%';
+};
 </script>
 
 <template>
@@ -53,14 +58,30 @@ const emit = defineEmits(['select-tank']);
       <div class="image-container">
         <img src="@/assets/blueprint_moacona.png" alt="Ship Blueprint" class="ship-bg" />
         
-        <!-- Temperature overlays -->
+        <!-- PV1 Temperature overlays -->
         <div 
           v-for="tank in fishHolds" 
-          :key="tank.id"
+          :key="tank.id + '_pv1'"
           class="tank-overlay"
           @click="emit('select-tank', tank)"
           :style="{
             top: tank.top,
+            left: tank.left,
+            width: tank.width,
+            height: tank.height
+          }"
+        >
+          <FishHoldIndicator :temp="tank.temp" />
+        </div>
+
+        <!-- PV2 Temperature overlays -->
+        <div 
+          v-for="tank in fishHolds" 
+          :key="tank.id + '_pv2'"
+          class="tank-overlay"
+          @click="emit('select-tank', tank)"
+          :style="{
+            top: getPv2Top(tank.top),
             left: tank.left,
             width: tank.width,
             height: tank.height
