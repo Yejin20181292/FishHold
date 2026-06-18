@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
@@ -44,11 +44,20 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 const savedShip = sessionStorage.getItem('fishhold_ship')
 const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : 'naoero'))
 
+const pushHistoryState = () => {
+  history.pushState({
+    view: currentView.value,
+    tank: currentTank.value,
+    ship: currentShip.value
+  }, '')
+}
+
 const handleTankSelect = (tank: any) => {
   currentTank.value = tank
   currentView.value = 'tankDetail'
   sessionStorage.setItem('fishhold_view', 'tankDetail')
   sessionStorage.setItem('fishhold_tank', JSON.stringify(tank))
+  pushHistoryState()
 }
 
 const handleBack = () => {
@@ -64,6 +73,7 @@ const handleBack = () => {
     sessionStorage.setItem('fishhold_view', 'dashboard')
   }
   sessionStorage.removeItem('fishhold_tank')
+  pushHistoryState()
 }
 
 // FishHoldMonitor ID (10p, 5s 등)를 MKR-3에서 사용하는 이름으로 변환
@@ -126,7 +136,38 @@ const handleNavigate = (viewType: string) => {
   }
 
   closeSidebar() // 모바일: 메뉴 선택 시 자동으로 사이드바 닫기
+  pushHistoryState()
 }
+
+const handlePopState = (event: PopStateEvent) => {
+  if (event.state) {
+    currentView.value = event.state.view
+    currentTank.value = event.state.tank
+    currentShip.value = event.state.ship
+    
+    // Sync sessionStorage
+    sessionStorage.setItem('fishhold_view', event.state.view)
+    if (event.state.tank) {
+      sessionStorage.setItem('fishhold_tank', JSON.stringify(event.state.tank))
+    } else {
+      sessionStorage.removeItem('fishhold_tank')
+    }
+    sessionStorage.setItem('fishhold_ship', event.state.ship)
+  }
+}
+
+onMounted(() => {
+  history.replaceState({
+    view: currentView.value,
+    tank: currentTank.value,
+    ship: currentShip.value
+  }, '')
+  window.addEventListener('popstate', handlePopState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('popstate', handlePopState)
+})
 </script>
 
 <template>
