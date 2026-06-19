@@ -80,7 +80,7 @@ const checkLimit = (event: Event, tank: TankData, isDataset = false) => {
 <template>
   <div class="mkr3-container">
     <div class="header">
-      <h2 class="title">신라 첼린저 MKR-3</h2>
+      <h2 class="title">신라 챌린저</h2>
     </div>
 
     <!-- TABS -->
