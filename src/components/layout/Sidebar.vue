@@ -22,7 +22,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 watch(() => props.currentView, (newView) => {
   if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3' || newView === 'explorerMkr3' || newView === 'sprinterMkr3' || newView === 'moamariMkr3') {
     expandedMenus.monitoring = true;
-  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard' || newView === 'explorerDashboard' || newView === 'sprinterDashboard' || newView === 'moamariDashboard') {
+  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard' || newView === 'explorerDashboard' || newView === 'sprinterDashboard' || newView === 'moamariDashboard' || newView === 'harvestDashboard') {
     expandedMenus.status = true;
   }
 }, { immediate: true });
@@ -66,7 +66,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' || currentView === 'moaconaDashboard' || currentView === 'jupiterDashboard' || currentView === 'explorerDashboard' || currentView === 'sprinterDashboard' || currentView === 'moamariDashboard' }" @click="toggleMenu('status')">
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' || currentView === 'moaconaDashboard' || currentView === 'jupiterDashboard' || currentView === 'explorerDashboard' || currentView === 'sprinterDashboard' || currentView === 'moamariDashboard' || currentView === 'harvestDashboard' }" @click="toggleMenu('status')">
               <div class="nav-link-main">
                 <span class="icon">🚢</span>
                 장비 현황판
@@ -75,13 +75,14 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona' && props.currentShip !== 'jupiter' && props.currentShip !== 'explorer' && props.currentShip !== 'sprinter' && props.currentShip !== 'moamari') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona' && props.currentShip !== 'jupiter' && props.currentShip !== 'explorer' && props.currentShip !== 'sprinter' && props.currentShip !== 'moamari' && props.currentShip !== 'harvest') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 챌린저</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'moaconaDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moacona') }" @click="emit('navigate', 'moaconaDashboard')">신라 모아코나</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'jupiterDashboard' || (currentView === 'tankDetail' && props.currentShip === 'jupiter') }" @click="emit('navigate', 'jupiterDashboard')">신라 쥬피터</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'explorerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'explorer') }" @click="emit('navigate', 'explorerDashboard')">신라 익스플로러</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'sprinterDashboard' || (currentView === 'tankDetail' && props.currentShip === 'sprinter') }" @click="emit('navigate', 'sprinterDashboard')">신라 스프린터</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'moamariDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moamari') }" @click="emit('navigate', 'moamariDashboard')">신라 모아마리</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'harvestDashboard' || (currentView === 'tankDetail' && props.currentShip === 'harvest') }" @click="emit('navigate', 'harvestDashboard')">신라 하비스트</li>
               </ul>
             </div>
           </li>
