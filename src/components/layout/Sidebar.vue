@@ -20,7 +20,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 
 // 현재 뷰에 따라 드롭다운 자동 펼침
 watch(() => props.currentView, (newView) => {
-  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3' || newView === 'explorerMkr3' || newView === 'sprinterMkr3') {
+  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3' || newView === 'explorerMkr3' || newView === 'sprinterMkr3' || newView === 'moamariMkr3') {
     expandedMenus.monitoring = true;
   } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard' || newView === 'explorerDashboard' || newView === 'sprinterDashboard' || newView === 'moamariDashboard') {
     expandedMenus.status = true;
@@ -46,7 +46,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' || currentView === 'moaconaMkr3' || currentView === 'jupiterMkr3' || currentView === 'explorerMkr3' || currentView === 'sprinterMkr3' }" @click="toggleMenu('monitoring')">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' || currentView === 'moaconaMkr3' || currentView === 'jupiterMkr3' || currentView === 'explorerMkr3' || currentView === 'sprinterMkr3' || currentView === 'moamariMkr3' }" @click="toggleMenu('monitoring')">
               <div class="nav-link-main">
                 <span class="icon">🖥️</span>
                 장비 모니터링
@@ -61,6 +61,7 @@ watch(() => props.currentView, (newView) => {
                 <li class="sub-nav-item" :class="{ active: currentView === 'jupiterMkr3' }" @click="emit('navigate', 'jupiterMkr3')">신라 쥬피터</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'explorerMkr3' }" @click="emit('navigate', 'explorerMkr3')">신라 익스플로러</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'sprinterMkr3' }" @click="emit('navigate', 'sprinterMkr3')">신라 스프린터</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'moamariMkr3' }" @click="emit('navigate', 'moamariMkr3')">신라 모아마리</li>
               </ul>
             </div>
           </li>
