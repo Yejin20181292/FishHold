@@ -49,7 +49,7 @@ const emit = defineEmits(['select-tank']);
   <div class="monitor-container">
     <div class="blueprint-wrapper">
       <div class="image-container">
-        <img src="@/assets/blueprint.png" alt="Ship Blueprint" class="ship-bg" />
+        <img src="@/assets/blueprint_harvest.png" alt="Ship Blueprint" class="ship-bg" />
         
         <!-- Temperature overlays -->
         <div 
