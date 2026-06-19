@@ -32,6 +32,8 @@ const viewDisplayName = computed(() => {
       return '장비 모니터링 / 신라 스프린터'
     case 'moamariMkr3':
       return '장비 모니터링 / 신라 모아마리'
+    case 'harvestMkr3':
+      return '장비 모니터링 / 신라 하비스트'
     case 'dashboard':
       return '장비 현황판 / 신라 나오에로썬'
     case 'challengerDashboard':

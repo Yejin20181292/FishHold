@@ -18,6 +18,7 @@ import JupiterEquipmentMonitorMkr3 from '@/components/dashboard/JupiterEquipment
 import ExplorerEquipmentMonitorMkr3 from '@/components/dashboard/ExplorerEquipmentMonitorMkr3.vue'
 import SprinterEquipmentMonitorMkr3 from '@/components/dashboard/SprinterEquipmentMonitorMkr3.vue'
 import MoamariEquipmentMonitorMkr3 from '@/components/dashboard/MoamariEquipmentMonitorMkr3.vue'
+import HarvestEquipmentMonitorMkr3 from '@/components/dashboard/HarvestEquipmentMonitorMkr3.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
@@ -41,7 +42,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'explorerDashboard', 'sprinterDashboard', 'moamariDashboard', 'harvestDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'jupiterMkr3', 'explorerMkr3', 'sprinterMkr3', 'moamariMkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'explorerDashboard', 'sprinterDashboard', 'moamariDashboard', 'harvestDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'jupiterMkr3', 'explorerMkr3', 'sprinterMkr3', 'moamariMkr3', 'harvestMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -51,7 +52,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard' || currentView.value === 'jupiterMkr3') ? 'jupiter' : (currentView.value === 'explorerDashboard' || currentView.value === 'explorerMkr3') ? 'explorer' : (currentView.value === 'sprinterDashboard' || currentView.value === 'sprinterMkr3') ? 'sprinter' : (currentView.value === 'moamariDashboard' || currentView.value === 'moamariMkr3') ? 'moamari' : (currentView.value === 'harvestDashboard') ? 'harvest' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard' || currentView.value === 'jupiterMkr3') ? 'jupiter' : (currentView.value === 'explorerDashboard' || currentView.value === 'explorerMkr3') ? 'explorer' : (currentView.value === 'sprinterDashboard' || currentView.value === 'sprinterMkr3') ? 'sprinter' : (currentView.value === 'moamariDashboard' || currentView.value === 'moamariMkr3') ? 'moamari' : (currentView.value === 'harvestDashboard' || currentView.value === 'harvestMkr3') ? 'harvest' : 'naoero'))
 
 const pushHistoryState = () => {
   try {
@@ -185,10 +186,13 @@ const handleNavigate = (viewType: string) => {
   } else if (viewType === 'moamariMkr3') {
     currentShip.value = 'moamari'
     sessionStorage.setItem('fishhold_ship', 'moamari')
+  } else if (viewType === 'harvestMkr3') {
+    currentShip.value = 'harvest'
+    sessionStorage.setItem('fishhold_ship', 'harvest')
   }
 
   // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
-  if (viewType === 'mkr3' || viewType === 'challengerMkr3' || viewType === 'moaconaMkr3' || viewType === 'jupiterMkr3' || viewType === 'explorerMkr3' || viewType === 'sprinterMkr3' || viewType === 'moamariMkr3') {
+  if (viewType === 'mkr3' || viewType === 'challengerMkr3' || viewType === 'moaconaMkr3' || viewType === 'jupiterMkr3' || viewType === 'explorerMkr3' || viewType === 'sprinterMkr3' || viewType === 'moamariMkr3' || viewType === 'harvestMkr3') {
     localStorage.setItem('mkr3_active_tab', 'monitoring')
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
@@ -213,7 +217,7 @@ const handlePopState = (event: PopStateEvent) => {
     // Fallback to initial values if browser state is null
     currentView.value = initialView
     currentTank.value = initialTank
-    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard' || initialView === 'jupiterMkr3') ? 'jupiter' : (initialView === 'explorerDashboard' || initialView === 'explorerMkr3') ? 'explorer' : (initialView === 'sprinterDashboard' || initialView === 'sprinterMkr3') ? 'sprinter' : (initialView === 'moamariDashboard' || initialView === 'moamariMkr3') ? 'moamari' : (initialView === 'harvestDashboard') ? 'harvest' : 'naoero')
+    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard' || initialView === 'jupiterMkr3') ? 'jupiter' : (initialView === 'explorerDashboard' || initialView === 'explorerMkr3') ? 'explorer' : (initialView === 'sprinterDashboard' || initialView === 'sprinterMkr3') ? 'sprinter' : (initialView === 'moamariDashboard' || initialView === 'moamariMkr3') ? 'moamari' : (initialView === 'harvestDashboard' || initialView === 'harvestMkr3') ? 'harvest' : 'naoero')
   }
   
   // Sync sessionStorage
@@ -287,6 +291,7 @@ onUnmounted(() => {
         <ExplorerEquipmentMonitorMkr3 v-else-if="currentView === 'explorerMkr3'" />
         <SprinterEquipmentMonitorMkr3 v-else-if="currentView === 'sprinterMkr3'" />
         <MoamariEquipmentMonitorMkr3 v-else-if="currentView === 'moamariMkr3'" />
+        <HarvestEquipmentMonitorMkr3 v-else-if="currentView === 'harvestMkr3'" />
       </main>
     </div>
   </div>
