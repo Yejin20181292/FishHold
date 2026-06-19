@@ -17,7 +17,7 @@ interface FishHold {
 // Approximate positions based on the provided image
 const fishHolds = ref<FishHold[]>([
   // Port (P) Side - Top Row (from stern to bow)
-  { id: '11p', name: 'No.11 (P)', temp: -15.0, top: '39.9%', left: '0.7%', width: '6%', height: '5%' },
+  { id: '11p', name: 'No.11 (P)', temp: -15.0, top: '39.9%', left: '0.6%', width: '6%', height: '5%' },
   { id: '10p', name: 'No.10 (P)', temp: -14.5, top: '39.9%', left: '8.6%', width: '6%', height: '5%' },
   { id: '9p', name: 'No.9 (P)', temp: -1.6, top: '39.9%', left: '17.8%', width: '6%', height: '5%' },
   { id: '8p', name: 'No.8 (P)', temp: 3.5, top: '43.5%', left: '26.8%', width: '6%', height: '5%' },
@@ -32,7 +32,7 @@ const fishHolds = ref<FishHold[]>([
   { id: '1', name: 'No.1', temp: 20.5, top: '54.9%', left: '88.5%', width: '5%', height: '5%' },
 
   // Starboard (S) Side - Bottom Row (from stern to bow)
-  { id: '11s', name: 'No.11 (S)', temp: -12.0, top: '69.2%', left: '0.7%', width: '6%', height: '5%' },
+  { id: '11s', name: 'No.11 (S)', temp: -12.0, top: '69.2%', left: '0.6%', width: '6%', height: '5%' },
   { id: '10s', name: 'No.10 (S)', temp: -11.1, top: '69.2%', left: '8.6%', width: '6%', height: '5%' },
   { id: '9s', name: 'No.9 (S)', temp: -1.9, top: '69.2%', left: '17.8%', width: '6%', height: '5%' },
   { id: '8s', name: 'No.8 (S)', temp: -1.0, top: '65.7%', left: '26.8%', width: '6%', height: '5%' },
