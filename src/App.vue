@@ -8,6 +8,7 @@ import MoaconaFishHoldMonitor from '@/components/dashboard/MoaconaFishHoldMonito
 import JupiterFishHoldMonitor from '@/components/dashboard/JupiterFishHoldMonitor.vue'
 import ExplorerFishHoldMonitor from '@/components/dashboard/ExplorerFishHoldMonitor.vue'
 import SprinterFishHoldMonitor from '@/components/dashboard/SprinterFishHoldMonitor.vue'
+import MoamariFishHoldMonitor from '@/components/dashboard/MoamariFishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import ChallengerEquipmentMonitorMkr3 from '@/components/dashboard/ChallengerEquipmentMonitorMkr3.vue'
@@ -38,7 +39,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'explorerDashboard', 'sprinterDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'jupiterMkr3', 'explorerMkr3', 'sprinterMkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'explorerDashboard', 'sprinterDashboard', 'moamariDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'jupiterMkr3', 'explorerMkr3', 'sprinterMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -48,7 +49,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard' || currentView.value === 'jupiterMkr3') ? 'jupiter' : (currentView.value === 'explorerDashboard' || currentView.value === 'explorerMkr3') ? 'explorer' : (currentView.value === 'sprinterDashboard' || currentView.value === 'sprinterMkr3') ? 'sprinter' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard' || currentView.value === 'jupiterMkr3') ? 'jupiter' : (currentView.value === 'explorerDashboard' || currentView.value === 'explorerMkr3') ? 'explorer' : (currentView.value === 'sprinterDashboard' || currentView.value === 'sprinterMkr3') ? 'sprinter' : (currentView.value === 'moamariDashboard') ? 'moamari' : 'naoero'))
 
 const pushHistoryState = () => {
   try {
@@ -87,6 +88,9 @@ const handleBack = () => {
   } else if (currentShip.value === 'sprinter') {
     currentView.value = 'sprinterDashboard'
     sessionStorage.setItem('fishhold_view', 'sprinterDashboard')
+  } else if (currentShip.value === 'moamari') {
+    currentView.value = 'moamariDashboard'
+    sessionStorage.setItem('fishhold_view', 'moamariDashboard')
   } else {
     currentView.value = 'dashboard'
     sessionStorage.setItem('fishhold_view', 'dashboard')
@@ -145,6 +149,11 @@ const handleNavigate = (viewType: string) => {
     sessionStorage.removeItem('fishhold_tank')
     currentShip.value = 'sprinter'
     sessionStorage.setItem('fishhold_ship', 'sprinter')
+  } else if (viewType === 'moamariDashboard') {
+    currentTank.value = null
+    sessionStorage.removeItem('fishhold_tank')
+    currentShip.value = 'moamari'
+    sessionStorage.setItem('fishhold_ship', 'moamari')
   } else if (viewType === 'mkr3') {
     currentShip.value = 'naoero'
     sessionStorage.setItem('fishhold_ship', 'naoero')
@@ -191,7 +200,7 @@ const handlePopState = (event: PopStateEvent) => {
     // Fallback to initial values if browser state is null
     currentView.value = initialView
     currentTank.value = initialTank
-    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard' || initialView === 'jupiterMkr3') ? 'jupiter' : (initialView === 'explorerDashboard' || initialView === 'explorerMkr3') ? 'explorer' : (initialView === 'sprinterDashboard' || initialView === 'sprinterMkr3') ? 'sprinter' : 'naoero')
+    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard' || initialView === 'jupiterMkr3') ? 'jupiter' : (initialView === 'explorerDashboard' || initialView === 'explorerMkr3') ? 'explorer' : (initialView === 'sprinterDashboard' || initialView === 'sprinterMkr3') ? 'sprinter' : (initialView === 'moamariDashboard') ? 'moamari' : 'naoero')
   }
   
   // Sync sessionStorage
@@ -255,6 +264,7 @@ onUnmounted(() => {
         <JupiterFishHoldMonitor v-else-if="currentView === 'jupiterDashboard'" @select-tank="handleTankSelect" />
         <ExplorerFishHoldMonitor v-else-if="currentView === 'explorerDashboard'" @select-tank="handleTankSelect" />
         <SprinterFishHoldMonitor v-else-if="currentView === 'sprinterDashboard'" @select-tank="handleTankSelect" />
+        <MoamariFishHoldMonitor v-else-if="currentView === 'moamariDashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" :currentShip="currentShip" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
         <ChallengerEquipmentMonitorMkr3 v-else-if="currentView === 'challengerMkr3'" />
