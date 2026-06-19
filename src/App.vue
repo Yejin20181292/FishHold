@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header.vue'
 import FishHoldMonitor from '@/components/dashboard/FishHoldMonitor.vue'
 import ChallengerFishHoldMonitor from '@/components/dashboard/ChallengerFishHoldMonitor.vue'
 import MoaconaFishHoldMonitor from '@/components/dashboard/MoaconaFishHoldMonitor.vue'
+import JupiterFishHoldMonitor from '@/components/dashboard/JupiterFishHoldMonitor.vue'
 import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import ChallengerEquipmentMonitorMkr3 from '@/components/dashboard/ChallengerEquipmentMonitorMkr3.vue'
@@ -32,7 +33,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -42,7 +43,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard') ? 'jupiter' : 'naoero'))
 
 const pushHistoryState = () => {
   try {
@@ -72,6 +73,9 @@ const handleBack = () => {
   } else if (currentShip.value === 'moacona') {
     currentView.value = 'moaconaDashboard'
     sessionStorage.setItem('fishhold_view', 'moaconaDashboard')
+  } else if (currentShip.value === 'jupiter') {
+    currentView.value = 'jupiterDashboard'
+    sessionStorage.setItem('fishhold_view', 'jupiterDashboard')
   } else {
     currentView.value = 'dashboard'
     sessionStorage.setItem('fishhold_view', 'dashboard')
@@ -115,6 +119,11 @@ const handleNavigate = (viewType: string) => {
     sessionStorage.removeItem('fishhold_tank')
     currentShip.value = 'moacona'
     sessionStorage.setItem('fishhold_ship', 'moacona')
+  } else if (viewType === 'jupiterDashboard') {
+    currentTank.value = null
+    sessionStorage.removeItem('fishhold_tank')
+    currentShip.value = 'jupiter'
+    sessionStorage.setItem('fishhold_ship', 'jupiter')
   } else if (viewType === 'mkr3') {
     currentShip.value = 'naoero'
     sessionStorage.setItem('fishhold_ship', 'naoero')
@@ -152,7 +161,7 @@ const handlePopState = (event: PopStateEvent) => {
     // Fallback to initial values if browser state is null
     currentView.value = initialView
     currentTank.value = initialTank
-    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : 'naoero')
+    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard') ? 'jupiter' : 'naoero')
   }
   
   // Sync sessionStorage
@@ -213,6 +222,7 @@ onUnmounted(() => {
         <FishHoldMonitor v-else-if="currentView === 'dashboard'" @select-tank="handleTankSelect" />
         <ChallengerFishHoldMonitor v-else-if="currentView === 'challengerDashboard'" @select-tank="handleTankSelect" />
         <MoaconaFishHoldMonitor v-else-if="currentView === 'moaconaDashboard'" @select-tank="handleTankSelect" />
+        <JupiterFishHoldMonitor v-else-if="currentView === 'jupiterDashboard'" @select-tank="handleTankSelect" />
         <FishHoldDetail v-else-if="currentView === 'tankDetail' && currentTank" :tank="currentTank" :currentShip="currentShip" @back="handleBack" @navigate="handleNavigate" />
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
         <ChallengerEquipmentMonitorMkr3 v-else-if="currentView === 'challengerMkr3'" />

@@ -22,7 +22,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 watch(() => props.currentView, (newView) => {
   if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3') {
     expandedMenus.monitoring = true;
-  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard') {
+  } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard') {
     expandedMenus.status = true;
   }
 }, { immediate: true });
@@ -71,9 +71,10 @@ watch(() => props.currentView, (newView) => {
             </div>
             <div class="dropdown-wrapper" :class="{ expanded: expandedMenus.status }">
               <ul class="sub-nav-list">
-                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'dashboard' || (currentView === 'tankDetail' && props.currentShip !== 'challenger' && props.currentShip !== 'moacona' && props.currentShip !== 'jupiter') }" @click="emit('navigate', 'dashboard')">신라 나오에로썬</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerDashboard' || (currentView === 'tankDetail' && props.currentShip === 'challenger') }" @click="emit('navigate', 'challengerDashboard')">신라 챌린저</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'moaconaDashboard' || (currentView === 'tankDetail' && props.currentShip === 'moacona') }" @click="emit('navigate', 'moaconaDashboard')">신라 모아코나</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'jupiterDashboard' || (currentView === 'tankDetail' && props.currentShip === 'jupiter') }" @click="emit('navigate', 'jupiterDashboard')">신라 쥬피터</li>
               </ul>
             </div>
           </li>

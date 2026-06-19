@@ -21,20 +21,24 @@ const viewDisplayName = computed(() => {
     case 'mkr3':
       return '장비 모니터링 / 신라 나오에로썬'
     case 'challengerMkr3':
-      return '장비 모니터링 / 신라 첼린저'
+      return '장비 모니터링 / 신라 챌린저'
     case 'moaconaMkr3':
       return '장비 모니터링 / 신라 모아코나'
     case 'dashboard':
       return '장비 현황판 / 신라 나오에로썬'
     case 'challengerDashboard':
-      return '장비 현황판 / 신라 첼린저'
+      return '장비 현황판 / 신라 챌린저'
     case 'moaconaDashboard':
       return '장비 현황판 / 신라 모아코나'
+    case 'jupiterDashboard':
+      return '장비 현황판 / 신라 쥬피터'
     case 'tankDetail':
       if (props.currentShip === 'challenger') {
-        return '장비 현황판 / 신라 첼린저'
+        return '장비 현황판 / 신라 챌린저'
       } else if (props.currentShip === 'moacona') {
         return '장비 현황판 / 신라 모아코나'
+      } else if (props.currentShip === 'jupiter') {
+        return '장비 현황판 / 신라 쥬피터'
       } else {
         return '장비 현황판 / 신라 나오에로썬'
       }
