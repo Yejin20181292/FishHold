@@ -38,6 +38,8 @@ const viewDisplayName = computed(() => {
       return '장비 현황판 / 신라 쥬피터'
     case 'explorerDashboard':
       return '장비 현황판 / 신라 익스플로러'
+    case 'sprinterDashboard':
+      return '장비 현황판 / 신라 스프린터'
     case 'tankDetail':
       if (props.currentShip === 'challenger') {
         return '장비 현황판 / 신라 챌린저'
@@ -47,6 +49,8 @@ const viewDisplayName = computed(() => {
         return '장비 현황판 / 신라 쥬피터'
       } else if (props.currentShip === 'explorer') {
         return '장비 현황판 / 신라 익스플로러'
+      } else if (props.currentShip === 'sprinter') {
+        return '장비 현황판 / 신라 스프린터'
       } else {
         return '장비 현황판 / 신라 나오에로썬'
       }
