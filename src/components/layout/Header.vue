@@ -28,6 +28,8 @@ const viewDisplayName = computed(() => {
       return '장비 모니터링 / 신라 쥬피터'
     case 'explorerMkr3':
       return '장비 모니터링 / 신라 익스플로러'
+    case 'sprinterMkr3':
+      return '장비 모니터링 / 신라 스프린터'
     case 'dashboard':
       return '장비 현황판 / 신라 나오에로썬'
     case 'challengerDashboard':

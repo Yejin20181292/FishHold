@@ -43,7 +43,7 @@ const emit = defineEmits(['back', 'navigate']);
       </div>
 
       <div class="card premium-card chart-card">
-        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" :showExpand="true" :expandTarget="currentShip === 'challenger' ? 'challengerMkr3' : currentShip === 'moacona' ? 'moaconaMkr3' : currentShip === 'jupiter' ? 'jupiterMkr3' : currentShip === 'explorer' ? 'explorerMkr3' : 'mkr3'" @navigate="(v) => emit('navigate', v)" />
+        <DateRangeChart :baseTemp="tank.temp" :titleName="tank.name" :showExpand="true" :expandTarget="currentShip === 'challenger' ? 'challengerMkr3' : currentShip === 'moacona' ? 'moaconaMkr3' : currentShip === 'jupiter' ? 'jupiterMkr3' : currentShip === 'explorer' ? 'explorerMkr3' : currentShip === 'sprinter' ? 'sprinterMkr3' : 'mkr3'" @navigate="(v) => emit('navigate', v)" />
       </div>
     </div>
   </div>
