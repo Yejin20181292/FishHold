@@ -64,7 +64,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' || currentView === 'moaconaDashboard' }" @click="toggleMenu('status')">
+            <div class="nav-link" :class="{ active: currentView === 'dashboard' || currentView === 'tankDetail' || currentView === 'challengerDashboard' || currentView === 'moaconaDashboard' || currentView === 'jupiterDashboard' || currentView === 'explorerDashboard' }" @click="toggleMenu('status')">
               <div class="nav-link-main">
                 <span class="icon">🚢</span>
                 장비 현황판
