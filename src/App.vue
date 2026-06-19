@@ -10,6 +10,7 @@ import FishHoldDetail from '@/components/dashboard/FishHoldDetail.vue'
 import EquipmentMonitorMkr3 from '@/components/dashboard/EquipmentMonitorMkr3.vue'
 import ChallengerEquipmentMonitorMkr3 from '@/components/dashboard/ChallengerEquipmentMonitorMkr3.vue'
 import MoaconaEquipmentMonitorMkr3 from '@/components/dashboard/MoaconaEquipmentMonitorMkr3.vue'
+import JupiterEquipmentMonitorMkr3 from '@/components/dashboard/JupiterEquipmentMonitorMkr3.vue'
 import MainDashboard from '@/components/dashboard/MainDashboard.vue'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import { useAuth } from '@/composables/useAuth'
@@ -33,7 +34,7 @@ if (savedTankStr && savedTankStr !== 'undefined') {
 }
 
 const currentTank = ref<any>(initialTank)
-const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'tankDetail', 'mainDashboard']
+const validViews = ['dashboard', 'challengerDashboard', 'moaconaDashboard', 'jupiterDashboard', 'mkr3', 'challengerMkr3', 'moaconaMkr3', 'jupiterMkr3', 'tankDetail', 'mainDashboard']
 const initialView = validViews.includes(savedView) ? savedView : 'dashboard'
 const currentView = ref<string>(initialView)
 
@@ -43,7 +44,7 @@ if (currentView.value === 'tankDetail' && !currentTank.value) {
 }
 
 const savedShip = sessionStorage.getItem('fishhold_ship')
-const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard') ? 'jupiter' : 'naoero'))
+const currentShip = ref<string>(savedShip || ((currentView.value === 'challengerDashboard' || currentView.value === 'challengerMkr3') ? 'challenger' : (currentView.value === 'moaconaDashboard' || currentView.value === 'moaconaMkr3') ? 'moacona' : (currentView.value === 'jupiterDashboard' || currentView.value === 'jupiterMkr3') ? 'jupiter' : 'naoero'))
 
 const pushHistoryState = () => {
   try {
@@ -133,10 +134,13 @@ const handleNavigate = (viewType: string) => {
   } else if (viewType === 'moaconaMkr3') {
     currentShip.value = 'moacona'
     sessionStorage.setItem('fishhold_ship', 'moacona')
+  } else if (viewType === 'jupiterMkr3') {
+    currentShip.value = 'jupiter'
+    sessionStorage.setItem('fishhold_ship', 'jupiter')
   }
 
   // 장비 현황판의 플러스(+) 버튼 등을 통해 MKR-3로 넘어올 때 매핑된 정보 전달
-  if (viewType === 'mkr3' || viewType === 'challengerMkr3' || viewType === 'moaconaMkr3') {
+  if (viewType === 'mkr3' || viewType === 'challengerMkr3' || viewType === 'moaconaMkr3' || viewType === 'jupiterMkr3') {
     localStorage.setItem('mkr3_active_tab', 'monitoring')
     
     // 현재 상세 페이지에서 보고 있던 탱크가 있다면, MKR-3 진입 시 자동으로 선택되도록 정보 저장
@@ -161,7 +165,7 @@ const handlePopState = (event: PopStateEvent) => {
     // Fallback to initial values if browser state is null
     currentView.value = initialView
     currentTank.value = initialTank
-    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard') ? 'jupiter' : 'naoero')
+    currentShip.value = savedShip || ((initialView === 'challengerDashboard' || initialView === 'challengerMkr3') ? 'challenger' : (initialView === 'moaconaDashboard' || initialView === 'moaconaMkr3') ? 'moacona' : (initialView === 'jupiterDashboard' || initialView === 'jupiterMkr3') ? 'jupiter' : 'naoero')
   }
   
   // Sync sessionStorage
@@ -227,6 +231,7 @@ onUnmounted(() => {
         <EquipmentMonitorMkr3 v-else-if="currentView === 'mkr3'" />
         <ChallengerEquipmentMonitorMkr3 v-else-if="currentView === 'challengerMkr3'" />
         <MoaconaEquipmentMonitorMkr3 v-else-if="currentView === 'moaconaMkr3'" />
+        <JupiterEquipmentMonitorMkr3 v-else-if="currentView === 'jupiterMkr3'" />
       </main>
     </div>
   </div>

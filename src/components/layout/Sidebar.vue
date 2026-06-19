@@ -20,7 +20,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 
 // 현재 뷰에 따라 드롭다운 자동 펼침
 watch(() => props.currentView, (newView) => {
-  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3') {
+  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3') {
     expandedMenus.monitoring = true;
   } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard') {
     expandedMenus.status = true;
@@ -58,6 +58,7 @@ watch(() => props.currentView, (newView) => {
                 <li class="sub-nav-item" :class="{ active: currentView === 'mkr3' }" @click="emit('navigate', 'mkr3')">신라 나오에로썬</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 챌린저</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'moaconaMkr3' }" @click="emit('navigate', 'moaconaMkr3')">신라 모아코나</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'jupiterMkr3' }" @click="emit('navigate', 'jupiterMkr3')">신라 쥬피터</li>
               </ul>
             </div>
           </li>
