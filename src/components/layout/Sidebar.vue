@@ -20,7 +20,7 @@ const toggleMenu = (menu: 'monitoring' | 'status') => {
 
 // 현재 뷰에 따라 드롭다운 자동 펼침
 watch(() => props.currentView, (newView) => {
-  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3') {
+  if (newView === 'mkr3' || newView === 'challengerMkr3' || newView === 'moaconaMkr3' || newView === 'jupiterMkr3' || newView === 'explorerMkr3') {
     expandedMenus.monitoring = true;
   } else if (newView === 'dashboard' || newView === 'tankDetail' || newView === 'challengerDashboard' || newView === 'moaconaDashboard' || newView === 'jupiterDashboard' || newView === 'explorerDashboard') {
     expandedMenus.status = true;
@@ -46,7 +46,7 @@ watch(() => props.currentView, (newView) => {
             </div>
           </li>
           <li class="nav-item">
-            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' || currentView === 'moaconaMkr3' }" @click="toggleMenu('monitoring')">
+            <div class="nav-link" :class="{ active: currentView === 'mkr3' || currentView === 'challengerMkr3' || currentView === 'moaconaMkr3' || currentView === 'jupiterMkr3' || currentView === 'explorerMkr3' }" @click="toggleMenu('monitoring')">
               <div class="nav-link-main">
                 <span class="icon">🖥️</span>
                 장비 모니터링
@@ -59,6 +59,7 @@ watch(() => props.currentView, (newView) => {
                 <li class="sub-nav-item" :class="{ active: currentView === 'challengerMkr3' }" @click="emit('navigate', 'challengerMkr3')">신라 챌린저</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'moaconaMkr3' }" @click="emit('navigate', 'moaconaMkr3')">신라 모아코나</li>
                 <li class="sub-nav-item" :class="{ active: currentView === 'jupiterMkr3' }" @click="emit('navigate', 'jupiterMkr3')">신라 쥬피터</li>
+                <li class="sub-nav-item" :class="{ active: currentView === 'explorerMkr3' }" @click="emit('navigate', 'explorerMkr3')">신라 익스플로러</li>
               </ul>
             </div>
           </li>
